@@ -1,0 +1,152 @@
+.loginFormBlock {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background-color: #1e2028;
+}
+.loginFormWrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    background-color: #5d626f;
+    box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5),
+    -2px -2px 8px rgba(255, 255, 255, 0.5);
+    padding: 15px 15px 30px;
+}
+.loginFormTitle{
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+.loginForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.loginForm__formGroup {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+    color: #ff7e67;
+    letter-spacing: 0.7px;
+}
+.loginForm__formGroup:not(:last-child) {
+    margin-bottom: 30px;
+}
+.loginForm__formGroup label{
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+.loginForm__formGroup input{
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    outline: none;
+    color: #555555;
+    border: none;
+    box-shadow: 2px 2px 0 rgb(71 65 65);
+}
+.loginForm__checkboxGroup{
+    display: flex;
+    width: 100%;
+    position: relative;
+    margin-bottom: 20px;
+}
+.loginForm__checkboxGroup input{
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+}
+.loginForm__checkboxGroup label{
+    color: #ffffff;
+    padding-left: 30px;
+    position: relative;
+    line-height: 1;
+    padding-top: 2px;
+}
+.loginForm__checkboxGroup label::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 20px;
+    width: 20px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 0 rgb(71 65 65);
+    background-color: #ffffff;
+    cursor: pointer;
+}
+.loginForm__checkboxGroup input:checked+label::after{
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    height: 14px;
+    width: 14px;
+    background-color: #67c166;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.loginForm button{
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    border: none;
+    background-color: #ffffff;
+    color: #555555;
+    cursor: pointer;
+    font-size: 18px;
+    outline: none;
+    transition: all linear 150ms;
+    width: max-content;
+    margin: 0 auto;
+}
+.loginForm button:hover{
+    /*background-color: #989898;*/
+    color: #67c166;
+    box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5),
+    -2px -2px 8px rgba(255, 255, 255, 0.5);
+    text-shadow: 1px 1px 8px rgba(85, 85, 85, 0.5);
+}
+.loginForm__info{
+    margin-top: -10px;
+    margin-bottom: 20px;
+    display: flex;
+    width: 100%;
+    padding-left: 10px;
+}
+.loginForm__info a{
+    color: #ffffff;
+    text-decoration: none;
+    outline: none;
+    transition: all linear 150ms;
+}
+.loginForm__info a:hover{
+    color: #ffffff;
+    text-shadow: 1px 1px 8px rgba(255, 255, 255, 0.5);
+}

@@ -1,7 +1,6 @@
-import React from "react";
-import {AppStateType} from "./store";
 import {ThunkDispatch} from "redux-thunk";
-import {api} from "../api/api";
+import {authApi} from "../api/authApi";
+import {AppRootStateType} from "../store/store";
 
 const MAKE_REGISTER = 'MAKE-REGISTER';
 const SET_ERROR = 'SET-ERROR';
@@ -62,9 +61,9 @@ export const errorSuccess = (error: string): errorSuccessType => ({
 //thunks
 
 export const addRegistration = (email: string, password: string) =>
-    async (dispatch: ThunkDispatch<AppStateType, {}, any>, getState: AppStateType) => {
+    async (dispatch: ThunkDispatch<AppRootStateType, {}, any>, getState: AppRootStateType) => {
         try {
-            const registrationSuccess = await api.registration(email, password);
+            const registrationSuccess = await authApi.registration(email, password);
             dispatch(makeRegister(email, password))
         } catch (e) {
             dispatch(errorSuccess(e.response.data.error))
