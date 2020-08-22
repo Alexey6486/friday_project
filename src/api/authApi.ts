@@ -20,13 +20,19 @@ export type LoginResponseObjectType = {
 }
 
 export const authApi = {
+    registration(email: string, password: string){
+        //debugger
+        return instance.post('auth/register', {email, password})
+            .then(res=>console.log(res.data))
+    },
     login(email: string, password: string, rememberMe: boolean = false) {
+        //debugger
         return instance
             .post<LoginResponseObjectType>(`auth/login`, {
                 email, password, rememberMe
             })
             .then((res) => {
-                debugger
+                //debugger
                 return res.data
             })
     }

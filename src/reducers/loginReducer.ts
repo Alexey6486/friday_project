@@ -37,6 +37,11 @@ export const authReducer = (state: AuthStateType = authInitState, action: Action
 
 type ThunkType = ThunkAction<void, AppRootStateType, {}, ActionTypes>;
 export const loginTC = (email: string, password: string, rememberMe: boolean): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
-    const res = await authApi.login(email, password, rememberMe);
-    dispatch(authMeAC(true));
+    //debugger
+    try {
+        const res = await authApi.login(email, password, rememberMe);
+        dispatch(authMeAC(true));
+    } catch (e) {
+        console.log(e.response.data.error)
+    }
 }

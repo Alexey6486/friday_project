@@ -21,6 +21,7 @@ export const Login = () => {
     const {isAuth} = authState;
 
     const onSubmit = (loginData: LoginFormType) => {
+        debugger
         dispatch(loginTC(loginData.email, loginData.password, loginData.rememberMe));
     }
 
