@@ -2,7 +2,7 @@
     position: relative;
     height: 100vh;
     width: 100%;
-    background-color: #555555;
+    background-color: #1e2028;
 }
 .loginFormWrap {
     position: absolute;
@@ -17,7 +17,7 @@
     justify-content: center;
     border: 1px solid #ffffff;
     border-radius: 10px;
-    background-color: #555555;
+    background-color: #5d626f;
     box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5),
     -2px -2px 8px rgba(255, 255, 255, 0.5);
     padding: 15px 15px 30px;
@@ -42,7 +42,8 @@
     justify-content: center;
     width: 100%;
     flex-direction: column;
-    color: tomato;
+    color: #ff7e67;
+    letter-spacing: 0.7px;
 }
 .loginForm__formGroup:not(:last-child) {
     margin-bottom: 30px;
