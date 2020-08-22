@@ -1,0 +1,6 @@
+.formFieldError{
+    position: absolute;
+    bottom: -18px;
+    left: 10px;
+    font-size: 12px;
+}

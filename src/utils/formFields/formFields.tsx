@@ -1,4 +1,5 @@
 import React from "react";
+import s from './formField.module.css';
 
 const FormField = (Element: string) => ({input, meta, ...props}: any) => {
 
@@ -9,7 +10,7 @@ const FormField = (Element: string) => ({input, meta, ...props}: any) => {
             <Element {...input} {...props}/>
             {
                 error &&
-                <div>{meta.error}</div>
+                <div className={s.formFieldError}>{meta.error}</div>
             }
         </>
     )

@@ -6,6 +6,7 @@ import { NavLink, Redirect } from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AuthStateType, loginTC} from "../../reducers/loginReducer";
 import {AppRootStateType} from "../../store/store";
+import { fieldRequired } from "../../utils/formValidation/loginValidation";
 
 type LoginFormType = {
     email: string
@@ -41,10 +42,10 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
     return (
         <form onSubmit={props.handleSubmit} className={s.loginForm}>
             <div className={s.loginForm__formGroup}>
-                <Field component={Input} name={'email'} type={'email'} placeholder={'email'} id={'emailLogin'}/>
+                <Field component={Input} name={'email'} type={'email'} placeholder={'email'} id={'emailLogin'} validate={[fieldRequired]}/>
             </div>
             <div className={s.loginForm__formGroup}>
-                <Field component={Input} name={'password'} type={'password'} placeholder={'password'} id={'passwordLogin'}/>
+                <Field component={Input} name={'password'} type={'password'} placeholder={'password'} id={'passwordLogin'} validate={[fieldRequired]}/>
             </div>
             <div className={s.loginForm__info}>
                 <NavLink to={'/restorePassword'}>Forgot password?</NavLink>

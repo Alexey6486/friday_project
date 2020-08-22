@@ -20,11 +20,11 @@
     background-color: #555555;
     box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5),
     -2px -2px 8px rgba(255, 255, 255, 0.5);
-    padding: 15px;
+    padding: 15px 15px 30px;
 }
 .loginFormTitle{
     color: #ffffff;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     text-transform: uppercase;
     font-size: 20px;
     letter-spacing: 2px;
@@ -37,10 +37,15 @@
     justify-content: center;
 }
 .loginForm__formGroup {
+    position: relative;
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-bottom: 20px;
+    flex-direction: column;
+    color: tomato;
+}
+.loginForm__formGroup:not(:last-child) {
+    margin-bottom: 30px;
 }
 .loginForm__formGroup label{
     color: #ffffff;
@@ -117,6 +122,8 @@
     font-size: 18px;
     outline: none;
     transition: all linear 150ms;
+    width: max-content;
+    margin: 0 auto;
 }
 .loginForm button:hover{
     /*background-color: #989898;*/
