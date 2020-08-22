@@ -33,7 +33,7 @@ export const Registration = () => {
                     <input placeholder={'password'} type={'password'} onChange={passwordField}/>
                 </div>
                 <div>
-                    <input placeholder={'repeat password'} onChange={rememberMeField}/>
+                    <input placeholder={'repeat password'} type={'password'} onChange={rememberMeField}/>
                 </div>
                 <div>
                     <button onClick={sendData}>Send</button>
