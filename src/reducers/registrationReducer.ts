@@ -1,24 +1,28 @@
 import {ThunkDispatch} from "redux-thunk";
 import {authApi} from "../api/authApi";
 import {AppRootStateType} from "../store/store";
+import {
+    actionTypes,
+    errorSuccessType,
+    initialStateType,
+    makeRegisterType
+} from "../auth/registration/RegistrationTypes";
 
-const MAKE_REGISTER = 'MAKE-REGISTER';
-const SET_ERROR = 'SET-ERROR';
+export const MAKE_REGISTER = 'MAKE-REGISTER';
+export const SET_ERROR = 'SET-ERROR';
 
-type actionType = makeRegisterType | errorSuccessType
 
 const initialState = {
-    email: '',
-    password: '',
+    registrationSuccess: false,
     error: ''
 };
 
-const registrationReducer = (state = initialState, action: actionType) => {
+const registrationReducer = (state: initialStateType = initialState, action: actionTypes) => {
 
     switch (action.type) {
         case MAKE_REGISTER:
             return {
-                ...state, email: action.email, password: action.password
+                ...state, email: action.registrationSuccess
             };
         case SET_ERROR:
             return {
@@ -29,28 +33,15 @@ const registrationReducer = (state = initialState, action: actionType) => {
             return state
         }
     }
-
 };
 
 export default registrationReducer
 
 // action Creators
 
-type makeRegisterType = {
-    type: typeof MAKE_REGISTER
-    email: string
-    password: string
-}
-
-type errorSuccessType = {
-    type: typeof SET_ERROR
-    error: string
-}
-
-export const makeRegister = (email: string, password: string): makeRegisterType => ({
+export const makeRegister = (registrationSuccess: boolean): makeRegisterType => ({
     type: MAKE_REGISTER,
-    email,
-    password
+    registrationSuccess,
 });
 
 export const errorSuccess = (error: string): errorSuccessType => ({
@@ -63,10 +54,12 @@ export const errorSuccess = (error: string): errorSuccessType => ({
 export const addRegistration = (email: string, password: string) =>
     async (dispatch: ThunkDispatch<AppRootStateType, {}, any>, getState: AppRootStateType) => {
         try {
-            const registrationSuccess = await authApi.registration(email, password);
-            dispatch(makeRegister(email, password))
+            const setRegistration = await authApi.registration(email, password);
+            dispatch(makeRegister(true))
         } catch (e) {
-            dispatch(errorSuccess(e.response.data.error))
+
+            dispatch(errorSuccess(e.response.data.error));
+            dispatch(makeRegister(false))
         }
     };
 
