@@ -3,9 +3,10 @@ import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import s from "../login/Login.module.css";
 import {Input} from "../../utils/formFields/formFields";
 import {registrationFieldsRequired} from "../../utils/formValidation/registrationValidation";
-import {useDispatch} from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import {setNewPasswordTC} from "../../reducers/newPasswordReducer";
+import {useDispatch, useSelector} from "react-redux";
+import {Redirect, RouteComponentProps, withRouter} from "react-router-dom";
+import {SetNewPasswordStateType, setNewPasswordTC} from "../../reducers/newPasswordReducer";
+import {AppRootStateType} from "../../store/store";
 
 type ParamsType = {
     token: string
@@ -20,6 +21,8 @@ type SetNewPasswordFormType = {
 const NewPassword = (props: PropsType) => {
 
     const dispatch = useDispatch();
+    const setNewPasswordState = useSelector<AppRootStateType, SetNewPasswordStateType>(state => state.newPassword);
+    const {passwordIsSet} = setNewPasswordState;
 
     const onSubmit = (newData: SetNewPasswordFormType) => {
         const token = props.match.params.token;
@@ -28,6 +31,10 @@ const NewPassword = (props: PropsType) => {
             newData.password.length >= 7) {
             dispatch(setNewPasswordTC(newData.password, token))
         }
+    }
+
+    if (passwordIsSet) {
+        return <Redirect to={'/login'}/>
     }
 
     return (
