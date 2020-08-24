@@ -1,0 +1,36 @@
+.profileBlock{
+    height: 100vh;
+    width: 100%;
+    background-color: #ffffff;
+}
+.profileHeader{
+    height: 50px;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.5);
+    color: #ffffff;
+    font-size: 20px;
+    background-color: #969696;
+}
+.profileHeader>div{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+.profileHeader__link{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    color: #969696;
+    line-height: 1;
+    padding: 0 15px;
+    font-size: 14px;
+    transition: all linear 150ms;
+}
+.profileHeader__link:hover{
+    color: tomato;
+    box-shadow: 0 0 8px rgba(255,255,255,0.5);
+}

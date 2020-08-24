@@ -1,10 +1,10 @@
-import React, {PropsWithChildren} from "react";
+import React, {PropsWithChildren, useEffect} from "react";
 import s from './Login.module.css';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../utils/formFields/formFields";
 import { NavLink, Redirect } from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {AuthStateType, loginTC} from "../../reducers/loginReducer";
+import { authMeTC, AuthStateType, loginTC} from "../../reducers/loginReducer";
 import {AppRootStateType} from "../../store/store";
 import { fieldRequired } from "../../utils/formValidation/loginValidation";
 
@@ -21,9 +21,14 @@ export const Login = () => {
     const {isAuth} = authState;
 
     const onSubmit = (loginData: LoginFormType) => {
-        debugger
         dispatch(loginTC(loginData.email, loginData.password, loginData.rememberMe));
     }
+
+    useEffect(() => {
+        if (localStorage.getItem('isAuth')) {
+            dispatch(authMeTC());
+        }
+    }, []);
 
     if (isAuth) {
         return <Redirect to={'/'}/>

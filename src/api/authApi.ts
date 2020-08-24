@@ -18,21 +18,36 @@ export type LoginResponseObjectType = {
     rememberMe: boolean
     error: string
 }
+export type LogoutResponseObjectType = {
+    info: string
+    error: string
+}
 
 export const authApi = {
     registration(email: string, password: string){
-        //debugger
         return instance.post('auth/register', {email, password})
             .then(res=>console.log(res.data))
     },
+    authMe() {
+        return instance
+            .post<LoginResponseObjectType>(`auth/me`)
+            .then((res) => {
+                return res.data
+            })
+    },
     login(email: string, password: string, rememberMe: boolean = false) {
-        //debugger
         return instance
             .post<LoginResponseObjectType>(`auth/login`, {
                 email, password, rememberMe
             })
             .then((res) => {
-                //debugger
+                return res.data
+            })
+    },
+    logout() {
+        return instance
+            .delete<LogoutResponseObjectType>(`auth/me`)
+            .then((res) => {
                 return res.data
             })
     }

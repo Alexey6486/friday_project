@@ -17,7 +17,7 @@ export type actionTypes = makeRegisterType | errorSuccessType
 
 //state
 
-export type initialStateType = {
+export type registrationInitialStateType = {
     registrationSuccess: boolean
     error: string
 }

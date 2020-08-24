@@ -4,7 +4,7 @@ import {AppRootStateType} from "../store/store";
 import {
     actionTypes,
     errorSuccessType,
-    initialStateType,
+    registrationInitialStateType,
     makeRegisterType
 } from "../auth/registration/RegistrationTypes";
 
@@ -17,7 +17,7 @@ const initialState = {
     error: ''
 };
 
-const registrationReducer = (state: initialStateType = initialState, action: actionTypes) => {
+const registrationReducer = (state: registrationInitialStateType = initialState, action: actionTypes) => {
 
     switch (action.type) {
         case MAKE_REGISTER:
