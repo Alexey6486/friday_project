@@ -1,6 +1,6 @@
 import React, {PropsWithChildren, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {Redirect} from "react-router-dom";
+import {NavLink, Redirect} from "react-router-dom";
 import {addRegistration} from "../../reducers/registrationReducer";
 import {AppRootStateType} from "../../store/store";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
@@ -67,6 +67,9 @@ const RegistrationForm: React.FC<InjectedFormProps<regFormType>> =
                 </div>
                 <div className={s.loginForm__formGroup}>
                     <button>Send</button>
+                </div>
+                <div className={s.loginForm__info}>
+                    Have an account?&nbsp;<NavLink to={'/login'}>Sign in.</NavLink>
                 </div>
             </form>
         )

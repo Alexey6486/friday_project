@@ -139,6 +139,7 @@
     display: flex;
     width: 100%;
     padding-left: 10px;
+    color: #ffffff;
 }
 .loginForm__info a{
     color: #ffffff;
@@ -146,7 +147,13 @@
     outline: none;
     transition: all linear 150ms;
 }
+.loginForm__info:last-child{
+    margin-bottom: 0;
+    padding-left: 0;
+    text-align: center;
+    justify-content: center;
+}
 .loginForm__info a:hover{
-    color: #ffffff;
+    color: #67c166;
     text-shadow: 1px 1px 8px rgba(255, 255, 255, 0.5);
 }

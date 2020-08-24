@@ -49,7 +49,7 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
                 <Field component={Input} name={'password'} type={'password'} placeholder={'password'} id={'passwordLogin'} validate={[fieldRequired]}/>
             </div>
             <div className={s.loginForm__info}>
-                <NavLink to={'/restorePassword'}>Forgot password?</NavLink>
+                <NavLink to={'/restorePassword'}>Forgot your password?</NavLink>
             </div>
             <div className={s.loginForm__checkboxGroup}>
                 <Field component={Input} name={'rememberMe'} type={'checkbox'} id={'checkboxLogin'}/>
@@ -57,6 +57,9 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
             </div>
             <div className={s.loginForm__formGroup}>
                 <button>Login</button>
+            </div>
+            <div className={s.loginForm__info}>
+                New user?&nbsp;<NavLink to={'/registration'}>Register now.</NavLink>
             </div>
         </form>
     )
