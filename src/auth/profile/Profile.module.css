@@ -29,6 +29,7 @@
     padding: 0 15px;
     font-size: 14px;
     transition: all linear 150ms;
+    outline: none;
 }
 .profileHeader__link:hover{
     color: tomato;
