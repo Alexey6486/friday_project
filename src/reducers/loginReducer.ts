@@ -7,7 +7,7 @@ const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const ERROR = 'ERROR';
 
-type AuthMeACType = {
+export type AuthMeACType = {
     type: typeof AUTH_ME
     isAuth: boolean
     userProfile: LoginResponseObjectType
