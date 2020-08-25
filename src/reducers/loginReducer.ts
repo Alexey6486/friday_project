@@ -5,6 +5,7 @@ import {authApi, LoginResponseObjectType} from "../api/authApi";
 const AUTH_ME = 'AUTH_ME';
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
+const ERROR = 'ERROR';
 
 type AuthMeACType = {
     type: typeof AUTH_ME
@@ -19,6 +20,10 @@ type LoginACType = {
 type LogoutACType = {
     type: typeof LOGOUT
     isAuth: boolean
+};
+type ErrorACType = {
+    type: typeof ERROR
+    error: string | null
 };
 
 export const authMeAC = (isAuth: boolean, userProfile: LoginResponseObjectType): AuthMeACType => {
@@ -41,16 +46,24 @@ export const logoutAC = (isAuth: boolean): LogoutACType => {
         isAuth,
     }
 };
+export const errorAC = (error: string | null): ErrorACType => {
+    return {
+        type: ERROR,
+        error,
+    }
+};
 
-type ActionTypes = AuthMeACType | LogoutACType | LoginACType;
+type ActionTypes = AuthMeACType | LogoutACType | LoginACType | ErrorACType;
 
 export type AuthStateType = {
     isAuth: boolean,
-    userProfile: LoginResponseObjectType
+    error: string | null,
+    userProfile: LoginResponseObjectType,
 };
 
 const authInitState = {
     isAuth: false,
+    error: null,
     userProfile: {
         _id: '',
         email: '',
@@ -62,7 +75,8 @@ const authInitState = {
         isAdmin: false,
         verified: false, // подтвердил ли почту
         rememberMe: false,
-        error: '',
+        token: '',
+        tokenDeathTime: 0,
     }
 };
 
@@ -74,6 +88,8 @@ export const authReducer = (state: AuthStateType = authInitState, action: Action
             return {...state, isAuth: action.isAuth, userProfile: action.userProfile};
         case LOGOUT:
             return {...state, isAuth: action.isAuth};
+        case ERROR:
+            return {...state, error: action.error};
         default:
             return state;
     }
@@ -83,10 +99,7 @@ type ThunkType = ThunkAction<void, AppRootStateType, {}, ActionTypes>;
 export const authMeTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     try {
         const res = await authApi.authMe();
-        if (!localStorage.getItem('isAuth')) {
-            localStorage.setItem('isAuth', '1');
-            dispatch(authMeAC(true, res));
-        }
+        dispatch(authMeAC(true, res));
     } catch (e) {
         console.log(e.response.data.error)
     }
@@ -94,16 +107,26 @@ export const authMeTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootS
 export const loginTC = (email: string, password: string, rememberMe: boolean): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     try {
         const res = await authApi.login(email, password, rememberMe);
-        localStorage.setItem('isAuth', '1');
-        dispatch(authMeAC(true, res));
+        dispatch(loginAC(true, res));
     } catch (e) {
         console.log(e.response.data.error)
+        console.log({...e})
+        if ( e.response.data.error === "not valid email/password /ᐠ-ꞈ-ᐟ\\") {
+            dispatch(errorAC('Incorrect password or email.'))
+            setTimeout(() => {
+                dispatch(errorAC(null));
+            }, 3000)
+        } else {
+            dispatch(errorAC(e.response.data.error));
+            setTimeout(() => {
+                dispatch(errorAC(null));
+            }, 3000)
+        }
     }
 }
 export const logoutTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     try {
         await authApi.logout();
-        localStorage.removeItem('isAuth');
         dispatch(logoutAC(false));
     } catch (e) {
         console.log(e.response.data.error)

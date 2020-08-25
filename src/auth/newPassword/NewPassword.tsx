@@ -40,7 +40,7 @@ const NewPassword = (props: PropsType) => {
     return (
         <div className={s.loginFormBlock}>
             <div className={s.loginFormWrap}>
-                <div className={s.loginFormTitle}>New password::</div>
+                <div className={s.loginFormTitle}>New password:</div>
                 <ReduxSetNewPasswordForm onSubmit={onSubmit}/>
             </div>
         </div>

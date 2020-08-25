@@ -14,7 +14,7 @@ export const App = () => {
         <Route exact path={'/login'} render={() => <Login/>}/>
         <Route exact path={'/restorePassword'} render={() => <RestorePassword/>}/>
         <Route exact path={'/registration'} render={() => <Registration/>}/>
-        <Route exact path={'/setNewPassword/:token'} render={() => <NewPasswordWithRouter/>}/>
+        <Route exact path={'/set-new-password/:token'} render={() => <NewPasswordWithRouter/>}/>
     </div>
   );
 }

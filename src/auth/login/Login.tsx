@@ -18,7 +18,7 @@ export const Login = () => {
 
     const dispatch = useDispatch();
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
-    const {isAuth} = authState;
+    const {isAuth, error} = authState;
 
     const onSubmit = (loginData: LoginFormType) => {
         dispatch(loginTC(loginData.email, loginData.password, loginData.rememberMe));
@@ -40,6 +40,12 @@ export const Login = () => {
                 <div className={s.loginFormTitle}>Login:</div>
                 <ReduxLoginForm onSubmit={onSubmit}/>
             </div>
+            {
+                error &&
+                <div className={s.loginFormError}>
+                    {error}
+                </div>
+            }
         </div>
     )
 };
