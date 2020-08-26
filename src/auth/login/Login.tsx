@@ -67,7 +67,7 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
                        id={'passwordLogin'} validate={[fieldRequired]}/>
             </div>
             <div className={s.loginForm__info}>
-                <NavLink to={'/restorePassword'}>Forgot your password?</NavLink>
+                <NavLink to={'/friday_project/restorePassword'}>Forgot your password?</NavLink>
             </div>
             <div className={s.loginForm__checkboxGroup}>
                 <Field component={Input} name={'rememberMe'} type={'checkbox'} id={'checkboxLogin'}/>
