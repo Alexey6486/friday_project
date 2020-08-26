@@ -32,7 +32,7 @@ export const Login = () => {
     }, []);
 
     if (isAuth) {
-        return <Redirect to={'/'}/>
+        return <Redirect to={'friday_project/'}/>
     }
 
     return (
@@ -77,7 +77,7 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
                 <button>Login</button>
             </div>
             <div className={s.loginForm__info}>
-                New user?&nbsp;<NavLink to={'/registration'}>Register now.</NavLink>
+                New user?&nbsp;<NavLink to={'friday_project/registration'}>Register now.</NavLink>
             </div>
         </form>
     )
