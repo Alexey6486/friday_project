@@ -2,11 +2,12 @@ import React, {PropsWithChildren, useEffect} from "react";
 import s from './Login.module.css';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../utils/formFields/formFields";
-import { NavLink, Redirect } from "react-router-dom";
+import {NavLink, Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import { authMeTC, AuthStateType, loginTC} from "../../reducers/loginReducer";
+import {authMeTC, AuthStateType, loginTC} from "../../reducers/loginReducer";
 import {AppRootStateType} from "../../store/store";
-import { fieldRequired } from "../../utils/formValidation/loginValidation";
+import {fieldRequired} from "../../utils/formValidation/loginValidation";
+import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
 
 type LoginFormType = {
     email: string
@@ -18,7 +19,7 @@ export const Login = () => {
 
     const dispatch = useDispatch();
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
-    const {isAuth, error} = authState;
+    const {isAuth, error, isLoading} = authState;
 
     const onSubmit = (loginData: LoginFormType) => {
         dispatch(loginTC(loginData.email, loginData.password, loginData.rememberMe));
@@ -36,9 +37,13 @@ export const Login = () => {
 
     return (
         <div className={s.loginFormBlock}>
-            <div className={s.loginFormWrap}>
+            <div className={isLoading ? `${s.loginFormWrap} ${s.disabled}` : `${s.loginFormWrap}`}>
                 <div className={s.loginFormTitle}>Login:</div>
                 <ReduxLoginForm onSubmit={onSubmit}/>
+                {
+                    isLoading &&
+                    <AuthLoading/>
+                }
             </div>
             {
                 error &&
@@ -54,10 +59,12 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
     return (
         <form onSubmit={props.handleSubmit} className={s.loginForm}>
             <div className={s.loginForm__formGroup}>
-                <Field component={Input} name={'email'} type={'email'} placeholder={'email'} id={'emailLogin'} validate={[fieldRequired]}/>
+                <Field component={Input} name={'email'} type={'email'} placeholder={'email'} id={'emailLogin'}
+                       validate={[fieldRequired]}/>
             </div>
             <div className={s.loginForm__formGroup}>
-                <Field component={Input} name={'password'} type={'password'} placeholder={'password'} id={'passwordLogin'} validate={[fieldRequired]}/>
+                <Field component={Input} name={'password'} type={'password'} placeholder={'password'}
+                       id={'passwordLogin'} validate={[fieldRequired]}/>
             </div>
             <div className={s.loginForm__info}>
                 <NavLink to={'/restorePassword'}>Forgot your password?</NavLink>

@@ -6,6 +6,7 @@ const AUTH_ME = 'AUTH_ME';
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const ERROR = 'ERROR';
+const LOADING = 'LOADING';
 
 export type AuthMeACType = {
     type: typeof AUTH_ME
@@ -24,6 +25,10 @@ type LogoutACType = {
 type ErrorACType = {
     type: typeof ERROR
     error: string | null
+};
+type LoadingACType = {
+    type: typeof LOADING
+    isLoading: boolean
 };
 
 export const authMeAC = (isAuth: boolean, userProfile: LoginResponseObjectType): AuthMeACType => {
@@ -52,16 +57,24 @@ export const errorAC = (error: string | null): ErrorACType => {
         error,
     }
 };
+export const loadingAC = (isLoading: boolean): LoadingACType => {
+    return {
+        type: LOADING,
+        isLoading,
+    }
+};
 
-type ActionTypes = AuthMeACType | LogoutACType | LoginACType | ErrorACType;
+type ActionTypes = AuthMeACType | LogoutACType | LoginACType | ErrorACType | LoadingACType;
 
 export type AuthStateType = {
-    isAuth: boolean,
-    error: string | null,
-    userProfile: LoginResponseObjectType,
+    isLoading: boolean
+    isAuth: boolean
+    error: string | null
+    userProfile: LoginResponseObjectType
 };
 
 const authInitState = {
+    isLoading: false,
     isAuth: false,
     error: null,
     userProfile: {
@@ -90,6 +103,8 @@ export const authReducer = (state: AuthStateType = authInitState, action: Action
             return {...state, isAuth: action.isAuth};
         case ERROR:
             return {...state, error: action.error};
+        case LOADING:
+            return {...state, isLoading: action.isLoading};
         default:
             return state;
     }
@@ -105,18 +120,22 @@ export const authMeTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootS
     }
 }
 export const loginTC = (email: string, password: string, rememberMe: boolean): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    dispatch(loadingAC(true));
     try {
         const res = await authApi.login(email, password, rememberMe);
         dispatch(loginAC(true, res));
+        dispatch(loadingAC(false));
     } catch (e) {
         console.log(e.response.data.error)
         console.log({...e})
         if ( e.response.data.error === "not valid email/password /ᐠ-ꞈ-ᐟ\\") {
+            dispatch(loadingAC(false));
             dispatch(errorAC('Incorrect password or email.'))
             setTimeout(() => {
                 dispatch(errorAC(null));
             }, 3000)
         } else {
+            dispatch(loadingAC(false));
             dispatch(errorAC(e.response.data.error));
             setTimeout(() => {
                 dispatch(errorAC(null));

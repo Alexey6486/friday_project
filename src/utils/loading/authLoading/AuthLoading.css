@@ -1,4 +1,4 @@
-@keyframes ldio-ookrzkze3oj {
+@keyframes authAnimation__inner {
     0% {
         transform: rotate(0deg)
     }
@@ -9,12 +9,20 @@
         transform: rotate(45deg)
     }
 }
-.ldio-ookrzkze3oj > div {
+@keyframes authAnimation__outer {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.auth-loading__inner > div {
     transform-origin: 100px 100px;
-    animation: ldio-ookrzkze3oj 1.8518518518518516s infinite linear;
+    animation: authAnimation__inner 1.8518518518518516s infinite linear;
 }
 
-.ldio-ookrzkze3oj > div div {
+.auth-loading__inner > div div {
     position: absolute;
     width: 22px;
     height: 152px;
@@ -24,48 +32,51 @@
     transform: translate(-50%, -50%);
 }
 
-.ldio-ookrzkze3oj > div div:nth-child(1) {
+.auth-loading__inner > div div:nth-child(1) {
     width: 120px;
     height: 120px;
     border-radius: 50%;
 }
 
-.ldio-ookrzkze3oj > div div:nth-child(6) {
+.auth-loading__inner > div div:nth-child(6) {
     width: 80px;
     height: 80px;
-    background: #1e2028;
+    background: #5d626f;
     border-radius: 50%;
 }
 
-.ldio-ookrzkze3oj > div div:nth-child(3) {
+.auth-loading__inner > div div:nth-child(3) {
     transform: translate(-50%, -50%) rotate(45deg)
 }
 
-.ldio-ookrzkze3oj > div div:nth-child(4) {
+.auth-loading__inner > div div:nth-child(4) {
     transform: translate(-50%, -50%) rotate(90deg)
 }
 
-.ldio-ookrzkze3oj > div div:nth-child(5) {
+.auth-loading__inner > div div:nth-child(5) {
     transform: translate(-50%, -50%) rotate(135deg)
 }
 
-.loadingio-spinner-gear-pzuuy69rnz {
+.auth-loading {
     overflow: hidden;
-    background: #1e2028;
-    position: relative;
-    height: 100vh;
-    width: 100%;
+    background: transparent;
+    position: absolute;
+    height: 200px;
+    right: -100px;
+    bottom: -100px;
+    width: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: authAnimation__outer 2s forwards linear;
 }
 
-.ldio-ookrzkze3oj {
+.auth-loading__inner {
     width: 200px;
     height: 200px;
 }
 
-.ldio-ookrzkze3oj div {
+.auth-loading__inner div {
     box-sizing: content-box;
 }
 
