@@ -34,7 +34,7 @@ const NewPassword = (props: PropsType) => {
     }
 
     if (passwordIsSet) {
-        return <Redirect to={'friday_project/login'}/>
+        return <Redirect to={'/friday_project/login'}/>
     }
 
     return (

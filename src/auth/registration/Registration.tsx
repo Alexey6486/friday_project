@@ -38,7 +38,7 @@ export const Registration: React.FC = () => {
 
             {
                 registered
-                    ? <Redirect to={'friday_project/login'}/>
+                    ? <Redirect to={'/friday_project/login'}/>
                     : <ReduxRegistrationForm onSubmit={onSubmit}/>
             }
             </div>
@@ -69,7 +69,7 @@ const RegistrationForm: React.FC<InjectedFormProps<regFormType>> =
                     <button>Send</button>
                 </div>
                 <div className={s.loginForm__info}>
-                    Have an account?&nbsp;<NavLink to={'friday_project/login'}>Sign in.</NavLink>
+                    Have an account?&nbsp;<NavLink to={'/friday_project/login'}>Sign in.</NavLink>
                 </div>
             </form>
         )
