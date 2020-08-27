@@ -32,7 +32,7 @@ export const Login = () => {
     }, []);
 
     if (isAuth) {
-        return <Redirect to={'/'}/>
+        return <Redirect to={'/friday_project/'}/>
     }
 
     return (
@@ -67,7 +67,7 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
                        id={'passwordLogin'} validate={[fieldRequired]}/>
             </div>
             <div className={s.authForm__info}>
-                <NavLink to={'/restorePassword'}>Forgot your password?</NavLink>
+                <NavLink to={'/friday_project/restorePassword'}>Forgot your password?</NavLink>
             </div>
             <div className={s.authForm__checkboxGroup}>
                 <Field component={Input} name={'rememberMe'} type={'checkbox'} id={'checkboxLogin'}/>
@@ -77,7 +77,7 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
                 <button>Login</button>
             </div>
             <div className={s.authForm__info}>
-                New user?&nbsp;<NavLink to={'/registration'}>Register now.</NavLink>
+                New user?&nbsp;<NavLink to={'/friday_project/registration'}>Register now.</NavLink>
             </div>
         </form>
     )

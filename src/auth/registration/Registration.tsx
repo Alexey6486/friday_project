@@ -23,8 +23,7 @@ export const Registration: React.FC = () => {
     const onSubmit = (registrationData: regFormType) => {
         debugger
 
-        if (registrationData.password === registrationData.repeatPassword &&
-            registrationData.password.length >= 7) {
+        if (registrationData.password === registrationData.repeatPassword) {
             dispatch(addRegistration(registrationData.email, registrationData.password))
         } else {
         }
@@ -38,7 +37,7 @@ export const Registration: React.FC = () => {
 
                 {
                     registered
-                        ? <Redirect to={'/login'}/>
+                        ? <Redirect to={'/friday_project/login'}/>
                         : <ReduxRegistrationForm onSubmit={onSubmit}/>
                 }
             </div>
@@ -70,7 +69,7 @@ const RegistrationForm: React.FC<InjectedFormProps<regFormType>> =
                     <button>Send</button>
                 </div>
                 <div className={s.authForm__info}>
-                    Have an account?&nbsp;<NavLink to={'/login'}>Sign in.</NavLink>
+                    Have an account?&nbsp;<NavLink to={'/friday_project/login'}>Sign in.</NavLink>
                 </div>
             </form>
         )

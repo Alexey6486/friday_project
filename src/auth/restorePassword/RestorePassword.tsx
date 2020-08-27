@@ -36,7 +36,7 @@ export const RestorePassword = () => {
                         <div className={sr.restorePasswordPopUp__info}>Follow the link that has been sent to your
                             email.
                         </div>
-                        <NavLink to={'login'}>OK</NavLink>
+                        <NavLink to={'/friday_project/login'}>OK</NavLink>
                     </div>
                 </div>
             }
@@ -55,7 +55,7 @@ const RestorePasswordForm: React.FC<InjectedFormProps<RestorePasswordFormType>> 
                 <button>Restore</button>
             </div>
             <div className={s.authForm__info}>
-                Remember password?&nbsp;<NavLink to={'/login'}>Sign in.</NavLink>
+                Remember password?&nbsp;<NavLink to={'/friday_project/login'}>Sign in.</NavLink>
             </div>
         </form>
     )

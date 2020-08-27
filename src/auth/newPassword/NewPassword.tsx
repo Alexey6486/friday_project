@@ -8,7 +8,6 @@ import {Redirect, RouteComponentProps, withRouter} from "react-router-dom";
 import {SetNewPasswordStateType, setNewPasswordTC} from "../../reducers/newPasswordReducer";
 import {AppRootStateType} from "../../store/store";
 import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
-import {AuthStateType} from "../../reducers/loginReducer";
 
 type ParamsType = {
     token: string
@@ -30,8 +29,7 @@ const NewPassword = (props: PropsType) => {
     const onSubmit = (newData: SetNewPasswordFormType) => {
         const token = props.match.params.token;
 
-        if (newData.password === newData.repeatPassword &&
-            newData.password.length >= 7) {
+        if (newData.password === newData.repeatPassword) {
             dispatch(setNewPasswordTC(newData.password, token))
         }
     }
