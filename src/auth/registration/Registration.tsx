@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useState} from "react";
+import React, {PropsWithChildren} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {NavLink, Redirect} from "react-router-dom";
 import {addRegistration} from "../../reducers/registrationReducer";
@@ -15,7 +15,7 @@ type regFormType = {
 }
 
 export const Registration: React.FC = () => {
-    const [check, setCheck] = useState(false);
+
     const dispatch = useDispatch();
     const registered = useSelector<AppRootStateType>(store => store.registrationReducer.registrationSuccess);
 
@@ -37,7 +37,7 @@ export const Registration: React.FC = () => {
 
                 {
                     registered
-                        ? <Redirect to={'/friday_project/login'}/>
+                        ? <Redirect to={'/friday_project/#/login'}/>
                         : <ReduxRegistrationForm onSubmit={onSubmit}/>
                 }
             </div>
@@ -69,7 +69,7 @@ const RegistrationForm: React.FC<InjectedFormProps<regFormType>> =
                     <button>Send</button>
                 </div>
                 <div className={s.authForm__info}>
-                    Have an account?&nbsp;<NavLink to={'/friday_project/login'}>Sign in.</NavLink>
+                    Have an account?&nbsp;<NavLink to={'/friday_project/#/login'}>Sign in.</NavLink>
                 </div>
             </form>
         )

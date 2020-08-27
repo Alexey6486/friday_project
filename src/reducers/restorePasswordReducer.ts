@@ -40,7 +40,7 @@ export const restorePasswordTC = (email: string): ThunkType => async (dispatch: 
         const message =
             `<div style="background-color: lime; padding: 15px">
                 password recovery link: 
-                <a href="https://alexey6486.github.io/friday_project/set-new-password/$token$">link</a>
+                <a href="https://alexey6486.github.io/friday_project/#/set-new-password/$token$">link</a>
             </div>`
         await authApi.restorePassword(email, 'alexey6486@gmail.com', message);
         dispatch(restorePasswordAC(true));
