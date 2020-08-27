@@ -1,7 +1,6 @@
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {AppRootStateType} from "../store/store";
 import {authApi} from "../api/authApi";
-import {authMeAC} from "./loginReducer";
 
 const RESTORE_PASSWORD = 'RESTORE_PASSWORD';
 

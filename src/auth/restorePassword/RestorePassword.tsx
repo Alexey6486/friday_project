@@ -2,7 +2,7 @@ import React, {PropsWithChildren, useState} from "react";
 import sr from './RestorePassword.module.css';
 import {useDispatch} from "react-redux";
 import {restorePasswordTC} from "../../reducers/restorePasswordReducer";
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import s from "../authStyles/authStyles.module.css";
 import {Input} from "../../utils/formFields/formFields";
@@ -36,7 +36,7 @@ export const RestorePassword = () => {
                         <div className={sr.restorePasswordPopUp__info}>Follow the link that has been sent to your
                             email.
                         </div>
-                        <NavLink to={'/friday_project/#/login'}>OK</NavLink>
+                        <Link to={'/login'}>OK</Link>
                     </div>
                 </div>
             }
@@ -48,14 +48,15 @@ const RestorePasswordForm: React.FC<InjectedFormProps<RestorePasswordFormType>> 
     return (
         <form onSubmit={props.handleSubmit} className={s.authForm}>
             <div className={s.authForm__formGroup}>
-                <Field component={Input} name={'email'} type={'email'} placeholder={'enter your email address'} id={'emailRestore'}
+                <Field component={Input} name={'email'} type={'email'} placeholder={'enter your email address'}
+                       id={'emailRestore'}
                        validate={[fieldRequired]}/>
             </div>
             <div className={s.authForm__formGroup}>
                 <button>Restore</button>
             </div>
             <div className={s.authForm__info}>
-                Remember password?&nbsp;<NavLink to={'/friday_project/#/login'}>Sign in.</NavLink>
+                Remember password?&nbsp;<Link to={'/login'}>Sign in.</Link>
             </div>
         </form>
     )

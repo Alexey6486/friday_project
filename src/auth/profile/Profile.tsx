@@ -21,7 +21,7 @@ export const Profile = () => {
     }, [])
 
     if (!isAuth) {
-        return <Redirect to={'/friday_project/#/login'}/>
+        return <Redirect to={'/login'}/>
     }
 
     const expirationDate = new Date(userProfile.tokenDeathTime).toLocaleString();

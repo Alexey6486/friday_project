@@ -1,13 +1,13 @@
 import React, {PropsWithChildren, useEffect} from "react";
 import s from '../authStyles/authStyles.module.css';
 import {Input} from "../../utils/formFields/formFields";
-import {NavLink, Redirect} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {authMeTC, AuthStateType, loginTC} from "../../reducers/loginReducer";
 import {AppRootStateType} from "../../store/store";
 import {fieldRequired} from "../../utils/formValidation/formValidation";
 import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
-import {InjectedFormProps, reduxForm, Field} from "redux-form";
+import {Field, InjectedFormProps, reduxForm} from "redux-form";
 
 type LoginFormType = {
     email: string
@@ -32,7 +32,7 @@ export const Login = () => {
     }, []);
 
     if (isAuth) {
-        return <Redirect to={'/friday_project/#/'}/>
+        return <Redirect to={'/'}/>
     }
 
     return (
@@ -67,7 +67,7 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
                        id={'passwordLogin'} validate={[fieldRequired]}/>
             </div>
             <div className={s.authForm__info}>
-                <NavLink to={'/friday_project/#/restorePassword'}>Forgot your password?</NavLink>
+                <Link to={'/restorePassword'}>Forgot your password?</Link>
             </div>
             <div className={s.authForm__checkboxGroup}>
                 <Field component={Input} name={'rememberMe'} type={'checkbox'} id={'checkboxLogin'}/>
@@ -77,7 +77,7 @@ const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithC
                 <button>Login</button>
             </div>
             <div className={s.authForm__info}>
-                New user?&nbsp;<NavLink to={'/friday_project/#/registration'}>Register now.</NavLink>
+                New user?&nbsp;<Link to={'/registration'}>Register now.</Link>
             </div>
         </form>
     )

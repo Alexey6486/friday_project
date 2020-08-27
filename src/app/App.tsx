@@ -27,11 +27,11 @@ export const App = () => {
 
     return (
         <div className="App">
-            <Route exact path={'/friday_project/#/'} render={() => <Profile/>}/>
-            <Route exact path={'/friday_project/#/login'} render={() => <Login/>}/>
-            <Route exact path={'/friday_project/#/restorePassword'} render={() => <RestorePassword/>}/>
-            <Route exact path={'/friday_project/#/registration'} render={() => <Registration/>}/>
-            <Route exact path={'/friday_project/#/set-new-password/:token'} render={() => <NewPasswordWithRouter/>}/>
+            <Route exact path={'/'} render={() => <Profile/>}/>
+            <Route exact path={'/login'} render={() => <Login/>}/>
+            <Route exact path={'/restorePassword'} render={() => <RestorePassword/>}/>
+            <Route exact path={'/registration'} render={() => <Registration/>}/>
+            <Route exact path={'/set-new-password/:token'} render={() => <NewPasswordWithRouter/>}/>
         </div>
     );
 }

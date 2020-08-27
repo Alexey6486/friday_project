@@ -1,6 +1,6 @@
 import React, {PropsWithChildren} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {NavLink, Redirect} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {addRegistration} from "../../reducers/registrationReducer";
 import {AppRootStateType} from "../../store/store";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
@@ -37,7 +37,7 @@ export const Registration: React.FC = () => {
 
                 {
                     registered
-                        ? <Redirect to={'/friday_project/#/login'}/>
+                        ? <Redirect to={'/login'}/>
                         : <ReduxRegistrationForm onSubmit={onSubmit}/>
                 }
             </div>
@@ -69,7 +69,7 @@ const RegistrationForm: React.FC<InjectedFormProps<regFormType>> =
                     <button>Send</button>
                 </div>
                 <div className={s.authForm__info}>
-                    Have an account?&nbsp;<NavLink to={'/friday_project/#/login'}>Sign in.</NavLink>
+                    Have an account?&nbsp;<Link to={'/login'}>Sign in.</Link>
                 </div>
             </form>
         )
