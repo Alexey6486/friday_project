@@ -5,8 +5,8 @@ import {addRegistration} from "../../reducers/registrationReducer";
 import {AppRootStateType} from "../../store/store";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../utils/formFields/formFields";
-import {registrationFieldsRequired} from "../../utils/formValidation/registrationValidation";
-import s from "./Registration.module.css";
+import {fieldRequired, minLength} from "../../utils/formValidation/formValidation";
+import s from "../authStyles/authStyles.module.css";
 
 type regFormType = {
     email: string
@@ -26,49 +26,50 @@ export const Registration: React.FC = () => {
         if (registrationData.password === registrationData.repeatPassword &&
             registrationData.password.length >= 7) {
             dispatch(addRegistration(registrationData.email, registrationData.password))
+        } else {
         }
-        else {}
     };
 
     return (
 
-        <div className={s.registrationFormBlock}>
-            <div className={s.registrationFormWrap}>
-            <div className={s.registrationFormTitle}>Registration</div>
+        <div className={s.authFormBlock}>
+            <div className={s.authFormWrap}>
+                <div className={s.authFormTitle}>Registration</div>
 
-            {
-                registered
-                    ? <Redirect to={'/login'}/>
-                    : <ReduxRegistrationForm onSubmit={onSubmit}/>
-            }
+                {
+                    registered
+                        ? <Redirect to={'/login'}/>
+                        : <ReduxRegistrationForm onSubmit={onSubmit}/>
+                }
             </div>
         </div>
     )
 };
 
+const minLengthValidation = minLength(8);
 const RegistrationForm: React.FC<InjectedFormProps<regFormType>> =
     (props: PropsWithChildren<InjectedFormProps<regFormType>>) => {
         return (
-            <form onSubmit={props.handleSubmit} className={s.loginForm}>
-                <div className={s.loginForm__formGroup}>
+            <form onSubmit={props.handleSubmit} className={s.authForm}>
+                <div className={s.authForm__formGroup}>
                     <Field component={Input} type={'email'} placeholder={'email'}
-                           validate={[registrationFieldsRequired]}
+                           validate={[fieldRequired]}
                            id={'registrationEmail'} name={'email'}/>
                 </div>
-                <div className={s.loginForm__formGroup}>
+                <div className={s.authForm__formGroup}>
                     <Field component={Input} type={'password'}
-                           placeholder={'password'} validate={[registrationFieldsRequired]}
+                           placeholder={'password'} validate={[fieldRequired, minLengthValidation]}
                            id={'registrationPassword'} name={'password'}/>
                 </div>
-                <div className={s.loginForm__formGroup}>
+                <div className={s.authForm__formGroup}>
                     <Field component={Input} placeholder={'repeat password'} type={'password'}
-                           validate={[registrationFieldsRequired]}
+                           validate={[fieldRequired]}
                            id={'registrationRepeatPassword'} name={'repeatPassword'}/>
                 </div>
-                <div className={s.loginForm__formGroup}>
+                <div className={s.authForm__formGroup}>
                     <button>Send</button>
                 </div>
-                <div className={s.loginForm__info}>
+                <div className={s.authForm__info}>
                     Have an account?&nbsp;<NavLink to={'/login'}>Sign in.</NavLink>
                 </div>
             </form>

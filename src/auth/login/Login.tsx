@@ -1,11 +1,11 @@
 import React, {PropsWithChildren, useEffect} from "react";
-import s from './Login.module.css';
+import s from '../authStyles/authStyles.module.css';
 import {Input} from "../../utils/formFields/formFields";
 import {NavLink, Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {authMeTC, AuthStateType, loginTC} from "../../reducers/loginReducer";
 import {AppRootStateType} from "../../store/store";
-import {fieldRequired} from "../../utils/formValidation/loginValidation";
+import {fieldRequired} from "../../utils/formValidation/formValidation";
 import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
 import {InjectedFormProps, reduxForm, Field} from "redux-form";
 
@@ -36,9 +36,9 @@ export const Login = () => {
     }
 
     return (
-        <div className={s.loginFormBlock}>
-            <div className={isLoading ? `${s.loginFormWrap} ${s.disabled}` : `${s.loginFormWrap}`}>
-                <div className={s.loginFormTitle}>Login:</div>
+        <div className={s.authFormBlock}>
+            <div className={isLoading ? `${s.authFormWrap} ${s.disabled}` : `${s.authFormWrap}`}>
+                <div className={s.authFormTitle}>Login</div>
                 <ReduxLoginForm onSubmit={onSubmit}/>
                 {
                     isLoading &&
@@ -47,7 +47,7 @@ export const Login = () => {
             </div>
             {
                 error &&
-                <div className={s.loginFormError}>
+                <div className={s.authFormError}>
                     {error}
                 </div>
             }
@@ -57,26 +57,26 @@ export const Login = () => {
 
 const LoginForm: React.FC<InjectedFormProps<LoginFormType>> = (props: PropsWithChildren<InjectedFormProps<LoginFormType>>) => {
     return (
-        <form onSubmit={props.handleSubmit} className={s.loginForm}>
-            <div className={s.loginForm__formGroup}>
+        <form onSubmit={props.handleSubmit} className={s.authForm}>
+            <div className={s.authForm__formGroup}>
                 <Field component={Input} name={'email'} type={'email'} placeholder={'email'} id={'emailLogin'}
                        validate={[fieldRequired]}/>
             </div>
-            <div className={s.loginForm__formGroup}>
+            <div className={s.authForm__formGroup}>
                 <Field component={Input} name={'password'} type={'password'} placeholder={'password'}
                        id={'passwordLogin'} validate={[fieldRequired]}/>
             </div>
-            <div className={s.loginForm__info}>
+            <div className={s.authForm__info}>
                 <NavLink to={'/restorePassword'}>Forgot your password?</NavLink>
             </div>
-            <div className={s.loginForm__checkboxGroup}>
+            <div className={s.authForm__checkboxGroup}>
                 <Field component={Input} name={'rememberMe'} type={'checkbox'} id={'checkboxLogin'}/>
                 <label htmlFor="checkboxLogin">Remember Me</label>
             </div>
-            <div className={s.loginForm__formGroup}>
+            <div className={s.authForm__formGroup}>
                 <button>Login</button>
             </div>
-            <div className={s.loginForm__info}>
+            <div className={s.authForm__info}>
                 New user?&nbsp;<NavLink to={'/registration'}>Register now.</NavLink>
             </div>
         </form>
