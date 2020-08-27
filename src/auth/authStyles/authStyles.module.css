@@ -1,15 +1,15 @@
-.loginFormBlock {
+.authFormBlock {
     position: relative;
     height: 100vh;
     width: 100%;
-    background-color: #1e2028;
+    background-color: #efefef;
     transition: linear all 200ms;
 }
-.loginFormWrap.disabled{
+.authFormWrap.disabled{
     pointer-events: none;
     opacity: 0.9;
 }
-.loginFormWrap {
+.authFormWrap {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -22,43 +22,40 @@
     justify-content: center;
     border: 1px solid #ffffff;
     border-radius: 10px;
-    background-color: #5d626f;
-    box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5),
-    -2px -2px 8px rgba(255, 255, 255, 0.5);
+    background-color: #0c1429;
+    box-shadow: 0px 0px 25px rgba(27, 30, 53, 0.7);
     padding: 15px 15px 30px;
     overflow: hidden;
 }
-.loginFormTitle{
+.authFormTitle{
     color: #ffffff;
     margin-bottom: 20px;
     text-transform: uppercase;
     font-size: 20px;
-    letter-spacing: 2px;
 }
-.loginForm {
+.authForm {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-.loginForm__formGroup {
+.authForm__formGroup {
     position: relative;
     display: flex;
     justify-content: center;
     width: 100%;
     flex-direction: column;
-    color: #ff7e67;
     letter-spacing: 0.7px;
 }
-.loginForm__formGroup:not(:last-child) {
+.authForm__formGroup:not(:last-child) {
     margin-bottom: 30px;
 }
-.loginForm__formGroup label{
+.authForm__formGroup label{
     color: #ffffff;
     margin-bottom: 5px;
 }
-.loginForm__formGroup input{
+.authForm__formGroup input{
     width: 100%;
     height: 30px;
     border-radius: 5px;
@@ -69,15 +66,15 @@
     outline: none;
     color: #555555;
     border: none;
-    box-shadow: 2px 2px 0 rgb(71 65 65);
+    box-shadow: 2px 2px 0 rgb(123 123 123);
 }
-.loginForm__checkboxGroup{
+.authForm__checkboxGroup{
     display: flex;
     width: 100%;
     position: relative;
     margin-bottom: 20px;
 }
-.loginForm__checkboxGroup input{
+.authForm__checkboxGroup input{
     visibility: hidden;
     opacity: 0;
     position: absolute;
@@ -86,14 +83,14 @@
     width: 20px;
     height: 20px;
 }
-.loginForm__checkboxGroup label{
+.authForm__checkboxGroup label{
     color: #ffffff;
     padding-left: 30px;
     position: relative;
     line-height: 1;
     padding-top: 2px;
 }
-.loginForm__checkboxGroup label::before{
+.authForm__checkboxGroup label::before{
     content: "";
     position: absolute;
     left: 0;
@@ -105,7 +102,7 @@
     background-color: #ffffff;
     cursor: pointer;
 }
-.loginForm__checkboxGroup input:checked+label::after{
+.authForm__checkboxGroup input:checked+label::after{
     content: "";
     position: absolute;
     left: 3px;
@@ -116,7 +113,7 @@
     border-radius: 3px;
     cursor: pointer;
 }
-.loginForm button{
+.authForm button{
     padding: 5px 15px;
     display: flex;
     align-items: center;
@@ -132,14 +129,14 @@
     width: max-content;
     margin: 0 auto;
 }
-.loginForm button:hover{
+.authForm button:hover{
     /*background-color: #989898;*/
     color: #67c166;
     box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.5),
     -2px -2px 8px rgba(255, 255, 255, 0.5);
     text-shadow: 1px 1px 8px rgba(85, 85, 85, 0.5);
 }
-.loginForm__info{
+.authForm__info{
     margin-top: -10px;
     margin-bottom: 20px;
     display: flex;
@@ -147,37 +144,37 @@
     padding-left: 10px;
     color: #ffffff;
 }
-.loginForm__info:last-child{
+.authForm__info:last-child{
     margin-bottom: 0;
     padding-left: 0;
     text-align: center;
     justify-content: center;
 }
-.loginForm__info a{
+.authForm__info a{
     color: #ffffff;
     text-decoration: none;
     outline: none;
     transition: all linear 150ms;
 }
-.loginForm__info a:hover{
+.authForm__info a:hover{
     color: #67c166;
     text-shadow: 1px 1px 8px rgba(255, 255, 255, 0.5);
 }
-@keyframes loginErrorAnimation {
+@keyframes authErrorAnimation {
     0% {
         opacity: 0;
         top: 100px;
     }
-    40% {
-        opacity: 1;
-        top: 130px;
-    }
+    /*40% {*/
+    /*    opacity: 1;*/
+    /*    top: 230px;*/
+    /*}*/
     100% {
         opacity: 1;
-        top: 125px;
+        top: 225px;
     }
 }
-.loginFormError{
+.authFormError{
     background-color: tomato;
     border: 1px solid #ffffff;
     box-shadow: 0 0 8px tomato;
@@ -190,6 +187,6 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 120px;
-    animation: loginErrorAnimation 800ms forwards;
+    animation: authErrorAnimation 800ms forwards;
+    animation-timing-function: cubic-bezier(0.57, 0.21, 0.29, 1.57);
 }

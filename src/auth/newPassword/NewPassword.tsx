@@ -1,12 +1,14 @@
 import React, {PropsWithChildren} from "react";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import s from "../login/Login.module.css";
+import s from "../authStyles/authStyles.module.css";
 import {Input} from "../../utils/formFields/formFields";
-import {registrationFieldsRequired} from "../../utils/formValidation/registrationValidation";
+import {fieldRequired, minLength} from "../../utils/formValidation/formValidation";
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect, RouteComponentProps, withRouter} from "react-router-dom";
 import {SetNewPasswordStateType, setNewPasswordTC} from "../../reducers/newPasswordReducer";
 import {AppRootStateType} from "../../store/store";
+import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
+import {AuthStateType} from "../../reducers/loginReducer";
 
 type ParamsType = {
     token: string
@@ -22,7 +24,8 @@ const NewPassword = (props: PropsType) => {
 
     const dispatch = useDispatch();
     const setNewPasswordState = useSelector<AppRootStateType, SetNewPasswordStateType>(state => state.newPassword);
-    const {passwordIsSet} = setNewPasswordState;
+    const {passwordIsSet, isLoading, error} = setNewPasswordState;
+
 
     const onSubmit = (newData: SetNewPasswordFormType) => {
         const token = props.match.params.token;
@@ -38,28 +41,39 @@ const NewPassword = (props: PropsType) => {
     }
 
     return (
-        <div className={s.loginFormBlock}>
-            <div className={s.loginFormWrap}>
-                <div className={s.loginFormTitle}>New password:</div>
+        <div className={s.authFormBlock}>
+            <div className={s.authFormWrap}>
+                <div className={s.authFormTitle}>New password</div>
                 <ReduxSetNewPasswordForm onSubmit={onSubmit}/>
+                {
+                    isLoading &&
+                    <AuthLoading/>
+                }
             </div>
+            {
+                error &&
+                <div className={s.authFormError}>
+                    {error}
+                </div>
+            }
         </div>
     )
 };
+const minLengthValidation = minLength(8);
 const SetNewPasswordForm: React.FC<InjectedFormProps<SetNewPasswordFormType>> = (props: PropsWithChildren<InjectedFormProps<SetNewPasswordFormType>>) => {
     return (
-        <form onSubmit={props.handleSubmit} className={s.loginForm}>
-            <div className={s.loginForm__formGroup}>
+        <form onSubmit={props.handleSubmit} className={s.authForm}>
+            <div className={s.authForm__formGroup}>
                 <Field component={Input} type={'password'}
-                       placeholder={'password'} validate={[registrationFieldsRequired]}
+                       placeholder={'password'} validate={[fieldRequired, minLengthValidation]}
                        id={'newPassword'} name={'password'}/>
             </div>
-            <div className={s.loginForm__formGroup}>
+            <div className={s.authForm__formGroup}>
                 <Field component={Input} placeholder={'repeat password'} type={'password'}
-                       validate={[registrationFieldsRequired]}
+                       validate={[fieldRequired]}
                        id={'newRepeatPassword'} name={'repeatPassword'}/>
             </div>
-            <div className={s.loginForm__formGroup}>
+            <div className={s.authForm__formGroup}>
                 <button>Send</button>
             </div>
         </form>

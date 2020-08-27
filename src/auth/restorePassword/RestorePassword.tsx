@@ -4,9 +4,10 @@ import {useDispatch} from "react-redux";
 import {restorePasswordTC} from "../../reducers/restorePasswordReducer";
 import {NavLink} from "react-router-dom";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import s from "../login/Login.module.css";
+import s from "../authStyles/authStyles.module.css";
 import {Input} from "../../utils/formFields/formFields";
-import {fieldRequired} from "../../utils/formValidation/loginValidation";
+import {fieldRequired} from "../../utils/formValidation/formValidation";
+
 
 type RestorePasswordFormType = {
     email: string
@@ -23,9 +24,9 @@ export const RestorePassword = () => {
     }
 
     return (
-        <div className={s.loginFormBlock}>
-            <div className={s.loginFormWrap}>
-                <div className={s.loginFormTitle}>Restore password:</div>
+        <div className={s.authFormBlock}>
+            <div className={s.authFormWrap}>
+                <div className={s.authFormTitle}>Restore password</div>
                 <ReduxRestorePasswordForm onSubmit={onSubmit}/>
             </div>
             {
@@ -35,25 +36,26 @@ export const RestorePassword = () => {
                         <div className={sr.restorePasswordPopUp__info}>Follow the link that has been sent to your
                             email.
                         </div>
-                        <NavLink to={'/friday_project/login'}>OK</NavLink>
+                        <NavLink to={'login'}>OK</NavLink>
                     </div>
                 </div>
             }
         </div>
     )
 }
+
 const RestorePasswordForm: React.FC<InjectedFormProps<RestorePasswordFormType>> = (props: PropsWithChildren<InjectedFormProps<RestorePasswordFormType>>) => {
     return (
-        <form onSubmit={props.handleSubmit} className={s.loginForm}>
-            <div className={s.loginForm__formGroup}>
-                <Field component={Input} name={'email'} type={'email'} placeholder={'email'} id={'emailRestore'}
+        <form onSubmit={props.handleSubmit} className={s.authForm}>
+            <div className={s.authForm__formGroup}>
+                <Field component={Input} name={'email'} type={'email'} placeholder={'enter your email address'} id={'emailRestore'}
                        validate={[fieldRequired]}/>
             </div>
-            <div className={s.loginForm__formGroup}>
+            <div className={s.authForm__formGroup}>
                 <button>Restore</button>
             </div>
-            <div className={s.loginForm__info}>
-                Remember password?&nbsp;<NavLink to={'/friday_project/login'}>Sign in.</NavLink>
+            <div className={s.authForm__info}>
+                Remember password?&nbsp;<NavLink to={'/login'}>Sign in.</NavLink>
             </div>
         </form>
     )
