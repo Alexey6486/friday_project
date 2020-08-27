@@ -18,7 +18,7 @@
     position: absolute;
     width: 22px;
     height: 152px;
-    background: #ffffff;
+    background: #0c1429;
     left: 100px;
     top: 100px;
     transform: translate(-50%, -50%);
@@ -33,7 +33,7 @@
 .ldio-ookrzkze3oj > div div:nth-child(6) {
     width: 80px;
     height: 80px;
-    background: #1e2028;
+    background: #efefef;
     border-radius: 50%;
 }
 
@@ -51,7 +51,7 @@
 
 .loadingio-spinner-gear-pzuuy69rnz {
     overflow: hidden;
-    background: #1e2028;
+    background: #efefef;
     position: relative;
     height: 100vh;
     width: 100%;
