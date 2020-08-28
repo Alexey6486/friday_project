@@ -19,20 +19,17 @@ export const Registration: React.FC = () => {
 
     const dispatch = useDispatch();
     const registrationState = useSelector<AppRootStateType, RegistrationInitialStateType>(store => store.registrationReducer);
-    const {error, registrationSuccess, isLoading} = registrationState;
+    const {error, isLoading} = registrationState;
 
-    const onSubmit = (registrationData: regFormType) => {
+    const onSubmit = async (registrationData: regFormType) => {
         if (registrationData.password === registrationData.repeatPassword) {
-            dispatch(registrationTC(registrationData.email, registrationData.password))
+            await dispatch(registrationTC(registrationData.email, registrationData.password))
+            return <Redirect to={'/login'}/>;
         } else {
             dispatch(errorTC());
             return;
         }
     };
-
-    if (registrationSuccess) {
-        return <Redirect to={'/login'}/>
-    }
 
     return (
 
