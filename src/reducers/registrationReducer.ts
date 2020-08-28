@@ -63,19 +63,24 @@ export const registrationReducer = (state: RegistrationInitialStateType = initia
 };
 
 type ThunkType = ThunkAction<void, AppRootStateType, {}, ActionTypes>;
-export const addRegistration = (email: string, password: string): ThunkType =>
-    async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
-        dispatch(loadingAC(true));
-        try {
-            await authApi.registration(email, password);
-            dispatch(registerAC(true));
-            dispatch(loadingAC(true));
-        } catch (e) {
-            dispatch(errorAC(e.response.data.error));
-            dispatch(loadingAC(true));
-            setTimeout(() => {
-                dispatch(errorAC(null));
-            }, 3000)
-        }
-    };
+export const registrationTC = (email: string, password: string): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    dispatch(loadingAC(true));
+    try {
+        await authApi.registration(email, password);
+        dispatch(registerAC(true));
+        dispatch(loadingAC(false));
+    } catch (e) {
+        dispatch(errorAC(e.response.data.error));
+        dispatch(loadingAC(false));
+        setTimeout(() => {
+            dispatch(errorAC(null));
+        }, 3000)
+    }
+};
+export const errorTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    dispatch(errorAC('Passwords do not match.'));
+    setTimeout(() => {
+        dispatch(errorAC(null));
+    }, 3000)
+};
 

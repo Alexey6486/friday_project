@@ -1,7 +1,7 @@
 import React, {PropsWithChildren} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, Redirect} from "react-router-dom";
-import {addRegistration, RegistrationInitialStateType} from "../../reducers/registrationReducer";
+import {registrationTC, RegistrationInitialStateType, errorTC} from "../../reducers/registrationReducer";
 import {AppRootStateType} from "../../store/store";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../utils/formFields/formFields";
@@ -22,11 +22,11 @@ export const Registration: React.FC = () => {
     const {error, registrationSuccess, isLoading} = registrationState;
 
     const onSubmit = (registrationData: regFormType) => {
-        debugger
-
         if (registrationData.password === registrationData.repeatPassword) {
-            dispatch(addRegistration(registrationData.email, registrationData.password))
+            dispatch(registrationTC(registrationData.email, registrationData.password))
         } else {
+            dispatch(errorTC());
+            return;
         }
     };
 
