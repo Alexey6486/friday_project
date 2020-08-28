@@ -1,7 +1,7 @@
-import React, {PropsWithChildren, useEffect} from "react";
+import React, {PropsWithChildren} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, Redirect} from "react-router-dom";
-import {registrationTC, RegistrationInitialStateType, errorTC} from "../../reducers/registrationReducer";
+import {errorTC, RegistrationInitialStateType, registrationTC} from "../../reducers/registrationReducer";
 import {AppRootStateType} from "../../store/store";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../utils/formFields/formFields";
@@ -39,12 +39,7 @@ export const Registration: React.FC = () => {
         <div className={s.authFormBlock}>
             <div className={s.authFormWrap}>
                 <div className={s.authFormTitle}>Registration</div>
-
-                {
-                    registrationSuccess
-                        ? <Redirect to={'/login'}/>
-                        : <ReduxRegistrationForm onSubmit={onSubmit}/>
-                }
+                <ReduxRegistrationForm onSubmit={onSubmit}/>
                 {
                     isLoading &&
                     <AuthLoading/>
