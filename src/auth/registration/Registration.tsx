@@ -1,4 +1,4 @@
-import React, {PropsWithChildren} from "react";
+import React, {PropsWithChildren, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, Redirect} from "react-router-dom";
 import {registrationTC, RegistrationInitialStateType, errorTC} from "../../reducers/registrationReducer";
@@ -29,6 +29,10 @@ export const Registration: React.FC = () => {
             return;
         }
     };
+
+    if (registrationSuccess) {
+        return <Redirect to={'/login'}/>
+    }
 
     return (
 
