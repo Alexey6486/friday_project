@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "345c0caa65c40f7cffe88134c76f88a3",
+    "revision": "5e666e91e8519b7f7a711d62146e9adf",
     "url": "/friday_project/index.html"
   },
   {
-    "revision": "e93358970fa44c8b6ac1",
+    "revision": "f62a456112077f1d0573",
     "url": "/friday_project/static/css/main.c6c6a7c0.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/friday_project/static/js/2.344db73b.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "e93358970fa44c8b6ac1",
-    "url": "/friday_project/static/js/main.a1643f6f.chunk.js"
+    "revision": "f62a456112077f1d0573",
+    "url": "/friday_project/static/js/main.ac1a2444.chunk.js"
   },
   {
     "revision": "a97e04ee65846022ecc5",
