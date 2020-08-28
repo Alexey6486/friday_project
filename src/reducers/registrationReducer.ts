@@ -51,7 +51,7 @@ export const registrationReducer = (state: RegistrationInitialStateType = initia
 
     switch (action.type) {
         case REGISTER:
-            return { ...state, email: action.registrationSuccess };
+            return { ...state, registrationSuccess: action.registrationSuccess };
         case ERROR:
             return { ...state, error: action.error };
         case LOADING:
