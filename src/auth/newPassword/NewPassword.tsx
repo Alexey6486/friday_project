@@ -5,9 +5,10 @@ import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired, minLength} from "../../utils/formValidation/formValidation";
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect, RouteComponentProps, withRouter} from "react-router-dom";
-import {SetNewPasswordStateType, setNewPasswordTC} from "../../reducers/newPasswordReducer";
+import {errorTC, SetNewPasswordStateType, setNewPasswordTC} from "../../reducers/newPasswordReducer";
 import {AppRootStateType} from "../../store/store";
 import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
+
 
 type ParamsType = {
     token: string
@@ -31,6 +32,9 @@ const NewPassword = (props: PropsType) => {
 
         if (newData.password === newData.repeatPassword) {
             dispatch(setNewPasswordTC(newData.password, token))
+        } else {
+            dispatch(errorTC());
+            return;
         }
     }
 

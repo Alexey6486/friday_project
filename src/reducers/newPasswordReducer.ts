@@ -76,5 +76,14 @@ export const setNewPasswordTC = (password: string, resetPasswordToken: string): 
         dispatch(loadingAC(false));
         console.log(e.response.data.error)
         dispatch(errorAC(e.response.data.error));
+        setTimeout(() => {
+            dispatch(errorAC(null));
+        }, 3000)
     }
+};
+export const errorTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    dispatch(errorAC('Passwords do not match.'));
+    setTimeout(() => {
+        dispatch(errorAC(null));
+    }, 3000)
 };
