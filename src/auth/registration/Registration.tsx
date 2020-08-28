@@ -31,7 +31,7 @@ export const Registration: React.FC = () => {
     };
 
     if (registrationSuccess) {
-        return <Redirect to={'/friday_project/login'}/>
+        return <Redirect to={'/login'}/>
     }
 
     return (
