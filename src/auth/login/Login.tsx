@@ -29,7 +29,7 @@ export const Login = () => {
         if (localStorage.getItem('isAuth')) {
             dispatch(authMeTC());
         }
-    }, []);
+    }, [dispatch]);
 
     if (isAuth) {
         return <Redirect to={'/'}/>

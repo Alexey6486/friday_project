@@ -19,7 +19,7 @@ export const App = () => {
 
     useEffect(() => {
         dispatch(appInitializedTC());
-    }, []);
+    }, [dispatch]);
 
     if (!isInit) {
         return <AppInitLoading/>;

@@ -18,7 +18,7 @@ export const Profile = () => {
 
     useEffect(() => {
         dispatch(authMeTC());
-    }, [])
+    }, [dispatch])
 
     if (!isAuth) {
         return <Redirect to={'/login'}/>

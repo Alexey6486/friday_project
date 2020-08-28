@@ -1,12 +1,13 @@
 import React, {PropsWithChildren} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, Redirect} from "react-router-dom";
-import {addRegistration} from "../../reducers/registrationReducer";
+import {addRegistration, RegistrationInitialStateType} from "../../reducers/registrationReducer";
 import {AppRootStateType} from "../../store/store";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired, minLength} from "../../utils/formValidation/formValidation";
 import s from "../authStyles/authStyles.module.css";
+import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
 
 type regFormType = {
     email: string
@@ -17,8 +18,8 @@ type regFormType = {
 export const Registration: React.FC = () => {
 
     const dispatch = useDispatch();
-    const registered = useSelector<AppRootStateType>(store => store.registrationReducer.registrationSuccess);
-
+    const registrationState = useSelector<AppRootStateType, RegistrationInitialStateType>(store => store.registrationReducer);
+    const {error, registrationSuccess, isLoading} = registrationState;
 
     const onSubmit = (registrationData: regFormType) => {
         debugger
@@ -36,11 +37,21 @@ export const Registration: React.FC = () => {
                 <div className={s.authFormTitle}>Registration</div>
 
                 {
-                    registered
+                    registrationSuccess
                         ? <Redirect to={'/login'}/>
                         : <ReduxRegistrationForm onSubmit={onSubmit}/>
                 }
+                {
+                    isLoading &&
+                    <AuthLoading/>
+                }
             </div>
+            {
+                error &&
+                <div className={s.authFormError}>
+                    {error}
+                </div>
+            }
         </div>
     )
 };

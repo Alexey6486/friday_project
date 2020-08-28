@@ -1,7 +1,7 @@
 
 import  thunkMiddleware from 'redux-thunk';
 import {authReducer} from "../reducers/loginReducer";
-import registrationReducer from "../reducers/registrationReducer";
+import {registrationReducer} from "../reducers/registrationReducer";
 import {restorePasswordReducer} from "../reducers/restorePasswordReducer";
 import {newPassword} from "../reducers/newPasswordReducer";
 import {appReducer} from "../app/appReducer";
