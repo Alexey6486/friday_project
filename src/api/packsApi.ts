@@ -17,6 +17,7 @@ type CardInPackType = {
     created: string
     updated: string
     __v: number
+    cardsCount: number
 }
 export type GetPacksReturnObject = {
     cardPacks: Array<CardInPackType>
@@ -49,6 +50,7 @@ export const packsApi = {
         return instance
             .get(`cards/pack?${paramString}`)
             .then((res) => {
+                debugger
                 return res.data;
             })
     }

@@ -1,3 +1,10 @@
 .packs{
     padding: 20px 0;
 }
+.pack{
+    display: flex;
+
+    &>div{
+        width: 300px;
+    }
+}
