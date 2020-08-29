@@ -38,8 +38,8 @@ const initState: PackStateType = {
         cardPacksTotalCount: 0,
         maxCardsCount: 0,
         minCardsCount: 0,
-        page: 0,
-        pageCount: 0,
+        page: 1,
+        pageCount: 5,
     },
     sortBy: true,
 };
@@ -47,7 +47,7 @@ const initState: PackStateType = {
 export const packsReducer = (state: PackStateType = initState, action: ActionTypes) => {
     switch (action.type) {
         case GET_PACKS:
-            return {...state, fromServer: action.payload};
+            return {...state, fromServer: {...state.fromServer, cardPacks: action.payload.cardPacks, cardPacksTotalCount: action.payload.cardPacksTotalCount}};
         case SORT:
             return {...state, sortBy: !state.sortBy};
         default:

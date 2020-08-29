@@ -5,7 +5,7 @@ const instance = axios.create({
     withCredentials: true,
 });
 
-type CardInPackType = {
+export type CardInPackType = {
     _id: string
     user_id: string
     name: string
@@ -50,7 +50,7 @@ export const packsApi = {
         return instance
             .get(`cards/pack?${paramString}`)
             .then((res) => {
-                debugger
+
                 return res.data;
             })
     }

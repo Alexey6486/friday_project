@@ -2,43 +2,33 @@ import React, {useEffect} from "react";
 import s from './Packs.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../store/store";
-import {getPacksTC, PackStateType, sortTC} from "../reducers/packsReducer/packsReducer";
+import {getPacksTC, PackStateType} from "../reducers/packsReducer/packsReducer";
+import {Sorting} from "../utils/sorting/Sorting";
+import { Pack } from "./pack/Pack";
 
 export const Packs = () => {
 
     const dispatch = useDispatch();
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer, sortBy} = packsState;
+    const {fromServer} = packsState;
 
     useEffect(() => {
-        dispatch(getPacksTC({}));
-    }, [dispatch])
+        const page = fromServer.page;
+        const pageCount = fromServer.pageCount;
+        dispatch(getPacksTC({page, pageCount}));
+    }, [dispatch]);
 
-    const sort = (sortDirection: string) => {
-        const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
-        dispatch(getPacksTC({sortPacks: `${sortUrl}`}));
-        dispatch(sortTC());
-    };
 
-    const packsMap = fromServer.cardPacks.map(pack => {
-        return (
-            <div key={pack._id} className={s.pack}>
-                <div>Pack name: {pack.name}</div>
-                <div>Cards count: {pack.cardsCount}</div>
-                <div>Updated: {pack.updated}</div>
-                <div>Created: {pack.created}</div>
-            </div>
-        )
-    });
+    const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}/>);
+
+    const sortArray = ['name', 'cardsCount', 'updated', 'created'];
+    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort}/>);
 
     return (
         <div className={s.packs}>
             <div className={'container'}>
                 Packs:
-                <button onClick={() => sort('name')}>sort by name</button>
-                <button onClick={() => sort('cardsCount')}>sort by cardsCount</button>
-                <button onClick={() => sort('updated')}>sort by updated</button>
-                <button onClick={() => sort('created')}>sort by created</button>
+                {sortMap}
                 {packsMap}
             </div>
         </div>

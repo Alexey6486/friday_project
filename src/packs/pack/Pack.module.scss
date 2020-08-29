@@ -1,0 +1,7 @@
+.pack{
+    display: flex;
+
+    &>div{
+        width: 300px;
+    }
+}
