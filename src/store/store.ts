@@ -1,12 +1,13 @@
 
 import  thunkMiddleware from 'redux-thunk';
-import {authReducer} from "../reducers/loginReducer";
-import {registrationReducer} from "../reducers/registrationReducer";
-import {restorePasswordReducer} from "../reducers/restorePasswordReducer";
-import {newPassword} from "../reducers/newPasswordReducer";
+import {authReducer} from "../reducers/authReducers/loginReducer";
+import {registrationReducer} from "../reducers/authReducers/registrationReducer";
+import {restorePasswordReducer} from "../reducers/authReducers/restorePasswordReducer";
+import {newPassword} from "../reducers/authReducers/newPasswordReducer";
 import {appReducer} from "../app/appReducer";
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import {reducer as formReducer} from 'redux-form';
+import {packsReducer} from "../reducers/packsReducer/packsReducer";
 
 const rootReducers = combineReducers({
     form: formReducer,
@@ -15,6 +16,7 @@ const rootReducers = combineReducers({
     restorePasswordReducer,
     newPassword,
     appReducer,
+    packsReducer,
 });
 
 export type AppRootStateType = ReturnType<typeof rootReducers>;

@@ -2,7 +2,7 @@ import React from "react";
 import s from './Header.module.scss';
 import {Link, RouteComponentProps, withRouter} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {logoutTC} from "../reducers/loginReducer";
+import {logoutTC} from "../reducers/authReducers/loginReducer";
 
 type RoutePropsType = {}
 type OtherPropsType = {}

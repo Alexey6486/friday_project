@@ -3,7 +3,7 @@ import s from '../authStyles/authStyles.module.css';
 import {Input} from "../../utils/formFields/formFields";
 import {Link, Redirect} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {authMeTC, AuthStateType, loginTC} from "../../reducers/loginReducer";
+import {authMeTC, AuthStateType, loginTC} from "../../reducers/authReducers/loginReducer";
 import {AppRootStateType} from "../../store/store";
 import {fieldRequired} from "../../utils/formValidation/formValidation";
 import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";

@@ -1,7 +1,7 @@
 import React, {PropsWithChildren, useState} from "react";
 import sr from './RestorePassword.module.css';
 import {useDispatch} from "react-redux";
-import {restorePasswordTC} from "../../reducers/restorePasswordReducer";
+import {restorePasswordTC} from "../../reducers/authReducers/restorePasswordReducer";
 import {Link} from "react-router-dom";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import s from "../authStyles/authStyles.module.css";

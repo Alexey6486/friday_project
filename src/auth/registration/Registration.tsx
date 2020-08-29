@@ -1,7 +1,7 @@
 import React, {PropsWithChildren} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, Redirect} from "react-router-dom";
-import {errorTC, RegistrationInitialStateType, registrationTC} from "../../reducers/registrationReducer";
+import {errorTC, RegistrationInitialStateType, registrationTC} from "../../reducers/authReducers/registrationReducer";
 import {AppRootStateType} from "../../store/store";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../utils/formFields/formFields";

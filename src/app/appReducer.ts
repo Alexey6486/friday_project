@@ -1,7 +1,7 @@
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import {AppRootStateType} from "../store/store";
 import {authApi} from "../api/authApi";
-import {authMeAC, AuthMeACType} from "../reducers/loginReducer";
+import {authMeAC, AuthMeACType} from "../reducers/authReducers/loginReducer";
 
 const APP_INITIALIZED = 'APP_INITIALIZED';
 

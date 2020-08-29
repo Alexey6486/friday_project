@@ -5,7 +5,7 @@ import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired, minLength} from "../../utils/formValidation/formValidation";
 import {useDispatch, useSelector} from "react-redux";
 import {Redirect, RouteComponentProps, withRouter} from "react-router-dom";
-import {errorTC, SetNewPasswordStateType, setNewPasswordTC} from "../../reducers/newPasswordReducer";
+import {errorTC, SetNewPasswordStateType, setNewPasswordTC} from "../../reducers/authReducers/newPasswordReducer";
 import {AppRootStateType} from "../../store/store";
 import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
 

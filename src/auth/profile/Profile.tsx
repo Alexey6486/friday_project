@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import s from './Profile.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
-import {authMeTC, AuthStateType} from "../../reducers/loginReducer";
+import {authMeTC, AuthStateType} from "../../reducers/authReducers/loginReducer";
 import {Redirect} from "react-router-dom";
 import dummy_img from '../../assets/img/user.png';
 

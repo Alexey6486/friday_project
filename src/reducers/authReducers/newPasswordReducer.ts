@@ -1,6 +1,6 @@
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
-import {AppRootStateType} from "../store/store";
-import {authApi} from "../api/authApi";
+import {AppRootStateType} from "../../store/store";
+import {authApi} from "../../api/authApi";
 
 const SET_NEW_PASSWORD = 'SET_NEW_PASSWORD';
 const ERROR = 'ERROR';

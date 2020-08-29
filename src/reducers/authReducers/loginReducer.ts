@@ -1,6 +1,6 @@
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
-import {AppRootStateType} from "../store/store";
-import {authApi, LoginResponseObjectType} from "../api/authApi";
+import {AppRootStateType} from "../../store/store";
+import {authApi, LoginResponseObjectType} from "../../api/authApi";
 
 const AUTH_ME = 'AUTH_ME';
 const LOGIN = 'LOGIN';

@@ -1,6 +1,6 @@
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
-import {authApi} from "../api/authApi";
-import {AppRootStateType} from "../store/store";
+import {authApi} from "../../api/authApi";
+import {AppRootStateType} from "../../store/store";
 
 const REGISTER = 'REGISTER';
 const LOADING = 'LOADING';

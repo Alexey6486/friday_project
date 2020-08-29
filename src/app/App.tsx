@@ -11,7 +11,7 @@ import {AppInitLoading} from "../utils/loading/appInitLoading/AppInitLoading";
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import {Header} from "../header/Header";
-import {AuthStateType} from "../reducers/loginReducer";
+import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import { Packs } from "../packs/Packs";
 import { Cards } from "../cards/Cards";
 
