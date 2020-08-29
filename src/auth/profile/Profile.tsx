@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
-import s from './Profile.module.css';
+import s from './Profile.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
-import {authMeTC, AuthStateType, logoutTC} from "../../reducers/loginReducer";
+import {authMeTC, AuthStateType} from "../../reducers/loginReducer";
 import {Redirect} from "react-router-dom";
 import dummy_img from '../../assets/img/user.png';
 
@@ -11,10 +11,6 @@ export const Profile = () => {
     const dispatch = useDispatch();
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
     const {isAuth, userProfile} = authState;
-
-    const logout = () => {
-        dispatch(logoutTC())
-    };
 
     useEffect(() => {
         dispatch(authMeTC());
@@ -28,21 +24,14 @@ export const Profile = () => {
 
     return (
         <div className={s.profileBlock}>
-            <div className={s.profileHeader}>
-                <div className={'container'}>
-                    <div className={s.profileHeader__title}>Profile</div>
-                    <div className={s.profileHeader__link} onClick={logout}>Logout</div>
-                </div>
-            </div>
-
             <div className={'container'}>
                 <div className={s.profileContent}>
                     <div className={s.profileContent__left}>
                         <div className={s.profileContent__ava}>
                             {
                                 userProfile.avatar
-                                ? <img src={'userProfile.avatar'} alt={'user ava'}/>
-                                : <img src={dummy_img} alt={'user ava'}/>
+                                    ? <img src={userProfile.avatar} alt={'user ava'}/>
+                                    : <img src={dummy_img} alt={'user ava'}/>
                             }
                         </div>
                     </div>

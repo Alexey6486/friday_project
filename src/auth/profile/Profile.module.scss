@@ -1,0 +1,40 @@
+.profileBlock {
+    height: 100vh;
+    width: 100%;
+    background-color: #ffffff;
+}
+
+.profileContent {
+    padding: 15px 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.profileContent__left {
+    width: 10%;
+    padding-right: 10px;
+}
+
+.profileContent__right {
+    width: 90%;
+    padding-left: 10px;
+}
+
+.profileContent__ava {
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+}
+.profileContent__userData{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 15px;
+}
+.profileContent__userData:nth-child(odd){
+    background-color: #eff1ff;
+}
