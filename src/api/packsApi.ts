@@ -48,6 +48,10 @@ export type CreatePackObject = {
     private?: boolean// если не отправить будет такой
     type?: string // если не отправить будет таким
 }
+export type EditPackObject = {
+    _id: string
+    name?: string // если не отправить будет таким
+}
 
 export const packsApi = {
     getPacks(params: ParamTypes) {
@@ -67,6 +71,15 @@ export const packsApi = {
     createPack(cardsPack: CreatePackObject) {
         return instance
             .post(`cards/pack`,{
+                cardsPack
+            })
+            .then((res) => {
+                return res.data
+            })
+    },
+    editPack(cardsPack: EditPackObject) {
+        return instance
+            .put(`cards/pack`, {
                 cardsPack
             })
             .then((res) => {

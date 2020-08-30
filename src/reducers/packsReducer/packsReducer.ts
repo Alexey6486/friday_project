@@ -1,5 +1,5 @@
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
-import {CreatePackObject, GetPacksReturnObject, packsApi, ParamTypes} from "../../api/packsApi";
+import {CreatePackObject, EditPackObject, GetPacksReturnObject, packsApi, ParamTypes} from "../../api/packsApi";
 import {AppRootStateType} from "../../store/store";
 
 const GET_PACKS = 'GET_PACKS';
@@ -77,6 +77,15 @@ export const sortTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootSta
 export const createPackTC = (params: ParamTypes, payload: CreatePackObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     try {
         await packsApi.createPack(payload);
+        const res = await packsApi.getPacks(params);
+        dispatch(getPacksAC(res));
+    } catch (error) {
+        console.log(error.response.data.error);
+    }
+};
+export const editPackTC = (params: ParamTypes, payload: EditPackObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    try {
+        await packsApi.editPack(payload);
         const res = await packsApi.getPacks(params);
         dispatch(getPacksAC(res));
     } catch (error) {

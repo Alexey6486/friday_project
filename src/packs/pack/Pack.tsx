@@ -6,7 +6,9 @@ import {AppRootStateType} from "../../store/store";
 import {deletePackTC, PackStateType} from "../../reducers/packsReducer/packsReducer";
 import {AuthStateType} from "../../reducers/authReducers/loginReducer";
 
-type PropsType = CardInPackType;
+type PropsType = CardInPackType & {
+    toggleEditPackPopUp: (_id: string) => void
+};
 
 export const Pack = (props: PropsType) => {
 
@@ -17,13 +19,17 @@ export const Pack = (props: PropsType) => {
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
     const {userProfile} = authState;
 
-    const {name, cardsCount, created, _id, user_id} = props;
+    const {name, cardsCount, created, _id, user_id, toggleEditPackPopUp} = props;
 
     const deletePack = (id: string) => {
         dispatch(deletePackTC({page: fromServer.page, pageCount: fromServer.pageCount}, id))
     }
+    const editPackHandler = () => {
+        toggleEditPackPopUp(_id);
+    }
 
     const disabledDeleteBtn = userProfile._id === user_id ? `${s.pack__btn} ${s.pack__btn_del}` : `${s.pack__btn} ${s.disabled}`;
+    const disabledEditBtn = userProfile._id === user_id ? `${s.pack__btn} ${s.pack__btn_edit}` : `${s.pack__btn} ${s.disabled}`;
 
     return (
         <div className={s.pack}>
@@ -36,7 +42,7 @@ export const Pack = (props: PropsType) => {
 
             <div className={s.pack__interface}>
                 <button className={s.pack__btn}>Open</button>
-                <button className={`${s.pack__btn} ${s.pack__btn_edit}`}>Edit</button>
+                <button className={disabledEditBtn} onClick={editPackHandler}>Edit</button>
                 <button className={disabledDeleteBtn} onClick={() => deletePack(_id)}>Delete</button>
             </div>
 

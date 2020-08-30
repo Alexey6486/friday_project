@@ -6,6 +6,7 @@ import {getPacksTC, PackStateType} from "../reducers/packsReducer/packsReducer";
 import {Sorting} from "../utils/sorting/Sorting";
 import {Pack} from "./pack/Pack";
 import {AddPack} from "./addPack/AddPack";
+import { EditPack } from "./editPack/EditPack";
 
 export const Packs = () => {
 
@@ -14,6 +15,14 @@ export const Packs = () => {
     const {fromServer} = packsState;
 
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
+    const [editPackPopUp, setEditPackPopUp] = useState('');
+
+    const toggleCreatePackPopUp = () => {
+        setCreatePackPopUp(prev => !prev);
+    }
+    const toggleEditPackPopUp = (_id: string) => {
+        setEditPackPopUp(_id);
+    }
 
     useEffect(() => {
         const page = fromServer.page;
@@ -21,12 +30,7 @@ export const Packs = () => {
         dispatch(getPacksTC({page, pageCount}));
     }, [dispatch]);
 
-    const toggleCreatePackPopUp = () => {
-        setCreatePackPopUp(prev => !prev);
-    }
-
-
-    const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}/>);
+    const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack} toggleEditPackPopUp={toggleEditPackPopUp}/>);
 
     const sortArray = ['name', 'cardsCount', 'created'];
     const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort}/>);
@@ -64,7 +68,10 @@ export const Packs = () => {
                 createPackPopUp &&
                 <AddPack toggleCreatePackPopUp={toggleCreatePackPopUp}/>
             }
-
+            {
+                editPackPopUp &&
+                <EditPack toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp}/>
+            }
         </div>
     )
 }
