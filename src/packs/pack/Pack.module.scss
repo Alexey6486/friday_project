@@ -1,7 +1,64 @@
-.pack{
+.pack {
+    width: 100%;
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    color: #444444;
 
-    &>div{
-        width: 300px;
+    &__row{
+        display: flex;
+
+        & > div {
+            width: 300px;
+            padding: 0 0 0 10px;
+        }
+    }
+
+    &:nth-child(even) {
+        background-color: #F0F8FF;
+    }
+
+    &:hover{
+        background-color: #cfcfcf;
+    }
+
+    .pack__interface {
+        display: flex;
+        width: auto;
+        height: 100%;
+
+        .pack__btn{
+            color: #444444;
+            cursor: pointer;
+            outline: none;
+            border: none;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background-color: transparent;
+
+            &:hover{
+                background-color: darken(#F0F8FF, 20%);
+                color: #ffffff;
+            }
+
+            &_del:hover{
+                background-color: tomato;
+                color: #ffffff;
+            }
+
+            &_edit:hover{
+                background-color: #66ae65;
+                color: #ffffff;
+            }
+
+            &.disabled{
+                pointer-events: none;
+                opacity: 0.4;
+            }
+        }
     }
 }

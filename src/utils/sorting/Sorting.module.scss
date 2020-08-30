@@ -1,0 +1,8 @@
+.sortBtn {
+    cursor: pointer;
+    outline: none;
+
+    &:not(:last-child) {
+        margin-right: 10px;
+    }
+}

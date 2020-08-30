@@ -38,6 +38,17 @@ export interface ParamTypes extends Record<string, any> {
     user_id?: string | number
 }
 
+export type CreatePackObject = {
+    name?: string // если не отправить будет таким
+    path?: string // если не отправить будет такой
+    grade?: number // не обязателен
+    shots?: number // не обязателен
+    rating?: number // не обязателен
+    deckCover?: string // не обязателен
+    private?: boolean// если не отправить будет такой
+    type?: string // если не отправить будет таким
+}
+
 export const packsApi = {
     getPacks(params: ParamTypes) {
 
@@ -50,9 +61,23 @@ export const packsApi = {
         return instance
             .get(`cards/pack?${paramString}`)
             .then((res) => {
-
                 return res.data;
             })
-    }
-
+    },
+    createPack(cardsPack: CreatePackObject) {
+        return instance
+            .post(`cards/pack`,{
+                cardsPack
+            })
+            .then((res) => {
+                return res.data
+            })
+    },
+    deletePack(id: string) {
+        return instance
+            .delete(`cards/pack?id=${id}`)
+            .then((res) => {
+                return res.data
+            })
+    },
 }

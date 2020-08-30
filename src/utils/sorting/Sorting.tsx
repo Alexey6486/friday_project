@@ -1,4 +1,5 @@
 import React from "react";
+import s from './Sorting.module.scss';
 import {getPacksTC, PackStateType, sortTC} from "../../reducers/packsReducer/packsReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
@@ -22,6 +23,6 @@ export const Sorting = (props: PropsType) => {
     };
 
     return (
-        <button onClick={sort}>{sortDirection}</button>
+        <button className={s.sortBtn} onClick={sort}>{sortDirection}</button>
     )
 }

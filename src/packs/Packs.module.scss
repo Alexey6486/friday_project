@@ -1,3 +1,47 @@
-.packs{
+.packs {
     padding: 20px 0;
+}
+
+.packs__interface {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.packs__btn{
+    cursor: pointer;
+    outline: none;
+}
+
+.packs__sortBlock {
+    display: flex;
+
+    .packs__sortTitle {
+        margin-right: 10px;
+    }
+
+    .packs__sortBtns {
+        display: flex;
+    }
+}
+
+.packsTable{
+
+    &__header{
+        display: flex;
+        height: 40px;
+        background-color: #5d626f;
+        color: #ffffff;
+
+        &>div{
+            width: 300px;
+            padding: 0 0 0 10px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+
+            &:not(:last-child) {
+                border-right: 1px solid #ffffff;
+            }
+        }
+    }
 }

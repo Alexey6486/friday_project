@@ -20,7 +20,7 @@ export const Profile = () => {
         return <Redirect to={'/login'}/>
     }
 
-    const expirationDate = new Date(userProfile.tokenDeathTime).toLocaleString();
+    //const expirationDate = new Date(userProfile.tokenDeathTime).toLocaleString();
 
     return (
         <div className={s.profileBlock}>
@@ -47,12 +47,6 @@ export const Profile = () => {
                         </div>
                         <div className={s.profileContent__userData}>
                             Created: {userProfile.created}
-                        </div>
-                        <div className={s.profileContent__userData}>
-                            Token: {userProfile.token}
-                        </div>
-                        <div className={s.profileContent__userData}>
-                            Token Death Time: {expirationDate}
                         </div>
                         <div className={s.profileContent__userData}>
                             Admin: {userProfile.isAdmin ? 'yes' : 'no'}

@@ -1,5 +1,5 @@
 import React from "react";
-import s from './formField.module.css';
+import s from './formField.module.scss';
 
 const FormField = (Element: string) => ({input, meta, ...props}: any) => {
 

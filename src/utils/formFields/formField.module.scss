@@ -1,0 +1,57 @@
+.formFieldError{
+    position: absolute;
+    bottom: -18px;
+    left: 10px;
+    font-size: 12px;
+    color: #ff6e54;
+}
+
+.checkboxGroup{
+    display: flex;
+    position: relative;
+    margin-bottom: 20px;
+
+    input {
+        visibility: hidden;
+        opacity: 0;
+        height: 20px !important;
+        width: 20px !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0 !important;
+        cursor: pointer;
+
+        &:checked + label::after{
+            content: "";
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            height: 14px;
+            width: 14px;
+            background-color: #67c166;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    }
+
+    label {
+        position: relative;
+        padding-left: 30px;
+        cursor: pointer;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+    }
+}
