@@ -1,15 +1,24 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import s from './Packs.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../store/store";
-import {getPacksTC, PackStateType, showOnlyMyPacksTC, sortTC} from "../reducers/packsReducer/packsReducer";
+import {
+    changePageTC,
+    getPacksTC,
+    PackStateType,
+    showByTC,
+    showOnlyMyPacksTC,
+    sortTC
+} from "../reducers/packsReducer/packsReducer";
 import {Sorting} from "../utils/sorting/Sorting";
 import {Pack} from "./pack/Pack";
 import {AddPack} from "./addPack/AddPack";
-import { EditPack } from "./editPack/EditPack";
+import {EditPack} from "./editPack/EditPack";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
+import {Search} from "../utils/search/Search";
+import {Pagination} from "../utils/pagination/Pagination";
 
-export const Packs = () => {
+export const Packs = React.memo(() => {
 
     const dispatch = useDispatch();
 
@@ -22,14 +31,14 @@ export const Packs = () => {
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
     const [editPackPopUp, setEditPackPopUp] = useState('');
 
-    const toggleCreatePackPopUp = () => {
+    const toggleCreatePackPopUp = useCallback(() => {
         setCreatePackPopUp(prev => !prev);
-    }
-    const toggleEditPackPopUp = (_id: string) => {
+    }, [])
+    const toggleEditPackPopUp = useCallback((_id: string) => {
         setEditPackPopUp(_id);
-    }
+    }, [])
 
-    const sortRegular = (sortDirection: string) => {
+    const sortRegular = useCallback((sortDirection: string) => {
         const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
         debugger
@@ -39,16 +48,30 @@ export const Packs = () => {
             sortPacks: `${sortUrl}`,
             user_id: checkFlag
         }));
-    };
+    }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page]);
 
-    const sortCheck = async () => {
+    const sortCheck = useCallback(() => {
         const checkFlag = onlyMyPacks ? `` : `${userProfile._id}`;
         dispatch(showOnlyMyPacksTC({
-            page: fromServer.page,
+            page: 1,
             pageCount: fromServer.pageCount,
             user_id: checkFlag
         }, !onlyMyPacks));
-    };
+    }, [dispatch, onlyMyPacks, fromServer.pageCount, fromServer.page]);
+
+    const onPageChange = useCallback((page: number) => {
+        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
+        const pageCount = fromServer.pageCount;
+        const user_id = checkFlag;
+        dispatch(changePageTC({page, pageCount, user_id}));
+    }, [dispatch, onlyMyPacks, fromServer.pageCount, fromServer.page])
+
+    const onShowByChange = useCallback((pageCount: number) => {
+        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
+        const page = fromServer.page;
+        const user_id = checkFlag;
+        dispatch(showByTC({page, pageCount, user_id}));
+    }, [onlyMyPacks, fromServer.page])
 
     useEffect(() => {
         const page = fromServer.page;
@@ -56,10 +79,12 @@ export const Packs = () => {
         dispatch(getPacksTC({page, pageCount}));
     }, [dispatch]);
 
-    const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack} toggleEditPackPopUp={toggleEditPackPopUp}/>);
+    const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}
+                                                            toggleEditPackPopUp={toggleEditPackPopUp}/>);
 
     const sortArray = ['name', 'cardsCount', 'created', 'user_id'];
-    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks} sortCheck={sortCheck} sortRegular={sortRegular}/>);
+    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks}
+                                                          sortCheck={sortCheck} sortRegular={sortRegular}/>);
 
     return (
         <div className={s.packs}>
@@ -68,6 +93,8 @@ export const Packs = () => {
                 <div className={s.packs__interface}>
 
                     <button className={s.packs__btn} onClick={toggleCreatePackPopUp}>add new pack</button>
+
+                    <Search/>
 
                     <div className={s.packs__sortBlock}>
                         <div className={s.packs__sortTitle}>Sort by:</div>
@@ -88,6 +115,9 @@ export const Packs = () => {
 
                 </div>
 
+                <Pagination currentPage={fromServer.page} itemsOnPage={fromServer.pageCount} onPageChange={onPageChange}
+                            pagesInPortion={5} totalItems={fromServer.cardPacksTotalCount} onShowByChange={onShowByChange}/>
+
             </div>
 
             {
@@ -100,4 +130,4 @@ export const Packs = () => {
             }
         </div>
     )
-}
+})

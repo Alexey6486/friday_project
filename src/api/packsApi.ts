@@ -33,8 +33,8 @@ export interface ParamTypes extends Record<string, any> {
     min?: string | number
     max?: string | number
     sortPacks?: string | number
-    page?: string | number
-    pageCount?: string | number
+    page: number
+    pageCount: number
     user_id?: string | number
 }
 
@@ -51,6 +51,9 @@ export type CreatePackObject = {
 export type EditPackObject = {
     _id: string
     name?: string // если не отправить будет таким
+}
+export type SearchPackObject = {
+    name: string
 }
 
 export const packsApi = {

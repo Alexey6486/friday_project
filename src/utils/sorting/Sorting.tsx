@@ -12,7 +12,7 @@ export const Sorting = (props: PropsType) => {
 
     const {sortDirection, onlyMyPacks, sortRegular, sortCheck} = props;
 
-    const radioSort = <div>
+    const radioSort = <div className={s.sortCheck}>
         <input type={'checkbox'} id={'radioMyPacks'} checked={onlyMyPacks} onChange={sortCheck}/>
         <label htmlFor="radioMyPacks">only my packs</label>
     </div>
