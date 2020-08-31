@@ -4,6 +4,7 @@ import {AppRootStateType} from "../../store/store";
 
 const GET_PACKS = 'GET_PACKS';
 const SORT = 'SORT';
+const SHOW_MY_PACKS = 'SHOW_MY_PACKS';
 
 type GetPacksACType = {
     type: typeof GET_PACKS
@@ -11,6 +12,10 @@ type GetPacksACType = {
 };
 type SortACType = {
     type: typeof SORT
+};
+type ShowMyPacksACType = {
+    type: typeof SHOW_MY_PACKS
+    showMyPacks: boolean
 };
 
 const getPacksAC = (payload: GetPacksReturnObject): GetPacksACType => {
@@ -24,12 +29,19 @@ const sortAC = (): SortACType => {
         type: SORT
     }
 };
+const showMyPacksAC = (showMyPacks: boolean): ShowMyPacksACType => {
+    return {
+        type: SHOW_MY_PACKS,
+        showMyPacks
+    }
+};
 
-type ActionTypes = GetPacksACType | SortACType;
+type ActionTypes = GetPacksACType | SortACType | ShowMyPacksACType;
 
 export type PackStateType = {
     fromServer: GetPacksReturnObject,
     sortBy: boolean,
+    onlyMyPacks: boolean,
 };
 
 const initState: PackStateType = {
@@ -42,6 +54,7 @@ const initState: PackStateType = {
         pageCount: 5,
     },
     sortBy: true,
+    onlyMyPacks: false,
 };
 
 export const packsReducer = (state: PackStateType = initState, action: ActionTypes) => {
@@ -56,6 +69,8 @@ export const packsReducer = (state: PackStateType = initState, action: ActionTyp
             };
         case SORT:
             return {...state, sortBy: !state.sortBy};
+        case SHOW_MY_PACKS:
+            return {...state, onlyMyPacks: action.showMyPacks};
         default:
             return state;
     }
@@ -71,8 +86,14 @@ export const getPacksTC = (params: ParamTypes): ThunkType => async (dispatch: Th
         console.log(error.response.data.error);
     }
 };
-export const sortTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
-    dispatch(sortAC());
+export const sortTC = (params: ParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    try {
+        dispatch(sortAC());
+        const res = await packsApi.getPacks(params);
+        dispatch(getPacksAC(res));
+    } catch (error) {
+        console.log(error.response.data.error);
+    }
 };
 export const createPackTC = (params: ParamTypes, payload: CreatePackObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     try {
@@ -97,6 +118,16 @@ export const deletePackTC = (params: ParamTypes, id: string): ThunkType => async
         await packsApi.deletePack(id);
         const res = await packsApi.getPacks(params);
         dispatch(getPacksAC(res));
+    } catch (error) {
+        console.log(error.response.data.error);
+    }
+};
+export const showOnlyMyPacksTC = (params: ParamTypes, showMyPacks: boolean): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    try {
+        dispatch(showMyPacksAC(showMyPacks));
+        const res = await packsApi.getPacks(params);
+        dispatch(getPacksAC(res));
+        debugger
     } catch (error) {
         console.log(error.response.data.error);
     }

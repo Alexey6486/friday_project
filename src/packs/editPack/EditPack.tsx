@@ -8,6 +8,7 @@ import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {EditPackObject} from "../../api/packsApi";
 import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired} from "../../utils/formValidation/formValidation";
+import {AuthStateType} from "../../reducers/authReducers/loginReducer";
 
 type PropsType = {
     toggleEditPackPopUp: (_id: string) => void
@@ -20,13 +21,18 @@ export const EditPack = (props: PropsType) => {
 
     const dispatch = useDispatch();
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer} = packsState;
+    const {fromServer, onlyMyPacks} = packsState;
+
+    const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
+    const {userProfile} = authState;
 
     const onSubmit = (formData: EditPackObject) => {
+        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         dispatch(editPackTC(
             {
                 page: fromServer.page,
-                pageCount: fromServer.pageCount
+                pageCount: fromServer.pageCount,
+                user_id: checkFlag,
             },
             {
                 _id: id,
@@ -54,7 +60,7 @@ const EditPackForm: React.FC<InjectedFormProps<EditPackObject>> = (props: PropsW
     return (
         <form className={s.editPack__form} onSubmit={props.handleSubmit}>
             <div className={s.editPack__formGroup}>
-                <Field component={Input} type={'text'} name={'name'} placeholder={'pack name'}
+                <Field component={Input} type={'text'} name={'name'} placeholder={'new pack name'} value={'test'}
                        validate={[fieldRequired]}/>
             </div>
             <button>Save</button>

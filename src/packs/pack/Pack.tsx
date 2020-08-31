@@ -14,7 +14,7 @@ export const Pack = (props: PropsType) => {
 
     const dispatch = useDispatch();
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer} = packsState;
+    const {fromServer, onlyMyPacks} = packsState;
 
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
     const {userProfile} = authState;
@@ -22,7 +22,8 @@ export const Pack = (props: PropsType) => {
     const {name, cardsCount, created, _id, user_id, toggleEditPackPopUp} = props;
 
     const deletePack = (id: string) => {
-        dispatch(deletePackTC({page: fromServer.page, pageCount: fromServer.pageCount}, id))
+        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
+        dispatch(deletePackTC({page: fromServer.page, pageCount: fromServer.pageCount, user_id: checkFlag}, id))
     }
     const editPackHandler = () => {
         toggleEditPackPopUp(_id);

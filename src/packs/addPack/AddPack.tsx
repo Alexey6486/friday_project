@@ -8,6 +8,7 @@ import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {CreatePackObject} from "../../api/packsApi";
 import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired} from "../../utils/formValidation/formValidation";
+import {AuthStateType} from "../../reducers/authReducers/loginReducer";
 
 type PropsType = {
     toggleCreatePackPopUp: () => void
@@ -19,13 +20,18 @@ export const AddPack = (props: PropsType) => {
 
     const dispatch = useDispatch();
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer} = packsState;
+    const {fromServer, onlyMyPacks} = packsState;
+
+    const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
+    const {userProfile} = authState;
 
     const onSubmit = (formData: CreatePackObject) => {
+        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         dispatch(createPackTC(
             {
                 page: fromServer.page,
-                pageCount: fromServer.pageCount
+                pageCount: fromServer.pageCount,
+                user_id: checkFlag,
             },
             {
                 name: formData.name,

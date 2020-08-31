@@ -2,17 +2,22 @@ import React, {useEffect, useState} from "react";
 import s from './Packs.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../store/store";
-import {getPacksTC, PackStateType} from "../reducers/packsReducer/packsReducer";
+import {getPacksTC, PackStateType, showOnlyMyPacksTC, sortTC} from "../reducers/packsReducer/packsReducer";
 import {Sorting} from "../utils/sorting/Sorting";
 import {Pack} from "./pack/Pack";
 import {AddPack} from "./addPack/AddPack";
 import { EditPack } from "./editPack/EditPack";
+import {AuthStateType} from "../reducers/authReducers/loginReducer";
 
 export const Packs = () => {
 
     const dispatch = useDispatch();
+
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer} = packsState;
+    const {fromServer, sortBy, onlyMyPacks} = packsState;
+
+    const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
+    const {userProfile} = authState;
 
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
     const [editPackPopUp, setEditPackPopUp] = useState('');
@@ -24,6 +29,27 @@ export const Packs = () => {
         setEditPackPopUp(_id);
     }
 
+    const sortRegular = (sortDirection: string) => {
+        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
+        const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
+        debugger
+        dispatch(sortTC({
+            page: fromServer.page,
+            pageCount: fromServer.pageCount,
+            sortPacks: `${sortUrl}`,
+            user_id: checkFlag
+        }));
+    };
+
+    const sortCheck = async () => {
+        const checkFlag = onlyMyPacks ? `` : `${userProfile._id}`;
+        dispatch(showOnlyMyPacksTC({
+            page: fromServer.page,
+            pageCount: fromServer.pageCount,
+            user_id: checkFlag
+        }, !onlyMyPacks));
+    };
+
     useEffect(() => {
         const page = fromServer.page;
         const pageCount = fromServer.pageCount;
@@ -32,8 +58,8 @@ export const Packs = () => {
 
     const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack} toggleEditPackPopUp={toggleEditPackPopUp}/>);
 
-    const sortArray = ['name', 'cardsCount', 'created'];
-    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort}/>);
+    const sortArray = ['name', 'cardsCount', 'created', 'user_id'];
+    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks} sortCheck={sortCheck} sortRegular={sortRegular}/>);
 
     return (
         <div className={s.packs}>

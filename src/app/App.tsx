@@ -14,6 +14,7 @@ import {Header} from "../header/Header";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import { Packs } from "../packs/Packs";
 import { Cards } from "../cards/Cards";
+import {NotFound} from "../notFound/NotFound";
 
 export const App = () => {
 
@@ -43,6 +44,7 @@ export const App = () => {
                 <Route exact path={'/restorePassword'} render={() => <RestorePassword/>}/>
                 <Route exact path={'/registration'} render={() => <Registration/>}/>
                 <Route exact path={'/set-new-password/:token'} render={() => <NewPasswordWithRouter/>}/>
+                <Route render={() => <NotFound/>}/>
             </Switch>
         </div>
     );

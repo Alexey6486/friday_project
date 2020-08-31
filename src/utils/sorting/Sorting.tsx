@@ -1,28 +1,27 @@
 import React from "react";
 import s from './Sorting.module.scss';
-import {getPacksTC, PackStateType, sortTC} from "../../reducers/packsReducer/packsReducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../store/store";
 
 type PropsType = {
     sortDirection: string
+    onlyMyPacks?: boolean
+    sortRegular: (sortDirection: string) => void
+    sortCheck?: () => void
 }
 
 export const Sorting = (props: PropsType) => {
 
-    const dispatch = useDispatch();
-    const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
+    const {sortDirection, onlyMyPacks, sortRegular, sortCheck} = props;
 
-    const {fromServer, sortBy} = packsState;
-    const {sortDirection} = props;
-
-    const sort = () => {
-        const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
-        dispatch(getPacksTC({page: fromServer.page, pageCount: fromServer.pageCount, sortPacks: `${sortUrl}`}));
-        dispatch(sortTC());
-    };
+    const radioSort = <div>
+        <input type={'checkbox'} id={'radioMyPacks'} checked={onlyMyPacks} onChange={sortCheck}/>
+        <label htmlFor="radioMyPacks">only my packs</label>
+    </div>
+    const regularSort = <button className={s.sortBtn} onClick={() => sortRegular(sortDirection)}>{sortDirection}</button>
+    const sortTypeCheck = sortDirection === 'user_id' ? radioSort : regularSort;
 
     return (
-        <button className={s.sortBtn} onClick={sort}>{sortDirection}</button>
+        <>
+            {sortTypeCheck}
+        </>
     )
 }
