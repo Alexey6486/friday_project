@@ -7,6 +7,8 @@ const SORT = 'SORT';
 const SHOW_MY_PACKS = 'SHOW_MY_PACKS';
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_SHOW_BY = 'SET_SHOW_BY';
+const CHANGE_PORTION = 'CHANGE_PORTION';
+const SET_PORTION = 'SET_PORTION';
 
 type GetPacksACType = {
     type: typeof GET_PACKS
@@ -27,6 +29,14 @@ type SetCurrentPageACType = {
 type SetShowByACType = {
     type: typeof SET_SHOW_BY
     pageCount: number
+};
+type ChangePortionACType = {
+    type: typeof CHANGE_PORTION
+    flag: boolean
+};
+type SetPortionACType = {
+    type: typeof SET_PORTION
+    portion: number
 };
 
 const getPacksAC = (payload: GetPacksReturnObject): GetPacksACType => {
@@ -59,13 +69,26 @@ const setShowByAC = (pageCount: number): SetShowByACType => {
         pageCount
     }
 };
+const changePortionAC = (flag: boolean): ChangePortionACType => {
+    return {
+        type: CHANGE_PORTION,
+        flag
+    }
+};
+const setPortionAC = (portion: number): SetPortionACType => {
+    return {
+        type: SET_PORTION,
+        portion
+    }
+};
 
-type ActionTypes = GetPacksACType | SortACType | ShowMyPacksACType | SetCurrentPageACType | SetShowByACType;
+type ActionTypes = GetPacksACType | SortACType | ShowMyPacksACType | SetCurrentPageACType | SetShowByACType | ChangePortionACType | SetPortionACType;
 
 export type PackStateType = {
     fromServer: GetPacksReturnObject,
     sortBy: boolean,
     onlyMyPacks: boolean,
+    currentPortion: number
 };
 
 const initState: PackStateType = {
@@ -79,6 +102,7 @@ const initState: PackStateType = {
     },
     sortBy: true,
     onlyMyPacks: false,
+    currentPortion: 1
 };
 
 export const packsReducer = (state: PackStateType = initState, action: ActionTypes) => {
@@ -99,6 +123,10 @@ export const packsReducer = (state: PackStateType = initState, action: ActionTyp
             return {...state, sortBy: !state.sortBy};
         case SHOW_MY_PACKS:
             return {...state, onlyMyPacks: action.showMyPacks, fromServer: {...state.fromServer, page: action.page}};
+        case CHANGE_PORTION:
+            return {...state, currentPortion: action.flag ? state.currentPortion + 1 : state.currentPortion - 1};
+        case SET_PORTION:
+            return {...state, currentPortion: action.portion};
         default:
             return state;
     }
@@ -152,7 +180,6 @@ export const sortTC = (params: ParamTypes): ThunkType => async (dispatch: ThunkD
 };
 export const showOnlyMyPacksTC = (params: ParamTypes, showMyPacks: boolean): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     try {
-        debugger
         dispatch(showMyPacksAC(showMyPacks, params.page));
         const res = await packsApi.getPacks(params);
         dispatch(getPacksAC(res));
@@ -174,6 +201,20 @@ export const showByTC = (params: ParamTypes): ThunkType => async (dispatch: Thun
         dispatch(setShowByAC(params.pageCount));
         const res = await packsApi.getPacks(params);
         dispatch(getPacksAC(res));
+    } catch (error) {
+        console.log(error.response.data.error);
+    }
+};
+export const changePortionTC = (flag: boolean): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    try {
+        dispatch(changePortionAC(flag));
+    } catch (error) {
+        console.log(error.response.data.error);
+    }
+};
+export const setPortionTC = (portion: number): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+    try {
+        dispatch(setPortionAC(portion));
     } catch (error) {
         console.log(error.response.data.error);
     }

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import s from './Pagination.module.scss';
 
 type PropsType = {
@@ -6,13 +6,16 @@ type PropsType = {
     totalItems: number
     itemsOnPage: number
     pagesInPortion: number
+    currentPortion: number
     onPageChange: (page: number) => void
     onShowByChange: (showBy: number) => void
+    onPortionChange: (flag: boolean) => void
+    setPortionChange: (portion: number) => void
 }
 
 export const Pagination = (props: PropsType) => {
 
-    const {currentPage, itemsOnPage, onPageChange, pagesInPortion, totalItems, onShowByChange} = props;
+    const {currentPage, itemsOnPage, onPageChange, pagesInPortion, totalItems, onShowByChange, onPortionChange, currentPortion, setPortionChange} = props;
 
     const onPageChangeHandler = (page: number) => {
         onPageChange(page);
@@ -26,9 +29,16 @@ export const Pagination = (props: PropsType) => {
         pages.push(i);
     }
 
-    const [currentPortion, setCurrentPortion] = useState(1);
-    const nextPortion = () => {setCurrentPortion(currentPortion + 1);};
-    const prevPortion = () => {setCurrentPortion(currentPortion - 1);};
+    // const [curPortion, setCurPortion] = useState(1);
+    // const nextPortion = () => {setCurPortion(curPortion + 1);};
+    // const prevPortion = () => {setCurPortion(curPortion - 1);};
+
+    const nextPortion = () => {
+        onPortionChange(true)
+    };
+    const prevPortion = () => {
+        onPortionChange(false)
+    };
 
     const firstPageInPortion = (currentPortion - 1) * pagesInPortion + 1;
     const lastPageInPortion = currentPortion * pagesInPortion;
@@ -43,16 +53,16 @@ export const Pagination = (props: PropsType) => {
 
     const portionWithLastPage = (page: number) => {
         onPageChange(page);
-        setCurrentPortion(totalPortions);
+        setPortionChange(totalPortions);
     };
 
     const portionWithFirstPage = (page: number) => {
         onPageChange(page);
-        setCurrentPortion(1);
+        setPortionChange(1);
     };
 
     const lastPage = pages.map(page => {
-        if (page === pages.length - 1) {
+        if (page === pages.length) {
             return (
                 <div key={page} className={s.paginationBlock__pre_after}>
                     <div className={s.paginationDots}>...</div>

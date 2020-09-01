@@ -4,8 +4,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../store/store";
 import {
     changePageTC,
+    changePortionTC,
     getPacksTC,
     PackStateType,
+    setPortionTC,
     showByTC,
     showOnlyMyPacksTC,
     sortTC
@@ -23,7 +25,7 @@ export const Packs = React.memo(() => {
     const dispatch = useDispatch();
 
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer, sortBy, onlyMyPacks} = packsState;
+    const {fromServer, sortBy, onlyMyPacks, currentPortion} = packsState;
 
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
     const {userProfile} = authState;
@@ -33,45 +35,48 @@ export const Packs = React.memo(() => {
 
     const toggleCreatePackPopUp = useCallback(() => {
         setCreatePackPopUp(prev => !prev);
-    }, [])
+    }, []);
     const toggleEditPackPopUp = useCallback((_id: string) => {
         setEditPackPopUp(_id);
-    }, [])
+    }, []);
 
     const sortRegular = useCallback((sortDirection: string) => {
         const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
-        debugger
         dispatch(sortTC({
             page: fromServer.page,
             pageCount: fromServer.pageCount,
             sortPacks: `${sortUrl}`,
             user_id: checkFlag
         }));
-    }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page]);
+    }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page, userProfile._id]);
 
     const sortCheck = useCallback(() => {
         const checkFlag = onlyMyPacks ? `` : `${userProfile._id}`;
-        dispatch(showOnlyMyPacksTC({
-            page: 1,
-            pageCount: fromServer.pageCount,
-            user_id: checkFlag
-        }, !onlyMyPacks));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, fromServer.page]);
+        dispatch(showOnlyMyPacksTC({page: 1,pageCount: fromServer.pageCount,user_id: checkFlag}, !onlyMyPacks));
+        dispatch(setPortionTC(1));
+    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id]);
 
     const onPageChange = useCallback((page: number) => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
+        const user_id = onlyMyPacks ? `${userProfile._id}` : '';
         const pageCount = fromServer.pageCount;
-        const user_id = checkFlag;
-        dispatch(changePageTC({page, pageCount, user_id}));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, fromServer.page])
+        user_id ? dispatch(changePageTC({page, pageCount, user_id})) : dispatch(changePageTC({page, pageCount}));
+    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id]);
 
     const onShowByChange = useCallback((pageCount: number) => {
         const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const page = fromServer.page;
         const user_id = checkFlag;
         dispatch(showByTC({page, pageCount, user_id}));
-    }, [onlyMyPacks, fromServer.page])
+    }, [dispatch, onlyMyPacks, fromServer.page, userProfile._id]);
+
+    const onPortionChange = useCallback((flag: boolean) => {
+        flag ? dispatch(changePortionTC(true)) : dispatch(changePortionTC(false));
+    }, [dispatch]);
+
+    const setPortionChange = useCallback((portion: number) => {
+        dispatch(setPortionTC(portion));
+    }, [dispatch]);
 
     useEffect(() => {
         const page = fromServer.page;
@@ -116,7 +121,9 @@ export const Packs = React.memo(() => {
                 </div>
 
                 <Pagination currentPage={fromServer.page} itemsOnPage={fromServer.pageCount} onPageChange={onPageChange}
-                            pagesInPortion={5} totalItems={fromServer.cardPacksTotalCount} onShowByChange={onShowByChange}/>
+                            pagesInPortion={5} totalItems={fromServer.cardPacksTotalCount}
+                            onShowByChange={onShowByChange} onPortionChange={onPortionChange}
+                            currentPortion={currentPortion} setPortionChange={setPortionChange}/>
 
             </div>
 
