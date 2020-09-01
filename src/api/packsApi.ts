@@ -32,7 +32,7 @@ export interface ParamTypes extends Record<string, any> {
     packName?: string | number
     min?: string | number
     max?: string | number
-    sortPacks?: string | number
+    sortPacks?: string
     page: number
     pageCount: number
     user_id?: string | number

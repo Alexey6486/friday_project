@@ -1,6 +1,6 @@
 import React, {PropsWithChildren} from "react";
 import s from './Search.module.scss';
-import {Field, InjectedFormProps, reduxForm} from "redux-form";
+import {Field, InjectedFormProps, reduxForm, reset} from "redux-form";
 import {Input} from "../formFields/formFields";
 import {SearchPackObject} from "../../api/packsApi";
 import {getPacksTC, PackStateType} from "../../reducers/packsReducer/packsReducer";
@@ -23,11 +23,13 @@ export const Search = () => {
                 pageCount: fromServer.pageCount,
                 packName: query
             }))
+            dispatch(reset('SearchForm'));
         } else {
             dispatch(getPacksTC({
                 page: fromServer.page,
                 pageCount: fromServer.pageCount,
             }))
+            dispatch(reset('SearchForm'));
         }
     }
 

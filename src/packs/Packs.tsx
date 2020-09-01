@@ -19,13 +19,14 @@ import {EditPack} from "./editPack/EditPack";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import {Search} from "../utils/search/Search";
 import {Pagination} from "../utils/pagination/Pagination";
+import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 
 export const Packs = React.memo(() => {
 
     const dispatch = useDispatch();
 
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer, sortBy, onlyMyPacks, currentPortion} = packsState;
+    const {fromServer, sortBy, onlyMyPacks, currentPortion, isLoading, sortParam} = packsState;
 
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
     const {userProfile} = authState;
@@ -49,26 +50,30 @@ export const Packs = React.memo(() => {
             sortPacks: `${sortUrl}`,
             user_id: checkFlag
         }));
+        debugger
     }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page, userProfile._id]);
 
     const sortCheck = useCallback(() => {
         const checkFlag = onlyMyPacks ? `` : `${userProfile._id}`;
-        dispatch(showOnlyMyPacksTC({page: 1,pageCount: fromServer.pageCount,user_id: checkFlag}, !onlyMyPacks));
+        dispatch(showOnlyMyPacksTC({page: 1, pageCount: fromServer.pageCount, user_id: checkFlag}, !onlyMyPacks));
         dispatch(setPortionTC(1));
     }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id]);
 
     const onPageChange = useCallback((page: number) => {
         const user_id = onlyMyPacks ? `${userProfile._id}` : '';
         const pageCount = fromServer.pageCount;
-        user_id ? dispatch(changePageTC({page, pageCount, user_id})) : dispatch(changePageTC({page, pageCount}));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id]);
+        const sortPacks = sortParam;
+        debugger
+        user_id ? dispatch(changePageTC({page, pageCount, sortPacks, user_id})) : dispatch(changePageTC({page, pageCount, sortPacks}));
+    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortParam]);
 
     const onShowByChange = useCallback((pageCount: number) => {
         const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const page = fromServer.page;
         const user_id = checkFlag;
-        dispatch(showByTC({page, pageCount, user_id}));
-    }, [dispatch, onlyMyPacks, fromServer.page, userProfile._id]);
+        const sortPacks = sortParam;
+        dispatch(showByTC({page, pageCount, sortPacks, user_id}));
+    }, [dispatch, onlyMyPacks, fromServer.page, userProfile._id, sortParam]);
 
     const onPortionChange = useCallback((flag: boolean) => {
         flag ? dispatch(changePortionTC(true)) : dispatch(changePortionTC(false));
@@ -116,7 +121,7 @@ export const Packs = React.memo(() => {
                         <div>Created</div>
                     </div>
 
-                    {packsMap}
+                    {isLoading ? <PacksLoading/> : packsMap}
 
                 </div>
 
