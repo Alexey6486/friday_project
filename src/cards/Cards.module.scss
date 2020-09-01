@@ -1,0 +1,74 @@
+.cards {
+    padding: 20px 0;
+    color: #333333;
+}
+
+.cards__interface {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 16px;
+
+    button{
+        font-size: 16px;
+        height: 30px;
+        margin-right: 5px;
+        cursor: pointer;
+        color: #ffffff;
+        background-color: #5d626f;
+        border: none;
+        outline: none;
+        transition: all linear 150ms;
+        line-height: 1;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+        &:hover,
+        &.active{
+            color: #ffffff;
+            background-color: #fa9716;
+        }
+    }
+}
+.cards__btn{
+    cursor: pointer;
+    outline: none;
+}
+
+.cards__sortBlock {
+    display: flex;
+    align-items: center;
+
+    .cards__sortTitle {
+        margin-right: 10px;
+    }
+
+    .cards__sortBtns {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.cardsTable{
+
+    &__header{
+        display: flex;
+        height: 40px;
+        background-color: #5d626f;
+        color: #ffffff;
+
+        &>div{
+            width: 300px;
+            padding: 0 0 0 10px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+
+            &:not(:last-child) {
+                border-right: 1px solid #ffffff;
+            }
+        }
+    }
+}
+
+

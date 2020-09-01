@@ -39,7 +39,7 @@ export const App = () => {
             <Switch>
                 <Route exact path={'/'} render={() => <Profile/>}/>
                 <Route exact path={'/packs'} render={() => <Packs/>}/>
-                <Route exact path={'/cards'} render={() => <Cards/>}/>
+                <Route exact path={'/cards/:cardsPack_id'} render={() => <Cards/>}/>
                 <Route exact path={'/login'} render={() => <Login/>}/>
                 <Route exact path={'/restorePassword'} render={() => <RestorePassword/>}/>
                 <Route exact path={'/registration'} render={() => <Registration/>}/>

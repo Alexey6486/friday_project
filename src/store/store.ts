@@ -8,6 +8,7 @@ import {appReducer} from "../app/appReducer";
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import {packsReducer} from "../reducers/packsReducer/packsReducer";
+import {cardsReducer} from "../reducers/cardsReducer/cardsReducer";
 
 const rootReducers = combineReducers({
     form: formReducer,
@@ -17,6 +18,7 @@ const rootReducers = combineReducers({
     newPassword,
     appReducer,
     packsReducer,
+    cardsReducer,
 });
 
 export type AppRootStateType = ReturnType<typeof rootReducers>;

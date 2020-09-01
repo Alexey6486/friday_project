@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
 import {deletePackTC, PackStateType} from "../../reducers/packsReducer/packsReducer";
 import {AuthStateType} from "../../reducers/authReducers/loginReducer";
+import {Link} from "react-router-dom";
 
 type PropsType = CardInPackType & {
     toggleEditPackPopUp: (_id: string) => void
@@ -42,7 +43,7 @@ export const Pack = (props: PropsType) => {
             </div>
 
             <div className={s.pack__interface}>
-                <button className={s.pack__btn}>Open</button>
+                <Link className={s.pack__btn} to={`/cards/${_id}`}>Open</Link>
                 <button className={disabledEditBtn} onClick={editPackHandler}>Edit</button>
                 <button className={disabledDeleteBtn} onClick={() => deletePack(_id)}>Delete</button>
             </div>

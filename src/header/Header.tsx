@@ -27,8 +27,6 @@ const HeaderComponent = (props: PropsType) => {
                           className={currentUrl === '/' ? `${s.headerNav__link} ${s.active}` : `${s.headerNav__link}`}>Profile</Link>
                     <Link to={'/packs'}
                           className={currentUrl === '/packs' ? `${s.headerNav__link} ${s.active}` : `${s.headerNav__link}`}>Packs</Link>
-                    <Link to={'/cards'}
-                          className={currentUrl === '/cards' ? `${s.headerNav__link} ${s.active}` : `${s.headerNav__link}`}>Cards</Link>
                 </div>
                 <div className={s.header__logout} onClick={logout}>Logout</div>
             </div>

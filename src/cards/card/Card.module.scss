@@ -1,4 +1,4 @@
-.pack {
+.card {
     width: 100%;
     display: flex;
     align-items: center;
@@ -23,12 +23,12 @@
         background-color: #cfcfcf;
     }
 
-    .pack__interface {
+    .card__interface {
         display: flex;
         width: auto;
         height: 100%;
 
-        .pack__btn{
+        .card__btn{
             color: #444444;
             cursor: pointer;
             outline: none;

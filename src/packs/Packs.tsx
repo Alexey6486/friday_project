@@ -92,7 +92,7 @@ export const Packs = React.memo(() => {
     const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}
                                                             toggleEditPackPopUp={toggleEditPackPopUp}/>);
 
-    const sortArray = ['name', 'cardsCount', 'created', 'user_id'];
+    const sortArray = ['name', 'cardsCount', 'created'];
     const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks}
                                                           sortCheck={sortCheck} sortRegular={sortRegular}/>);
 
