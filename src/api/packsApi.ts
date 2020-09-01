@@ -9,10 +9,10 @@ export type CardInPackType = {
     _id: string
     user_id: string
     name: string
-    path: string // папка
-    grade: number // средняя оценка карточек
-    shots: number // количество попыток
-    rating: number // лайки
+    path: string
+    grade: number
+    shots: number
+    rating: number
     type: string
     created: string
     updated: string
@@ -39,18 +39,18 @@ export interface ParamTypes extends Record<string, any> {
 }
 
 export type CreatePackObject = {
-    name?: string // если не отправить будет таким
-    path?: string // если не отправить будет такой
-    grade?: number // не обязателен
-    shots?: number // не обязателен
-    rating?: number // не обязателен
-    deckCover?: string // не обязателен
-    private?: boolean// если не отправить будет такой
-    type?: string // если не отправить будет таким
+    name?: string
+    path?: string
+    grade?: number
+    shots?: number
+    rating?: number
+    deckCover?: string
+    private?: boolean
+    type?: string
 }
 export type EditPackObject = {
     _id: string
-    name?: string // если не отправить будет таким
+    name?: string
 }
 export type SearchPackObject = {
     name: string

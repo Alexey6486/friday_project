@@ -17,3 +17,4 @@ const FormField = (Element: string) => ({input, meta, ...props}: any) => {
 };
 
 export const Input = FormField('input');
+export const Textarea = FormField('textarea');

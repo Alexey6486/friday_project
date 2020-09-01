@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import s from './Cards.module.scss';
@@ -10,6 +10,9 @@ import {Card} from "./card/Card";
 import {Pagination} from "../utils/pagination/Pagination";
 import {PackStateType} from "../reducers/packsReducer/packsReducer";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
+import {AddCard} from "./addCard/AddCard";
+import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
+import {EditCard} from "./editCard/EditCard";
 
 type CardsPackIdType = {
     cardsPack_id: string
@@ -28,9 +31,19 @@ const CardsComponent = (props: PropsType) => {
 
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
 
-    const {match, history, location} = props;
+    const {match} = props;
 
     const cardsPack_id = match.params.cardsPack_id;
+
+    const [createPackPopUp, setCreatePackPopUp] = useState(false);
+    const [editPackPopUp, setEditPackPopUp] = useState('');
+
+    const toggleCreatePackPopUp = useCallback(() => {
+        setCreatePackPopUp(prev => !prev);
+    }, []);
+    const toggleEditPackPopUp = useCallback((_id: string) => {
+        setEditPackPopUp(_id);
+    }, []);
 
     useEffect(() => {
         const page = fromServer.page;
@@ -39,7 +52,8 @@ const CardsComponent = (props: PropsType) => {
     }, [])
 
     const sortArray = ['cardAnswer', 'cardQuestion'];
-    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} sortRegular={() => {}}/>);
+    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} sortRegular={() => {
+    }}/>);
 
     const checkIfPackIsYours = packsState.fromServer.cardPacks.filter(f => {
         if (f._id === cardsPack_id && f.user_id === userProfile._id) {
@@ -47,15 +61,18 @@ const CardsComponent = (props: PropsType) => {
         }
     });
 
-
     const cardsMap = fromServer.cards.map(card => {
 
         const {_id, question, answer, created} = card;
 
         return (
-            <Card key={_id} question={question} answer={answer} created={created} checkIfPackIsYours={checkIfPackIsYours.length}/>
+            <Card key={_id} question={question} answer={answer} created={created}
+                  checkIfPackIsYours={checkIfPackIsYours.length} toggleEditPackPopUp={toggleEditPackPopUp} id={_id}
+                  cardsPack_id={cardsPack_id}/>
         )
     })
+
+    const isPackEmpty = cardsMap.length < 1 ? <div>There are no cards yet here.</div> : cardsMap;
 
     return (
         <div className={s.cards}>
@@ -63,7 +80,7 @@ const CardsComponent = (props: PropsType) => {
 
                 <div className={s.cards__interface}>
 
-                    <button className={s.cards__btn}>add new card</button>
+                    <button className={s.cards__btn} onClick={toggleCreatePackPopUp}>add new card</button>
 
                     <Search/>
 
@@ -82,16 +99,31 @@ const CardsComponent = (props: PropsType) => {
                         <div>Created</div>
                     </div>
 
-                    {cardsMap}
+
+                    {isLoading ? <PacksLoading/> : isPackEmpty}
 
                 </div>
 
-                <Pagination currentPage={fromServer.page} itemsOnPage={fromServer.pageCount} onPageChange={() => {}}
+                <Pagination currentPage={fromServer.page} itemsOnPage={fromServer.pageCount} onPageChange={() => {
+                }}
                             pagesInPortion={5} totalItems={fromServer.cardsTotalCount}
-                            onShowByChange={() => {}} onPortionChange={() => {}}
-                            currentPortion={currentPortion} setPortionChange={() => {}}/>
+                            onShowByChange={() => {
+                            }} onPortionChange={() => {
+                }}
+                            currentPortion={currentPortion} setPortionChange={() => {
+                }}/>
 
             </div>
+
+            {
+                createPackPopUp &&
+                <AddCard toggleCreatePackPopUp={toggleCreatePackPopUp} cardsPack_id={cardsPack_id}/>
+            }
+            {
+                editPackPopUp &&
+                <EditCard toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp} cardsPack_id={cardsPack_id}/>
+            }
+
         </div>
     )
 }

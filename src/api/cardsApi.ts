@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {CreatePackObject, EditPackObject} from "./packsApi";
 
 const instance = axios.create({
     baseURL: 'https://neko-back.herokuapp.com/2.0/',
@@ -37,6 +38,28 @@ export interface CardsParamTypes extends Record<string, any> {
     page: number
     pageCount: number
 }
+export type CreateCardObject = {
+    cardsPack_id: string
+    question?: string
+    answer?: string
+    grade?: number
+    shots?: number
+    rating?: number
+    answerImg?: string
+    questionImg?: string
+    questionVideo?: string
+    answerVideo?: string
+    type?: string
+}
+export type EditCardObject = {
+    _id: string
+    question?: string
+    answer?: string
+    comments?: string
+}
+export type SearchCardObject = {
+    name: string
+}
 
 export const cardsApi = {
     getCards(params: CardsParamTypes) {
@@ -52,5 +75,30 @@ export const cardsApi = {
             .then((res) => {
                 return res.data
             })
-    }
+    },
+    createCard(card: CreateCardObject) {
+        return instance
+            .post(`cards/card`,{
+                card
+            })
+            .then((res) => {
+                return res.data
+            })
+    },
+    editCard(card: EditCardObject) {
+        return instance
+            .put(`cards/card`, {
+                card
+            })
+            .then((res) => {
+                return res.data
+            })
+    },
+    deleteCard(id: string) {
+        return instance
+            .delete(`cards/card?id=${id}`)
+            .then((res) => {
+                return res.data
+            })
+    },
 };
