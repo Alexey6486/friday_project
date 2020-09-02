@@ -5,9 +5,8 @@ import {AppRootStateType} from "../../store/store";
 import {PackStateType} from "../../reducers/packsReducer/packsReducer";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input, Textarea} from "../../utils/formFields/formFields";
-import {fieldRequired} from "../../utils/formValidation/formValidation";
 import {EditCardObject} from "../../api/cardsApi";
-import {editCardTC} from "../../reducers/cardsReducer/cardsReducer";
+import {CardsStateType, editCardTC} from "../../reducers/cardsReducer/cardsReducer";
 
 type PropsType = {
     toggleEditPackPopUp: (_id: string) => void
@@ -20,14 +19,14 @@ export const EditCard = (props: PropsType) => {
     const {toggleEditPackPopUp, id, cardsPack_id} = props;
 
     const dispatch = useDispatch();
-    const cardsState = useSelector<AppRootStateType, PackStateType>(state => state.cardsReducer);
-    const {fromServer} = cardsState;
+    const cardsState = useSelector<AppRootStateType, CardsStateType>(state => state.cardsReducer);
+    const {fromCardsServer} = cardsState;
 
     const onSubmit = (formData: EditCardObject) => {
         dispatch(editCardTC(
             {
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
+                page: fromCardsServer.page,
+                pageCount: fromCardsServer.pageCount,
                 cardsPack_id,
             },
             {

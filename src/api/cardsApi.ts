@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {CreatePackObject, EditPackObject} from "./packsApi";
 
 const instance = axios.create({
     baseURL: 'https://neko-back.herokuapp.com/2.0/',
@@ -28,6 +27,7 @@ export type GetCardsResponseObjectType = {
     page: number
     pageCount: number
 }
+
 export interface CardsParamTypes extends Record<string, any> {
     cardAnswer?: string
     cardQuestion?: string
@@ -38,6 +38,7 @@ export interface CardsParamTypes extends Record<string, any> {
     page: number
     pageCount: number
 }
+
 export type CreateCardObject = {
     cardsPack_id: string
     question?: string
@@ -78,7 +79,7 @@ export const cardsApi = {
     },
     createCard(card: CreateCardObject) {
         return instance
-            .post(`cards/card`,{
+            .post(`cards/card`, {
                 card
             })
             .then((res) => {

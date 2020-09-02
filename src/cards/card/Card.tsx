@@ -19,12 +19,12 @@ export const Card = (props: PropsType) => {
     const dispatch = useDispatch()
 
     const cardsState = useSelector<AppRootStateType, CardsStateType>(state => state.cardsReducer);
-    const {fromServer} = cardsState;
+    const {fromCardsServer} = cardsState;
 
     const {answer, created, question, checkIfPackIsYours, toggleEditPackPopUp, id, cardsPack_id} = props;
 
     const deletePack = () => {
-        dispatch(deleteCardTC({page: fromServer.page, pageCount: fromServer.pageCount, cardsPack_id}, id))
+        dispatch(deleteCardTC({page: fromCardsServer.page, pageCount: fromCardsServer.pageCount, cardsPack_id}, id))
     }
     const editPackHandler = () => {
         toggleEditPackPopUp(id);

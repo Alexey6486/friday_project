@@ -2,15 +2,15 @@ import {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {CreatePackObject, EditPackObject, GetPacksReturnObject, packsApi, ParamTypes} from "../../api/packsApi";
 import {AppRootStateType} from "../../store/store";
 
+const LOADING = 'LOADING';
 const GET_PACKS = 'GET_PACKS';
 const SORT = 'SORT';
+const SET_SORT_PARAM = 'SET_SORT_PARAM';
 const SHOW_MY_PACKS = 'SHOW_MY_PACKS';
 const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_SHOW_BY = 'SET_SHOW_BY';
 const CHANGE_PORTION = 'CHANGE_PORTION';
 const SET_PORTION = 'SET_PORTION';
-const LOADING = 'LOADING';
-const SET_SORT_PARAM = 'SET_SORT_PARAM';
 
 type GetPacksACType = {
     type: typeof GET_PACKS
@@ -155,16 +155,16 @@ export const packsReducer = (state: PackStateType = initState, action: ActionTyp
             return {...state, fromServer: {...state.fromServer, page: action.page}};
         case SET_SHOW_BY:
             return {...state, fromServer: {...state.fromServer, pageCount: action.pageCount}};
-        case SORT:
-            return {...state, sortBy: !state.sortBy};
-        case SET_SORT_PARAM:
-            return {...state, sortParam: action.sortParam};
-        case SHOW_MY_PACKS:
-            return {...state, onlyMyPacks: action.showMyPacks, fromServer: {...state.fromServer, page: action.page}};
         case CHANGE_PORTION:
             return {...state, currentPortion: action.flag ? state.currentPortion + 1 : state.currentPortion - 1};
         case SET_PORTION:
             return {...state, currentPortion: action.portion};
+        case SET_SORT_PARAM:
+            return {...state, sortParam: action.sortParam};
+        case SORT:
+            return {...state, sortBy: !state.sortBy};
+        case SHOW_MY_PACKS:
+            return {...state, onlyMyPacks: action.showMyPacks, fromServer: {...state.fromServer, page: action.page}};
         case LOADING:
             return {...state, isLoading: action.isLoading};
         default:

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import s from './Pagination.module.scss';
 
 type PropsType = {
@@ -47,7 +47,8 @@ export const Pagination = (props: PropsType) => {
         .filter(f => f >= firstPageInPortion && f <= lastPageInPortion)
         .map(m => {
             return (
-                <button key={m} onClick={() => onPageChangeHandler(m)} className={m === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{m}</button>
+                <button key={m} onClick={() => onPageChangeHandler(m)}
+                        className={m === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{m}</button>
             )
         })
 
@@ -67,7 +68,7 @@ export const Pagination = (props: PropsType) => {
                 <div key={page} className={s.paginationBlock__pre_after}>
                     <div className={s.paginationDots}>...</div>
                     <button onClick={() => portionWithLastPage(page)}
-                         className={page === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{page}</button>
+                            className={page === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{page}</button>
                 </div>
             )
         }
@@ -79,7 +80,7 @@ export const Pagination = (props: PropsType) => {
             return (
                 <div key={page} className={s.paginationBlock__pre_after}>
                     <button onClick={() => portionWithFirstPage(page)}
-                         className={page === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{page}</button>
+                            className={page === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{page}</button>
                     <div className={s.paginationDots}>...</div>
                 </div>
             )
@@ -106,9 +107,11 @@ export const Pagination = (props: PropsType) => {
             </div>
             <div className={s.paginationSelectBlock}>
                 <div className={s.paginationSelectBlock__title}>Show by:</div>
-                <div className={openSelect ? `${s.paginationSelect} ${s.open}` : `${s.paginationSelect}`} onClick={onSelectOpenClick}>
+                <div className={openSelect ? `${s.paginationSelect} ${s.open}` : `${s.paginationSelect}`}
+                     onClick={onSelectOpenClick}>
                     <div className={s.paginationSelect__current}>{itemsOnPage}</div>
-                    <div className={openSelect ? `${s.paginationSelect__options} ${s.open}` : `${s.paginationSelect__options}`}>
+                    <div
+                        className={openSelect ? `${s.paginationSelect__options} ${s.open}` : `${s.paginationSelect__options}`}>
                         <div onClick={() => showByChange(5)}>5</div>
                         <div onClick={() => showByChange(10)}>10</div>
                         <div onClick={() => showByChange(15)}>15</div>

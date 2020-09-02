@@ -31,6 +31,7 @@ export const Packs = React.memo(() => {
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
     const {userProfile} = authState;
 
+    // create/edit pop ups
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
     const [editPackPopUp, setEditPackPopUp] = useState('');
 
@@ -40,7 +41,9 @@ export const Packs = React.memo(() => {
     const toggleEditPackPopUp = useCallback((_id: string) => {
         setEditPackPopUp(_id);
     }, []);
+    ///
 
+    // sorting
     const sortRegular = useCallback((sortDirection: string) => {
         const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
@@ -50,7 +53,6 @@ export const Packs = React.memo(() => {
             sortPacks: `${sortUrl}`,
             user_id: checkFlag
         }));
-        debugger
     }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page, userProfile._id]);
 
     const sortCheck = useCallback(() => {
@@ -58,12 +60,13 @@ export const Packs = React.memo(() => {
         dispatch(showOnlyMyPacksTC({page: 1, pageCount: fromServer.pageCount, user_id: checkFlag}, !onlyMyPacks));
         dispatch(setPortionTC(1));
     }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id]);
+    ///
 
+    // pagination
     const onPageChange = useCallback((page: number) => {
         const user_id = onlyMyPacks ? `${userProfile._id}` : '';
         const pageCount = fromServer.pageCount;
         const sortPacks = sortParam;
-        debugger
         user_id ? dispatch(changePageTC({page, pageCount, sortPacks, user_id})) : dispatch(changePageTC({page, pageCount, sortPacks}));
     }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortParam]);
 
@@ -82,12 +85,13 @@ export const Packs = React.memo(() => {
     const setPortionChange = useCallback((portion: number) => {
         dispatch(setPortionTC(portion));
     }, [dispatch]);
+    ///
 
     useEffect(() => {
         const page = fromServer.page;
         const pageCount = fromServer.pageCount;
-        dispatch(getPacksTC({page, pageCount}));
-    }, [dispatch]);
+        dispatch(getPacksTC({page, pageCount, sortParam}));
+    }, []);
 
     const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}
                                                             toggleEditPackPopUp={toggleEditPackPopUp}/>);

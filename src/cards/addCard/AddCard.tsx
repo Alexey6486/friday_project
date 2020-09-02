@@ -1,15 +1,12 @@
 import React, {PropsWithChildren} from "react";
 import s from './AddCard.module.scss';
-import s2 from '../../utils/formFields/formField.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
-import {createPackTC} from "../../reducers/packsReducer/packsReducer";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
-import {CreatePackObject} from "../../api/packsApi";
 import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired} from "../../utils/formValidation/formValidation";
 import {CardsStateType, createCardTC} from "../../reducers/cardsReducer/cardsReducer";
-import { CreateCardObject } from "../../api/cardsApi";
+import {CreateCardObject} from "../../api/cardsApi";
 
 type PropsType = {
     toggleCreatePackPopUp: () => void
@@ -22,13 +19,13 @@ export const AddCard = (props: PropsType) => {
 
     const dispatch = useDispatch();
     const cardsState = useSelector<AppRootStateType, CardsStateType>(state => state.cardsReducer);
-    const {fromServer} = cardsState;
+    const {fromCardsServer} = cardsState;
 
     const onSubmit = (formData: CreateCardObject) => {
         dispatch(createCardTC(
             {
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
+                page: fromCardsServer.page,
+                pageCount: fromCardsServer.pageCount,
                 cardsPack_id,
             },
             {
