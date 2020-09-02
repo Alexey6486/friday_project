@@ -10,19 +10,20 @@ import {
     getCardsTC,
     setCurrentPageAC,
     setPortionTC,
-    showByTC, sortCardsTC
+    showByTC,
+    sortCardsTC
 } from "../reducers/cardsReducer/cardsReducer";
 import {Search} from "../utils/search/Search";
 import {Sorting} from "../utils/sorting/Sorting";
 import {Card} from "./card/Card";
 import {Pagination} from "../utils/pagination/Pagination";
-import {getPacksTC, PackStateType, showOnlyMyPacksTC, sortTC} from "../reducers/packsReducer/packsReducer";
+import {PackStateType} from "../reducers/packsReducer/packsReducer";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import {AddCard} from "./addCard/AddCard";
 import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 import {EditCard} from "./editCard/EditCard";
 import {reset} from "redux-form";
-import { SearchObject } from "../api/packsApi";
+import {SearchObject} from "../api/packsApi";
 
 type CardsPackIdType = {
     cardsPack_id: string
@@ -181,7 +182,8 @@ const CardsComponent = (props: PropsType) => {
 
                 </div>
 
-                <Pagination currentPage={fromCardsServer.page} itemsOnPage={fromCardsServer.pageCount} onPageChange={onPageChange}
+                <Pagination currentPage={fromCardsServer.page} itemsOnPage={fromCardsServer.pageCount}
+                            onPageChange={onPageChange}
                             pagesInPortion={5} totalItems={fromCardsServer.cardsTotalCount}
                             onShowByChange={onShowByChange} onPortionChange={onPortionChange}
                             currentPortion={currentPortion} setPortionChange={setPortionChange}/>

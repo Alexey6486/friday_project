@@ -2,7 +2,6 @@ import React, {PropsWithChildren} from "react";
 import s from './EditCard.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
-import {PackStateType} from "../../reducers/packsReducer/packsReducer";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input, Textarea} from "../../utils/formFields/formFields";
 import {EditCardObject} from "../../api/cardsApi";

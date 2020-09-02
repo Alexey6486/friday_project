@@ -8,7 +8,6 @@ import s from "../authStyles/authStyles.module.css";
 import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired} from "../../utils/formValidation/formValidation";
 
-
 type RestorePasswordFormType = {
     email: string
 }

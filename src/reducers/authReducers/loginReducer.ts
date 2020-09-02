@@ -126,8 +126,6 @@ export const loginTC = (email: string, password: string, rememberMe: boolean): T
         dispatch(loginAC(true, res));
         dispatch(loadingAC(false));
     } catch (e) {
-        console.log(e.response.data.error)
-        console.log({...e})
         if ( e.response.data.error === "not valid email/password /ᐠ-ꞈ-ᐟ\\") {
             dispatch(loadingAC(false));
             dispatch(errorAC('Incorrect password or email.'))

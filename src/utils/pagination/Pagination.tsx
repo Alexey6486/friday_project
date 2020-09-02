@@ -29,10 +29,6 @@ export const Pagination = (props: PropsType) => {
         pages.push(i);
     }
 
-    // const [curPortion, setCurPortion] = useState(1);
-    // const nextPortion = () => {setCurPortion(curPortion + 1);};
-    // const prevPortion = () => {setCurPortion(curPortion - 1);};
-
     const nextPortion = () => {
         onPortionChange(true)
     };

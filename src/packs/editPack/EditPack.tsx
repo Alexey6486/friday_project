@@ -1,6 +1,5 @@
 import React, {PropsWithChildren} from "react";
 import s from './EditPack.module.scss';
-import s2 from '../../utils/formFields/formField.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
 import {editPackTC, PackStateType} from "../../reducers/packsReducer/packsReducer";

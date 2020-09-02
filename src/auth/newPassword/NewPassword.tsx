@@ -9,7 +9,6 @@ import {errorTC, SetNewPasswordStateType, setNewPasswordTC} from "../../reducers
 import {AppRootStateType} from "../../store/store";
 import {AuthLoading} from "../../utils/loading/authLoading/AuthLoading";
 
-
 type ParamsType = {
     token: string
 }
