@@ -1,52 +1,61 @@
-import React, {PropsWithChildren} from "react";
+import React, {PropsWithChildren, useState} from "react";
 import s from './Search.module.scss';
-import {Field, InjectedFormProps, reduxForm, reset} from "redux-form";
+import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../formFields/formFields";
-import {SearchPackObject} from "../../api/packsApi";
-import {getPacksTC, PackStateType} from "../../reducers/packsReducer/packsReducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../store/store";
+import {SearchObject} from "../../api/packsApi";
 
-export const Search = () => {
+type PropsToReduxType = {
+    searchBy: Array<string>
+}
+type PropsType = PropsToReduxType & {
+    onSearchSubmit: (queryParam: SearchObject) => void
+}
 
-    const dispatch = useDispatch();
+export const Search = (props: PropsType) => {
 
-    const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer} = packsState;
+    const {searchBy, onSearchSubmit} = props;
 
-    const onSubmit = (formData: SearchPackObject) => {
-        const query = formData.name;
-
+    const onSubmit = (formData: SearchObject) => {
+        const query = formData;
         if (query) {
-            dispatch(getPacksTC({
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
-                packName: query
-            }))
-            dispatch(reset('SearchForm'));
-        } else {
-            dispatch(getPacksTC({
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
-            }))
-            dispatch(reset('SearchForm'));
+            onSearchSubmit(query);
         }
     }
 
     return (
         <div className={s.searchBlock}>
-            <SearchReduxForm onSubmit={onSubmit}/>
+            <SearchReduxForm onSubmit={onSubmit} searchBy={searchBy}/>
         </div>
     )
 };
 
-const SearchForm: React.FC<InjectedFormProps<SearchPackObject>> = (props: PropsWithChildren<InjectedFormProps<SearchPackObject>>) => {
+const SearchForm: React.FC<InjectedFormProps<SearchObject, PropsToReduxType> & PropsToReduxType> = (props: PropsWithChildren<InjectedFormProps<SearchObject, PropsToReduxType>> & PropsToReduxType) => {
+
+    const {searchBy} = props;
+
+    const [open, setOpen] = useState(false);
+    const [searchParam, setSearchParam] = useState(searchBy[0]);
+
+    const searchOptionHandler = (param: string) => {
+        setSearchParam(param);
+        setOpen(prev => !prev);
+    }
+
+    const searchByMap = searchBy.map((i, idx) => <div key={idx} onClick={() => searchOptionHandler(i)}>{i}</div>);
+
     return (
         <form onSubmit={props.handleSubmit}>
-            <Field component={Input} type={'text'} name={'name'} placeholder={'search by name'}/>
+            <div className={s.searchFieldGroup}>
+                <Field component={Input} type={'text'} name={`${searchParam}`} placeholder={`search by ${searchParam}`}/>
+                <div className={open ? `${s.searchOptions} ${s.open}` : `${s.searchOptions}`}>
+                    {searchByMap}
+                </div>
+            </div>
+            <div className={open ? `${s.searchOptionsBtn} ${s.open}` : `${s.searchOptionsBtn}`}
+                 onClick={() => setOpen(prev => !prev)}></div>
             <button>Search</button>
         </form>
     )
 };
 
-const SearchReduxForm = reduxForm<SearchPackObject>({form: 'SearchForm'})(SearchForm);
+const SearchReduxForm = reduxForm<SearchObject, PropsToReduxType>({form: 'SearchForm'})(SearchForm);

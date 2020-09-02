@@ -20,6 +20,8 @@ import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import {Search} from "../utils/search/Search";
 import {Pagination} from "../utils/pagination/Pagination";
 import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
+import {reset} from "redux-form";
+import { SearchObject } from "../api/packsApi";
 
 export const Packs = React.memo(() => {
 
@@ -87,6 +89,25 @@ export const Packs = React.memo(() => {
     }, [dispatch]);
     ///
 
+    //search
+    const onSearchSubmit = (queryParam: SearchObject) => {
+        if (queryParam.packName) {
+            dispatch(getPacksTC({
+                page: fromServer.page,
+                pageCount: fromServer.pageCount,
+                packName: queryParam.packName
+            }))
+            dispatch(reset('SearchForm'));
+        } else {
+            dispatch(getPacksTC({
+                page: fromServer.page,
+                pageCount: fromServer.pageCount,
+            }))
+            dispatch(reset('SearchForm'));
+        }
+    }
+    ///
+
     useEffect(() => {
         const page = fromServer.page;
         const pageCount = fromServer.pageCount;
@@ -108,7 +129,7 @@ export const Packs = React.memo(() => {
 
                     <button className={s.packs__btn} onClick={toggleCreatePackPopUp}>add new pack</button>
 
-                    <Search/>
+                    <Search searchBy={['packName']} onSearchSubmit={onSearchSubmit}/>
 
                     <div className={s.packs__sortBlock}>
                         <div className={s.packs__sortTitle}>Sort by:</div>

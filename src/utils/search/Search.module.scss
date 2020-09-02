@@ -1,20 +1,117 @@
-.searchBlock{
+.searchBlock {
 
     form {
         display: flex;
         height: 30px;
 
-        input{
+        input {
             margin-right: 5px;
             border: none;
             background-color: #efefef;
             padding: 0 10px;
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
             outline: none;
         }
 
-        button{
+        button {
             outline: none;
+        }
+    }
+}
+
+.searchFieldGroup {
+    display: flex;
+    height: 100%;
+    position: relative;
+
+
+}
+
+.searchOptionsBtn {
+    height: 30px;
+    width: 31px;
+    margin-right: 5px;
+    border: 1px solid #5d626f;
+    cursor: pointer;
+    position: relative;
+    transition: all linear 150ms;
+
+    &::before {
+        content: "";
+        position: absolute;
+        right: 3px;
+        top: 14px;
+        height: 2px;
+        width: 14px;
+        background-color: #5d626f;
+        transform: rotate(-45deg);
+        transition: all linear 150ms;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        right: 12px;
+        top: 14px;
+        height: 2px;
+        width: 14px;
+        background-color: #5d626f;
+        transform: rotate(45deg);
+        transition: all linear 150ms;
+    }
+
+    &:hover {
+        background-color: #fa9716;
+        border: 1px solid #fa9716;
+
+        &::before {
+            background-color: #ffffff;
+        }
+
+        &::after {
+            background-color: #ffffff;
+        }
+    }
+
+    &.open {
+
+        &::before {
+            transform: rotate(45deg);
+        }
+
+        &::after {
+            transform: rotate(-45deg);
+        }
+    }
+}
+
+.searchOptions {
+    display: none;
+    position: absolute;
+    top: 35px;
+    left: 0;
+    background-color: #ffffff;
+    border: 1px solid #fa9716;
+    width: calc(100% - 5px);
+    transition: all linear 150ms;
+
+    &.open{
+        display: block;
+    }
+
+    div {
+        height: 30px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        cursor: pointer;
+        line-height: 1;
+        text-transform: capitalize;
+        transition: all linear 150ms;
+
+        &:hover {
+            background-color: #fa9716;
+            color: #ffffff;
         }
     }
 }

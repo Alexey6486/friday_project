@@ -16,11 +16,13 @@ import {Search} from "../utils/search/Search";
 import {Sorting} from "../utils/sorting/Sorting";
 import {Card} from "./card/Card";
 import {Pagination} from "../utils/pagination/Pagination";
-import {PackStateType, showOnlyMyPacksTC, sortTC} from "../reducers/packsReducer/packsReducer";
+import {getPacksTC, PackStateType, showOnlyMyPacksTC, sortTC} from "../reducers/packsReducer/packsReducer";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import {AddCard} from "./addCard/AddCard";
 import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 import {EditCard} from "./editCard/EditCard";
+import {reset} from "redux-form";
+import { SearchObject } from "../api/packsApi";
 
 type CardsPackIdType = {
     cardsPack_id: string
@@ -89,6 +91,36 @@ const CardsComponent = (props: PropsType) => {
     }, [dispatch, sortBy, fromCardsServer.pageCount, fromCardsServer.page]);
     ///
 
+    //search
+    const onSearchSubmit = (queryParam: SearchObject) => {
+
+        if (queryParam.cardAnswer) {
+            dispatch(getCardsTC({
+                page: fromCardsServer.page,
+                pageCount: fromCardsServer.pageCount,
+                cardAnswer: queryParam.cardAnswer,
+                cardsPack_id
+            }))
+            dispatch(reset('SearchForm'));
+        } else if (queryParam.cardQuestion) {
+            dispatch(getCardsTC({
+                page: fromCardsServer.page,
+                pageCount: fromCardsServer.pageCount,
+                cardQuestion: queryParam.cardQuestion,
+                cardsPack_id
+            }))
+            dispatch(reset('SearchForm'));
+        } else {
+            dispatch(getCardsTC({
+                page: fromCardsServer.page,
+                pageCount: fromCardsServer.pageCount,
+                cardsPack_id
+            }))
+            dispatch(reset('SearchForm'));
+        }
+    }
+    ///
+
     useEffect(() => {
         const page = fromCardsServer.page;
         const pageCount = fromCardsServer.pageCount;
@@ -128,7 +160,7 @@ const CardsComponent = (props: PropsType) => {
 
                     <button className={s.cards__btn} onClick={toggleCreatePackPopUp}>add new card</button>
 
-                    <Search/>
+                    <Search searchBy={['cardQuestion', 'cardAnswer']} onSearchSubmit={onSearchSubmit}/>
 
                     <div className={s.cards__sortBlock}>
                         <div className={s.cards__sortTitle}>Sort by:</div>

@@ -52,8 +52,10 @@ export type EditPackObject = {
     _id: string
     name?: string
 }
-export type SearchPackObject = {
-    name: string
+export type SearchObject = {
+    packName?: string
+    cardAnswer?: string
+    cardQuestion?: string
 }
 
 export const packsApi = {
