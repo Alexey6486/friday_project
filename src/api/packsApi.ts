@@ -30,8 +30,8 @@ export type GetPacksReturnObject = {
 
 export interface ParamTypes extends Record<string, any> {
     packName?: string | number
-    min?: string | number
-    max?: string | number
+    min?: number
+    max?: number
     sortPacks?: string
     page: number
     pageCount: number

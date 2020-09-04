@@ -7,6 +7,7 @@ import {
     changePortionTC,
     getPacksTC,
     PackStateType,
+    setMinMaxAC,
     setPortionTC,
     showByTC,
     showOnlyMyPacksTC,
@@ -22,13 +23,14 @@ import {Pagination} from "../utils/pagination/Pagination";
 import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 import {reset} from "redux-form";
 import { SearchObject } from "../api/packsApi";
+import { RangeSlider } from "../utils/rangeSlider/RangeSlider";
 
 export const Packs = React.memo(() => {
 
     const dispatch = useDispatch();
 
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer, sortBy, onlyMyPacks, currentPortion, isLoading, sortParam} = packsState;
+    const {fromServer, sortBy, onlyMyPacks, currentPortion, isLoading, sortParam, sortMax, sortMin} = packsState;
 
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
     const {userProfile} = authState;
@@ -49,19 +51,22 @@ export const Packs = React.memo(() => {
     const sortRegular = useCallback((sortDirection: string) => {
         const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
+
         dispatch(sortTC({
             page: fromServer.page,
             pageCount: fromServer.pageCount,
             sortPacks: `${sortUrl}`,
-            user_id: checkFlag
+            user_id: checkFlag,
+            max: sortMax,
+            min: sortMin
         }));
-    }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page, userProfile._id]);
+    }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page, userProfile._id, sortMin, sortMax]);
 
     const sortCheck = useCallback(() => {
         const checkFlag = onlyMyPacks ? `` : `${userProfile._id}`;
-        dispatch(showOnlyMyPacksTC({page: 1, pageCount: fromServer.pageCount, user_id: checkFlag}, !onlyMyPacks));
+        dispatch(showOnlyMyPacksTC({page: 1, pageCount: fromServer.pageCount, user_id: checkFlag, max: sortMax, min: sortMin}, !onlyMyPacks));
         dispatch(setPortionTC(1));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id]);
+    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortMin, sortMax]);
     ///
 
     // pagination
@@ -69,16 +74,16 @@ export const Packs = React.memo(() => {
         const user_id = onlyMyPacks ? `${userProfile._id}` : '';
         const pageCount = fromServer.pageCount;
         const sortPacks = sortParam;
-        user_id ? dispatch(changePageTC({page, pageCount, sortPacks, user_id})) : dispatch(changePageTC({page, pageCount, sortPacks}));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortParam]);
+        user_id ? dispatch(changePageTC({page, pageCount, sortPacks, user_id, max: sortMax, min: sortMin})) : dispatch(changePageTC({page, pageCount, sortPacks, max: sortMax, min: sortMin}));
+    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortParam, sortMin, sortMax]);
 
     const onShowByChange = useCallback((pageCount: number) => {
         const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const page = fromServer.page;
         const user_id = checkFlag;
         const sortPacks = sortParam;
-        dispatch(showByTC({page, pageCount, sortPacks, user_id}));
-    }, [dispatch, onlyMyPacks, fromServer.page, userProfile._id, sortParam]);
+        dispatch(showByTC({page, pageCount, sortPacks, user_id, max: sortMax, min: sortMin}));
+    }, [dispatch, onlyMyPacks, fromServer.page, userProfile._id, sortParam, sortMin, sortMax]);
 
     const onPortionChange = useCallback((flag: boolean) => {
         flag ? dispatch(changePortionTC(true)) : dispatch(changePortionTC(false));
@@ -108,6 +113,24 @@ export const Packs = React.memo(() => {
     }
     ///
 
+    //range slider
+    const searchByMinMax = (valArr: Array<number>) => {
+        const user_id = onlyMyPacks ? `${userProfile._id}` : '';
+        const sortPacks = sortParam;
+        const min = valArr[0];
+        const max = valArr[1];
+        dispatch(setMinMaxAC(min, max));
+        dispatch(getPacksTC({
+            page: fromServer.page,
+            pageCount: fromServer.pageCount,
+            min,
+            max,
+            sortPacks,
+            user_id,
+        }));
+    }
+    ///
+
     useEffect(() => {
         const page = fromServer.page;
         const pageCount = fromServer.pageCount;
@@ -130,6 +153,9 @@ export const Packs = React.memo(() => {
                     <button className={s.packs__btn} onClick={toggleCreatePackPopUp}>add new pack</button>
 
                     <Search searchBy={['packName']} onSearchSubmit={onSearchSubmit}/>
+
+                    <RangeSlider max={fromServer.maxCardsCount} min={fromServer.minCardsCount} step={1}
+                    fromVal={sortMin} toVal={sortMax} searchByMinMax={searchByMinMax}/>
 
                     <div className={s.packs__sortBlock}>
                         <div className={s.packs__sortTitle}>Sort by:</div>
