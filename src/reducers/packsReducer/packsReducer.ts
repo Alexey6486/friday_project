@@ -11,6 +11,7 @@ const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 const SET_SHOW_BY = 'SET_SHOW_BY';
 const CHANGE_PORTION = 'CHANGE_PORTION';
 const SET_PORTION = 'SET_PORTION';
+const SET_MIN_MAX = 'SET_MIN_MAX';
 
 type GetPacksACType = {
     type: typeof GET_PACKS
@@ -47,6 +48,11 @@ type SetPortionACType = {
 type LoadingACType = {
     type: typeof LOADING
     isLoading: boolean
+};
+type SetMinMaxACType = {
+    type: typeof SET_MIN_MAX
+    min: number
+    max: number
 };
 
 const getPacksAC = (payload: GetPacksReturnObject): GetPacksACType => {
@@ -103,6 +109,13 @@ const loadingAC = (isLoading: boolean): LoadingACType => {
         isLoading
     }
 };
+export const setMinMaxAC = (min: number, max: number): SetMinMaxACType => {
+    return {
+        type: SET_MIN_MAX,
+        min,
+        max,
+    }
+};
 
 type ActionTypes =
     GetPacksACType
@@ -113,7 +126,8 @@ type ActionTypes =
     | ChangePortionACType
     | SetPortionACType
     | LoadingACType
-    | SetSortParamACType;
+    | SetSortParamACType
+    | SetMinMaxACType;
 
 export type PackStateType = {
     fromServer: GetPacksReturnObject
@@ -122,13 +136,15 @@ export type PackStateType = {
     onlyMyPacks: boolean
     currentPortion: number
     isLoading: false
+    sortMin: number
+    sortMax: number
 };
 
 const initState: PackStateType = {
     fromServer: {
         cardPacks: [],
         cardPacksTotalCount: 0,
-        maxCardsCount: 0,
+        maxCardsCount: 1,
         minCardsCount: 0,
         page: 1,
         pageCount: 5,
@@ -138,6 +154,8 @@ const initState: PackStateType = {
     onlyMyPacks: false,
     currentPortion: 1,
     isLoading: false,
+    sortMin: 0,
+    sortMax: 1,
 };
 
 export const packsReducer = (state: PackStateType = initState, action: ActionTypes) => {
@@ -148,7 +166,8 @@ export const packsReducer = (state: PackStateType = initState, action: ActionTyp
                 fromServer: {
                     ...state.fromServer,
                     cardPacks: action.payload.cardPacks,
-                    cardPacksTotalCount: action.payload.cardPacksTotalCount
+                    cardPacksTotalCount: action.payload.cardPacksTotalCount,
+                    maxCardsCount: action.payload.maxCardsCount < 20 ? 20 : action.payload.maxCardsCount,
                 }
             };
         case SET_CURRENT_PAGE:
@@ -167,6 +186,8 @@ export const packsReducer = (state: PackStateType = initState, action: ActionTyp
             return {...state, onlyMyPacks: action.showMyPacks, fromServer: {...state.fromServer, page: action.page}};
         case LOADING:
             return {...state, isLoading: action.isLoading};
+        case SET_MIN_MAX:
+            return {...state, sortMin: action.min, sortMax: action.max};
         default:
             return state;
     }
