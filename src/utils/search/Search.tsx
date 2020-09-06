@@ -1,5 +1,5 @@
-import React, {PropsWithChildren, useState} from "react";
-import s from './Search.module.scss';
+import React, {PropsWithChildren, useEffect, useState} from "react";
+import './Search.styles.scss';
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../formFields/formFields";
 import {SearchObject} from "../../api/packsApi";
@@ -23,7 +23,7 @@ export const Search = (props: PropsType) => {
     }
 
     return (
-        <div className={s.searchBlock}>
+        <div className={'searchBlock'}>
             <SearchReduxForm onSubmit={onSubmit} searchBy={searchBy}/>
         </div>
     )
@@ -41,17 +41,40 @@ const SearchForm: React.FC<InjectedFormProps<SearchObject, PropsToReduxType> & P
         setOpen(prev => !prev);
     }
 
-    const searchByMap = searchBy.map((i, idx) => <div key={idx} onClick={() => searchOptionHandler(i)}>{i}</div>);
+    useEffect(() => {
+
+        const body = document.querySelector('body');
+
+        const searchToggle = (e: MouseEvent) => {
+
+            const target = e.target as HTMLElement;
+
+            if (e.target) {
+                if (!target.classList.contains('searchOption') && !target.classList.contains('searchOptionsBtn')) setOpen(false);
+            }
+        }
+
+        if (body) body.addEventListener('click', searchToggle);
+
+        return () => {
+            if (body) body.removeEventListener('click', searchToggle);
+        }
+
+    }, [])
+
+    const searchByMap = searchBy.map((i, idx) => <div key={idx} className={'searchOption'}
+                                                      onClick={() => searchOptionHandler(i)}>{i}</div>);
 
     return (
-        <form onSubmit={props.handleSubmit}>
-            <div className={s.searchFieldGroup}>
-                <Field component={Input} type={'text'} name={`${searchParam}`} placeholder={`search by ${searchParam}`}/>
-                <div className={open ? `${s.searchOptions} ${s.open}` : `${s.searchOptions}`}>
+        <form onSubmit={props.handleSubmit} id={'searchForm'}>
+            <div className={'searchFieldGroup'}>
+                <Field component={Input} type={'text'} name={`${searchParam}`}
+                       placeholder={`search by ${searchParam}`}/>
+                <div className={open ? 'searchOptions open' : 'searchOptions'}>
                     {searchByMap}
                 </div>
             </div>
-            <div className={open ? `${s.searchOptionsBtn} ${s.open}` : `${s.searchOptionsBtn}`}
+            <div className={open ? 'searchOptionsBtn open' : 'searchOptionsBtn'}
                  onClick={() => setOpen(prev => !prev)}></div>
             <button>Search</button>
         </form>

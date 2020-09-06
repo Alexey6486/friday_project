@@ -71,5 +71,9 @@ const EditCardForm: React.FC<InjectedFormProps<EditCardObject>> = (props: PropsW
 };
 
 const EditCardReduxForm = reduxForm<EditCardObject>({
-    form: 'EditCardForm'
+    form: 'EditCardForm',
+    initialValues: {
+        question: 'test',
+        answer: 'test2'
+    }
 })(EditCardForm);

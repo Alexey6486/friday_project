@@ -4,7 +4,7 @@ import s2 from '../../utils/formFields/formField.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../store/store";
 import {editPackTC, PackStateType} from "../../reducers/packsReducer/packsReducer";
-import {Field, InjectedFormProps, reduxForm} from "redux-form";
+import {Field, FieldArray, InjectedFormProps, reduxForm} from "redux-form";
 import {EditPackObject} from "../../api/packsApi";
 import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired} from "../../utils/formValidation/formValidation";
@@ -68,6 +68,16 @@ const EditPackForm: React.FC<InjectedFormProps<EditPackObject>> = (props: PropsW
     )
 };
 
+// const renderMembers = ({fields: any}: any) => {
+//
+// }
+// const FormArray = () => {
+//     <FieldArray name='members' component={renderMembers} />
+// }
+
 const EditPackReduxForm = reduxForm<EditPackObject>({
-    form: 'EditPackForm'
+    form: 'EditPackForm',
+    initialValues: {
+        name: 'test'
+    }
 })(EditPackForm);
