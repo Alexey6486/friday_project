@@ -1,8 +1,5 @@
 import React from "react";
 import s from "./Card.module.scss";
-import {useDispatch, useSelector} from "react-redux";
-import {CardsStateType, deleteCardTC} from "../../reducers/cardsReducer/cardsReducer";
-import {AppRootStateType} from "../../store/store";
 
 type PropsType = {
     question: string
@@ -12,19 +9,15 @@ type PropsType = {
     id: string
     cardsPack_id: string
     toggleEditPackPopUp: (id: string) => void
+    toggleDeleteCardPopUp: (id: string, cardsPack_id: string) => void
 }
 
 export const Card = (props: PropsType) => {
 
-    const dispatch = useDispatch()
+    const {answer, created, question, checkIfPackIsYours, toggleEditPackPopUp, id, cardsPack_id, toggleDeleteCardPopUp} = props;
 
-    const cardsState = useSelector<AppRootStateType, CardsStateType>(state => state.cardsReducer);
-    const {fromCardsServer} = cardsState;
-
-    const {answer, created, question, checkIfPackIsYours, toggleEditPackPopUp, id, cardsPack_id} = props;
-
-    const deletePack = () => {
-        dispatch(deleteCardTC({page: fromCardsServer.page, pageCount: fromCardsServer.pageCount, cardsPack_id}, id))
+    const deleteCard = () => {
+        toggleDeleteCardPopUp(id, cardsPack_id);
     }
     const editPackHandler = () => {
         toggleEditPackPopUp(id);
@@ -42,7 +35,7 @@ export const Card = (props: PropsType) => {
             </div>
             <div className={s.card__interface}>
                 <button className={disabledEditBtn} onClick={editPackHandler}>Edit</button>
-                <button className={disabledDeleteBtn} onClick={deletePack}>Delete</button>
+                <button className={disabledDeleteBtn} onClick={deleteCard}>Delete</button>
             </div>
         </div>
     )

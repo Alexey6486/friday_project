@@ -5,6 +5,7 @@ import {AppRootStateType} from "../store/store";
 import {
     changePageTC,
     changePortionTC,
+    deletePackTC,
     getPacksTC,
     PackStateType,
     setMinMaxAC,
@@ -22,8 +23,10 @@ import {Search} from "../utils/search/Search";
 import {Pagination} from "../utils/pagination/Pagination";
 import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 import {reset} from "redux-form";
-import { SearchObject } from "../api/packsApi";
-import { RangeSlider } from "../utils/rangeSlider/RangeSlider";
+import {SearchObject} from "../api/packsApi";
+import {RangeSlider} from "../utils/rangeSlider/RangeSlider";
+import {Redirect} from "react-router-dom";
+import {DeletePack} from "./deletePack/DeletePack";
 
 export const Packs = React.memo(() => {
 
@@ -33,17 +36,21 @@ export const Packs = React.memo(() => {
     const {fromServer, sortBy, onlyMyPacks, currentPortion, isLoading, sortParam, sortMax, sortMin} = packsState;
 
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
-    const {userProfile} = authState;
+    const {userProfile, isAuth} = authState;
 
-    // create/edit pop ups
+    // create/edit/delete pop ups
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
     const [editPackPopUp, setEditPackPopUp] = useState('');
+    const [deletePackPopUp, setDeletePackPopUp] = useState('');
 
     const toggleCreatePackPopUp = useCallback(() => {
         setCreatePackPopUp(prev => !prev);
     }, []);
     const toggleEditPackPopUp = useCallback((_id: string) => {
         setEditPackPopUp(_id);
+    }, []);
+    const toggleDeletePackPopUp = useCallback((id: string) => {
+        setDeletePackPopUp(id);
     }, []);
     ///
 
@@ -64,7 +71,13 @@ export const Packs = React.memo(() => {
 
     const sortCheck = useCallback(() => {
         const checkFlag = onlyMyPacks ? `` : `${userProfile._id}`;
-        dispatch(showOnlyMyPacksTC({page: 1, pageCount: fromServer.pageCount, user_id: checkFlag, max: sortMax, min: sortMin}, !onlyMyPacks));
+        dispatch(showOnlyMyPacksTC({
+            page: 1,
+            pageCount: fromServer.pageCount,
+            user_id: checkFlag,
+            max: sortMax,
+            min: sortMin
+        }, !onlyMyPacks));
         dispatch(setPortionTC(1));
     }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortMin, sortMax]);
     ///
@@ -74,7 +87,14 @@ export const Packs = React.memo(() => {
         const user_id = onlyMyPacks ? `${userProfile._id}` : '';
         const pageCount = fromServer.pageCount;
         const sortPacks = sortParam;
-        user_id ? dispatch(changePageTC({page, pageCount, sortPacks, user_id, max: sortMax, min: sortMin})) : dispatch(changePageTC({page, pageCount, sortPacks, max: sortMax, min: sortMin}));
+        user_id ? dispatch(changePageTC({
+            page,
+            pageCount,
+            sortPacks,
+            user_id,
+            max: sortMax,
+            min: sortMin
+        })) : dispatch(changePageTC({page, pageCount, sortPacks, max: sortMax, min: sortMin}));
     }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortParam, sortMin, sortMax]);
 
     const onShowByChange = useCallback((pageCount: number) => {
@@ -131,6 +151,13 @@ export const Packs = React.memo(() => {
     }
     ///
 
+    //delete pack
+    const deletePack = (id: string) => {
+        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
+        dispatch(deletePackTC({page: fromServer.page, pageCount: fromServer.pageCount, user_id: checkFlag}, id))
+    }
+    ///
+
     useEffect(() => {
         const page = fromServer.page;
         const pageCount = fromServer.pageCount;
@@ -138,11 +165,16 @@ export const Packs = React.memo(() => {
     }, []);
 
     const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}
-                                                            toggleEditPackPopUp={toggleEditPackPopUp}/>);
+                                                            toggleEditPackPopUp={toggleEditPackPopUp}
+                                                            toggleDeletePackPopUp={toggleDeletePackPopUp}/>);
 
     const sortArray = ['name', 'cardsCount', 'created', 'user_id'];
     const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks}
                                                           sortCheck={sortCheck} sortRegular={sortRegular}/>);
+
+    if (!isAuth) {
+        return <Redirect to={'/login'}/>
+    }
 
     return (
         <div className={s.packs}>
@@ -155,7 +187,7 @@ export const Packs = React.memo(() => {
                     <Search searchBy={['packName']} onSearchSubmit={onSearchSubmit}/>
 
                     <RangeSlider max={fromServer.maxCardsCount} min={fromServer.minCardsCount} step={1}
-                    fromVal={sortMin} toVal={sortMax} searchByMinMax={searchByMinMax}/>
+                                 fromVal={sortMin} toVal={sortMax} searchByMinMax={searchByMinMax}/>
 
                     <div className={s.packs__sortBlock}>
                         <div className={s.packs__sortTitle}>Sort by:</div>
@@ -190,6 +222,10 @@ export const Packs = React.memo(() => {
             {
                 editPackPopUp &&
                 <EditPack toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp}/>
+            }
+            {
+                deletePackPopUp &&
+                <DeletePack toggleDeletePackPopUp={toggleDeletePackPopUp} deletePack={deletePack} id={deletePackPopUp}/>
             }
         </div>
     )

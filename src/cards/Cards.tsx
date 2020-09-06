@@ -7,22 +7,25 @@ import {
     CardsStateType,
     changePageTC,
     changePortionTC,
+    deleteCardTC,
     getCardsTC,
     setCurrentPageAC,
     setPortionTC,
-    showByTC, sortCardsTC
+    showByTC,
+    sortCardsTC
 } from "../reducers/cardsReducer/cardsReducer";
 import {Search} from "../utils/search/Search";
 import {Sorting} from "../utils/sorting/Sorting";
 import {Card} from "./card/Card";
 import {Pagination} from "../utils/pagination/Pagination";
-import {getPacksTC, PackStateType, showOnlyMyPacksTC, sortTC} from "../reducers/packsReducer/packsReducer";
+import {PackStateType} from "../reducers/packsReducer/packsReducer";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import {AddCard} from "./addCard/AddCard";
 import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 import {EditCard} from "./editCard/EditCard";
 import {reset} from "redux-form";
-import { SearchObject } from "../api/packsApi";
+import {SearchObject} from "../api/packsApi";
+import {DeleteCard} from "./deleteCard/DeleteCard";
 
 type CardsPackIdType = {
     cardsPack_id: string
@@ -45,15 +48,23 @@ const CardsComponent = (props: PropsType) => {
 
     const cardsPack_id = match.params.cardsPack_id;
 
-    // create/edit pop ups
+    // create/edit/delete pop ups
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
     const [editPackPopUp, setEditPackPopUp] = useState('');
+    const [deleteCardPopUp, setDeleteCardPopUp] = useState<Array<string>>([]);
 
     const toggleCreatePackPopUp = useCallback(() => {
         setCreatePackPopUp(prev => !prev);
     }, []);
     const toggleEditPackPopUp = useCallback((_id: string) => {
         setEditPackPopUp(_id);
+    }, []);
+    const toggleDeleteCardPopUp = useCallback((id: string, cardsPack_id: string) => {
+        if (id.length > 0) {
+            setDeleteCardPopUp([id, cardsPack_id]);
+        } else {
+            setDeleteCardPopUp([]);
+        }
     }, []);
     ///
 
@@ -121,6 +132,12 @@ const CardsComponent = (props: PropsType) => {
     }
     ///
 
+    //delete card
+    const deleteCard = (id: string, cardsPack_id: string) => {
+        dispatch(deleteCardTC({page: fromCardsServer.page, pageCount: fromCardsServer.pageCount, cardsPack_id}, id))
+    }
+    ///
+
     useEffect(() => {
         const page = fromCardsServer.page;
         const pageCount = fromCardsServer.pageCount;
@@ -146,7 +163,7 @@ const CardsComponent = (props: PropsType) => {
         return (
             <Card key={_id} question={question} answer={answer} created={created}
                   checkIfPackIsYours={checkIfPackIsYours.length} toggleEditPackPopUp={toggleEditPackPopUp} id={_id}
-                  cardsPack_id={cardsPack_id}/>
+                  cardsPack_id={cardsPack_id} toggleDeleteCardPopUp={toggleDeleteCardPopUp}/>
         )
     })
 
@@ -181,7 +198,8 @@ const CardsComponent = (props: PropsType) => {
 
                 </div>
 
-                <Pagination currentPage={fromCardsServer.page} itemsOnPage={fromCardsServer.pageCount} onPageChange={onPageChange}
+                <Pagination currentPage={fromCardsServer.page} itemsOnPage={fromCardsServer.pageCount}
+                            onPageChange={onPageChange}
                             pagesInPortion={5} totalItems={fromCardsServer.cardsTotalCount}
                             onShowByChange={onShowByChange} onPortionChange={onPortionChange}
                             currentPortion={currentPortion} setPortionChange={setPortionChange}/>
@@ -195,6 +213,11 @@ const CardsComponent = (props: PropsType) => {
             {
                 editPackPopUp &&
                 <EditCard toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp} cardsPack_id={cardsPack_id}/>
+            }
+            {
+                deleteCardPopUp.length > 0 &&
+                <DeleteCard toggleDeleteCardPopUp={toggleDeleteCardPopUp} deleteCard={deleteCard}
+                            id={deleteCardPopUp[0]} cardsPackId={deleteCardPopUp[1]}/>
             }
 
         </div>
