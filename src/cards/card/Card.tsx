@@ -1,30 +1,36 @@
 import React from "react";
 import s from "./Card.module.scss";
+import {useSelector} from "react-redux";
+import {AppRootStateType} from "../../store/store";
+import {AuthStateType} from "../../reducers/authReducers/loginReducer";
 
 type PropsType = {
     question: string
     answer: string
     created: string
-    checkIfPackIsYours: number
     id: string
     cardsPack_id: string
-    toggleEditPackPopUp: (id: string) => void
+    toggleEditCardPopUp: (id: string, args: Array<string>) => void
     toggleDeleteCardPopUp: (id: string, cardsPack_id: string) => void
+    userId: string
 }
 
 export const Card = (props: PropsType) => {
 
-    const {answer, created, question, checkIfPackIsYours, toggleEditPackPopUp, id, cardsPack_id, toggleDeleteCardPopUp} = props;
+    const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
+    const {userProfile} = authState;
+
+    const {answer, created, question, toggleEditCardPopUp, id, cardsPack_id, toggleDeleteCardPopUp, userId} = props;
 
     const deleteCard = () => {
         toggleDeleteCardPopUp(id, cardsPack_id);
     }
     const editPackHandler = () => {
-        toggleEditPackPopUp(id);
+        toggleEditCardPopUp(id, [question, answer]);
     }
 
-    const disabledDeleteBtn = checkIfPackIsYours > 0 ? `${s.card__btn} ${s.card__btn_del}` : `${s.card__btn} ${s.disabled}`;
-    const disabledEditBtn = checkIfPackIsYours > 0 ? `${s.card__btn} ${s.card__btn_edit}` : `${s.card__btn} ${s.disabled}`;
+    const disabledDeleteBtn = userId === userProfile._id ? `${s.card__btn} ${s.card__btn_del}` : `${s.card__btn} ${s.disabled}`;
+    const disabledEditBtn = userId === userProfile._id ? `${s.card__btn} ${s.card__btn_edit}` : `${s.card__btn} ${s.disabled}`;
 
     return (
         <div className={s.card}>

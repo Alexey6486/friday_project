@@ -49,15 +49,19 @@ const CardsComponent = (props: PropsType) => {
     const cardsPack_id = match.params.cardsPack_id;
 
     // create/edit/delete pop ups
-    const [createPackPopUp, setCreatePackPopUp] = useState(false);
-    const [editPackPopUp, setEditPackPopUp] = useState('');
+    const [createCardPopUp, setCreateCardPopUp] = useState(false);
+    const [editCardPopUp, setEditCardPopUp] = useState<Array<string>>([]);
     const [deleteCardPopUp, setDeleteCardPopUp] = useState<Array<string>>([]);
 
-    const toggleCreatePackPopUp = useCallback(() => {
-        setCreatePackPopUp(prev => !prev);
+    const toggleCreateCardPopUp = useCallback(() => {
+        setCreateCardPopUp(prev => !prev);
     }, []);
-    const toggleEditPackPopUp = useCallback((_id: string) => {
-        setEditPackPopUp(_id);
+    const toggleEditCardPopUp = useCallback((_id: string, args: Array<string>) => {
+        if (_id) {
+            setEditCardPopUp([_id, ...args]);
+        } else {
+            setEditCardPopUp([]);
+        }
     }, []);
     const toggleDeleteCardPopUp = useCallback((id: string, cardsPack_id: string) => {
         if (id.length > 0) {
@@ -159,11 +163,11 @@ const CardsComponent = (props: PropsType) => {
     });
 
     const cardsMap = fromCardsServer.cards.map(card => {
-        const {_id, question, answer, created} = card;
+        const {_id, question, answer, created, user_id} = card;
         return (
             <Card key={_id} question={question} answer={answer} created={created}
-                  checkIfPackIsYours={checkIfPackIsYours.length} toggleEditPackPopUp={toggleEditPackPopUp} id={_id}
-                  cardsPack_id={cardsPack_id} toggleDeleteCardPopUp={toggleDeleteCardPopUp}/>
+                  toggleEditCardPopUp={toggleEditCardPopUp} id={_id}
+                  cardsPack_id={cardsPack_id} toggleDeleteCardPopUp={toggleDeleteCardPopUp} userId={user_id}/>
         )
     })
 
@@ -175,7 +179,7 @@ const CardsComponent = (props: PropsType) => {
 
                 <div className={s.cards__interface}>
 
-                    <button className={s.cards__btn} onClick={toggleCreatePackPopUp}>add new card</button>
+                    <button className={checkIfPackIsYours.length ? `${s.cards__btn}` : `${s.cards__btn} ${s.disabled}`} onClick={toggleCreateCardPopUp}>add new card</button>
 
                     <Search searchBy={['cardQuestion', 'cardAnswer']} onSearchSubmit={onSearchSubmit}/>
 
@@ -207,12 +211,12 @@ const CardsComponent = (props: PropsType) => {
             </div>
 
             {
-                createPackPopUp &&
-                <AddCard toggleCreatePackPopUp={toggleCreatePackPopUp} cardsPack_id={cardsPack_id}/>
+                createCardPopUp &&
+                <AddCard toggleCreatePackPopUp={toggleCreateCardPopUp} cardsPack_id={cardsPack_id}/>
             }
             {
-                editPackPopUp &&
-                <EditCard toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp} cardsPack_id={cardsPack_id}/>
+                editCardPopUp[0] &&
+                <EditCard toggleEditCardPopUp={toggleEditCardPopUp} id={editCardPopUp[0]} question={editCardPopUp[1]} answer={editCardPopUp[2]} cardsPack_id={cardsPack_id}/>
             }
             {
                 deleteCardPopUp.length > 0 &&

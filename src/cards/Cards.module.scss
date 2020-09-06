@@ -33,6 +33,11 @@
 .cards__btn{
     cursor: pointer;
     outline: none;
+
+    &.disabled {
+        pointer-events: none;
+        background-color: lighten(#5d626f, 20%);
+    }
 }
 
 .cards__sortBlock {

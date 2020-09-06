@@ -11,13 +11,14 @@ import {fieldRequired} from "../../utils/formValidation/formValidation";
 import {AuthStateType} from "../../reducers/authReducers/loginReducer";
 
 type PropsType = {
-    toggleEditPackPopUp: (_id: string) => void
+    toggleEditPackPopUp: (_id: string, args: Array<string>) => void
     id: string
+    name: string
 }
 
 export const EditPack = (props: PropsType) => {
 
-    const {toggleEditPackPopUp, id} = props;
+    const {toggleEditPackPopUp, id, name} = props;
 
     const dispatch = useDispatch();
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
@@ -38,18 +39,18 @@ export const EditPack = (props: PropsType) => {
                 _id: id,
                 name: formData.name,
             }));
-        toggleEditPackPopUp('');
+        toggleEditPackPopUp('', []);
     }
 
     const onClose = () => {
-        toggleEditPackPopUp('')
+        toggleEditPackPopUp('', [])
     }
 
     return (
         <div className={s.editPack}>
             <div className={s.editPack__formWrap}>
                 <div className={s.close} onClick={onClose}></div>
-                <EditPackReduxForm onSubmit={onSubmit}/>
+                <EditPackReduxForm onSubmit={onSubmit} initialValues={{name}}/>
             </div>
         </div>
     )
@@ -76,8 +77,5 @@ const EditPackForm: React.FC<InjectedFormProps<EditPackObject>> = (props: PropsW
 // }
 
 const EditPackReduxForm = reduxForm<EditPackObject>({
-    form: 'EditPackForm',
-    initialValues: {
-        name: 'test'
-    }
+    form: 'EditPackForm'
 })(EditPackForm);

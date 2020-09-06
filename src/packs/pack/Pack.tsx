@@ -7,7 +7,7 @@ import {AuthStateType} from "../../reducers/authReducers/loginReducer";
 import {Link} from "react-router-dom";
 
 type PropsType = CardInPackType & {
-    toggleEditPackPopUp: (_id: string) => void
+    toggleEditPackPopUp: (_id: string, args: Array<string>) => void
     toggleDeletePackPopUp: (id: string) => void
 };
 
@@ -22,7 +22,7 @@ export const Pack = (props: PropsType) => {
         toggleDeletePackPopUp(id);
     }
     const editPackHandler = () => {
-        toggleEditPackPopUp(_id);
+        toggleEditPackPopUp(_id, [name]);
     }
 
     const disabledDeleteBtn = userProfile._id === user_id ? `${s.pack__btn} ${s.pack__btn_del}` : `${s.pack__btn} ${s.disabled}`;

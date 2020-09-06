@@ -40,14 +40,18 @@ export const Packs = React.memo(() => {
 
     // create/edit/delete pop ups
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
-    const [editPackPopUp, setEditPackPopUp] = useState('');
+    const [editPackPopUp, setEditPackPopUp] = useState<Array<string>>([]);
     const [deletePackPopUp, setDeletePackPopUp] = useState('');
 
     const toggleCreatePackPopUp = useCallback(() => {
         setCreatePackPopUp(prev => !prev);
     }, []);
-    const toggleEditPackPopUp = useCallback((_id: string) => {
-        setEditPackPopUp(_id);
+    const toggleEditPackPopUp = useCallback((_id: string, args: Array<string>) => {
+        if (_id) {
+            setEditPackPopUp([_id, ...args]);
+        } else {
+            setEditPackPopUp([]);
+        }
     }, []);
     const toggleDeletePackPopUp = useCallback((id: string) => {
         setDeletePackPopUp(id);
@@ -159,9 +163,10 @@ export const Packs = React.memo(() => {
     ///
 
     useEffect(() => {
+        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const page = fromServer.page;
         const pageCount = fromServer.pageCount;
-        dispatch(getPacksTC({page, pageCount, sortParam}));
+        dispatch(getPacksTC({page, pageCount, sortParam, user_id: checkFlag}));
     }, []);
 
     const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}
@@ -220,8 +225,8 @@ export const Packs = React.memo(() => {
                 <AddPack toggleCreatePackPopUp={toggleCreatePackPopUp}/>
             }
             {
-                editPackPopUp &&
-                <EditPack toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp}/>
+                editPackPopUp[0] &&
+                <EditPack toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp[0]} name={editPackPopUp[1]}/>
             }
             {
                 deletePackPopUp &&
