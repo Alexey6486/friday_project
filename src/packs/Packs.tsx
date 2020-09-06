@@ -8,6 +8,7 @@ import {
     deletePackTC,
     getPacksTC,
     PackStateType,
+    searchPacksAC,
     setMinMaxAC,
     setPortionTC,
     showByTC,
@@ -33,10 +34,10 @@ export const Packs = React.memo(() => {
     const dispatch = useDispatch();
 
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer, sortBy, onlyMyPacks, currentPortion, isLoading, sortParam, sortMax, sortMin} = packsState;
+    const {fromServer, sortBy, onlyMyPacks, currentPortion, isLoading, sortMax, sortMin} = packsState;
 
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
-    const {userProfile, isAuth} = authState;
+    const {isAuth} = authState;
 
     // create/edit/delete pop ups
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
@@ -60,54 +61,24 @@ export const Packs = React.memo(() => {
 
     // sorting
     const sortRegular = useCallback((sortDirection: string) => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
-
-        dispatch(sortTC({
-            page: fromServer.page,
-            pageCount: fromServer.pageCount,
-            sortPacks: `${sortUrl}`,
-            user_id: checkFlag,
-            max: sortMax,
-            min: sortMin
-        }));
-    }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page, userProfile._id, sortMin, sortMax]);
+        dispatch(sortTC(sortUrl));
+    }, [dispatch, sortBy]);
 
     const sortCheck = useCallback(() => {
-        const checkFlag = onlyMyPacks ? `` : `${userProfile._id}`;
-        dispatch(showOnlyMyPacksTC({
-            page: 1,
-            pageCount: fromServer.pageCount,
-            user_id: checkFlag,
-            max: sortMax,
-            min: sortMin
-        }, !onlyMyPacks));
+        dispatch(showOnlyMyPacksTC(!onlyMyPacks, 1));
         dispatch(setPortionTC(1));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortMin, sortMax]);
+    }, [dispatch, onlyMyPacks]);
     ///
 
     // pagination
     const onPageChange = useCallback((page: number) => {
-        const user_id = onlyMyPacks ? `${userProfile._id}` : '';
-        const pageCount = fromServer.pageCount;
-        const sortPacks = sortParam;
-        user_id ? dispatch(changePageTC({
-            page,
-            pageCount,
-            sortPacks,
-            user_id,
-            max: sortMax,
-            min: sortMin
-        })) : dispatch(changePageTC({page, pageCount, sortPacks, max: sortMax, min: sortMin}));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortParam, sortMin, sortMax]);
+        dispatch(changePageTC(page))
+    }, [dispatch]);
 
     const onShowByChange = useCallback((pageCount: number) => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
-        const page = fromServer.page;
-        const user_id = checkFlag;
-        const sortPacks = sortParam;
-        dispatch(showByTC({page, pageCount, sortPacks, user_id, max: sortMax, min: sortMin}));
-    }, [dispatch, onlyMyPacks, fromServer.page, userProfile._id, sortParam, sortMin, sortMax]);
+        dispatch(showByTC(pageCount))
+    }, [dispatch]);
 
     const onPortionChange = useCallback((flag: boolean) => {
         flag ? dispatch(changePortionTC(true)) : dispatch(changePortionTC(false));
@@ -121,17 +92,12 @@ export const Packs = React.memo(() => {
     //search
     const onSearchSubmit = (queryParam: SearchObject) => {
         if (queryParam.packName) {
-            dispatch(getPacksTC({
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
-                packName: queryParam.packName
-            }))
+            dispatch(searchPacksAC(queryParam.packName))
+            dispatch(getPacksTC())
             dispatch(reset('SearchForm'));
         } else {
-            dispatch(getPacksTC({
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
-            }))
+            dispatch(searchPacksAC(''))
+            dispatch(getPacksTC())
             dispatch(reset('SearchForm'));
         }
     }
@@ -139,34 +105,19 @@ export const Packs = React.memo(() => {
 
     //range slider
     const searchByMinMax = (valArr: Array<number>) => {
-        const user_id = onlyMyPacks ? `${userProfile._id}` : '';
-        const sortPacks = sortParam;
-        const min = valArr[0];
-        const max = valArr[1];
-        dispatch(setMinMaxAC(min, max));
-        dispatch(getPacksTC({
-            page: fromServer.page,
-            pageCount: fromServer.pageCount,
-            min,
-            max,
-            sortPacks,
-            user_id,
-        }));
+        dispatch(setMinMaxAC(valArr[0], valArr[1]));
+        dispatch(getPacksTC());
     }
     ///
 
     //delete pack
     const deletePack = (id: string) => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
-        dispatch(deletePackTC({page: fromServer.page, pageCount: fromServer.pageCount, user_id: checkFlag}, id))
+        dispatch(deletePackTC(id))
     }
     ///
 
     useEffect(() => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
-        const page = fromServer.page;
-        const pageCount = fromServer.pageCount;
-        dispatch(getPacksTC({page, pageCount, sortParam, user_id: checkFlag}));
+        dispatch(getPacksTC());
     }, []);
 
     const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}

@@ -28,13 +28,13 @@ export const EditPack = (props: PropsType) => {
     const {userProfile} = authState;
 
     const onSubmit = (formData: EditPackObject) => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
+        //const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         dispatch(editPackTC(
-            {
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
-                user_id: checkFlag,
-            },
+            // {
+            //     page: fromServer.page,
+            //     pageCount: fromServer.pageCount,
+            //     user_id: checkFlag,
+            // },
             {
                 _id: id,
                 name: formData.name,

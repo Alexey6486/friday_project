@@ -1,5 +1,5 @@
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
-import {CreatePackObject, EditPackObject, GetPacksReturnObject, packsApi, ParamTypes} from "../../api/packsApi";
+import {CreatePackObject, EditPackObject, GetPacksReturnObject, packsApi} from "../../api/packsApi";
 import {AppRootStateType} from "../../store/store";
 
 const LOADING = 'LOADING';
@@ -12,6 +12,7 @@ const SET_SHOW_BY = 'SET_SHOW_BY';
 const CHANGE_PORTION = 'CHANGE_PORTION';
 const SET_PORTION = 'SET_PORTION';
 const SET_MIN_MAX = 'SET_MIN_MAX';
+const SEARCH_PACKS = 'SEARCH_PACKS';
 
 type GetPacksACType = {
     type: typeof GET_PACKS
@@ -53,6 +54,10 @@ type SetMinMaxACType = {
     type: typeof SET_MIN_MAX
     min: number
     max: number
+};
+type SearchPacksACType = {
+    type: typeof SEARCH_PACKS
+    packName: string
 };
 
 const getPacksAC = (payload: GetPacksReturnObject): GetPacksACType => {
@@ -116,6 +121,12 @@ export const setMinMaxAC = (min: number, max: number): SetMinMaxACType => {
         max,
     }
 };
+export const searchPacksAC = (packName: string): SearchPacksACType => {
+    return {
+        type: SEARCH_PACKS,
+        packName
+    }
+};
 
 type ActionTypes =
     GetPacksACType
@@ -127,7 +138,8 @@ type ActionTypes =
     | SetPortionACType
     | LoadingACType
     | SetSortParamACType
-    | SetMinMaxACType;
+    | SetMinMaxACType
+    | SearchPacksACType;
 
 export type PackStateType = {
     fromServer: GetPacksReturnObject
@@ -135,16 +147,17 @@ export type PackStateType = {
     sortParam: string
     onlyMyPacks: boolean
     currentPortion: number
-    isLoading: false
+    isLoading: boolean
     sortMin: number
     sortMax: number
+    searchParam: string
 };
 
 const initState: PackStateType = {
     fromServer: {
         cardPacks: [],
         cardPacksTotalCount: 0,
-        maxCardsCount: 1,
+        maxCardsCount: 20,
         minCardsCount: 0,
         page: 1,
         pageCount: 5,
@@ -155,7 +168,8 @@ const initState: PackStateType = {
     currentPortion: 1,
     isLoading: false,
     sortMin: 0,
-    sortMax: 1,
+    sortMax: 20,
+    searchParam: '',
 };
 
 export const packsReducer = (state: PackStateType = initState, action: ActionTypes) => {
@@ -188,6 +202,8 @@ export const packsReducer = (state: PackStateType = initState, action: ActionTyp
             return {...state, isLoading: action.isLoading};
         case SET_MIN_MAX:
             return {...state, sortMin: action.min, sortMax: action.max};
+        case SEARCH_PACKS:
+            return {...state, searchParam: action.packName}
         default:
             return state;
     }
@@ -195,10 +211,22 @@ export const packsReducer = (state: PackStateType = initState, action: ActionTyp
 
 type ThunkType = ThunkAction<void, AppRootStateType, {}, ActionTypes>;
 
-export const getPacksTC = (params: ParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const getPacksTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>, getState: () => AppRootStateType) => {
     dispatch(loadingAC(true));
     try {
-        const res = await packsApi.getPacks(params);
+        const state = getState();
+
+        const paramObject = {
+            page: state.packsReducer.fromServer.page,
+            pageCount: state.packsReducer.fromServer.pageCount,
+            sortPacks: state.packsReducer.sortParam,
+            user_id: state.packsReducer.onlyMyPacks ? state.authReducer.userProfile._id : '',
+            max: state.packsReducer.sortMax,
+            min: state.packsReducer.sortMin,
+            packName: state.packsReducer.searchParam,
+        }
+
+        const res = await packsApi.getPacks(paramObject);
         dispatch(getPacksAC(res));
         dispatch(loadingAC(false));
     } catch (error) {
@@ -206,87 +234,80 @@ export const getPacksTC = (params: ParamTypes): ThunkType => async (dispatch: Th
         console.log(error.response.data.error);
     }
 };
-export const createPackTC = (params: ParamTypes, payload: CreatePackObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const createPackTC = (payload: CreatePackObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
         await packsApi.createPack(payload);
-        const res = await packsApi.getPacks(params);
-        dispatch(getPacksAC(res));
+        dispatch(getPacksTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const editPackTC = (params: ParamTypes, payload: EditPackObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const editPackTC = (payload: EditPackObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
         await packsApi.editPack(payload);
-        const res = await packsApi.getPacks(params);
-        dispatch(getPacksAC(res));
+        dispatch(getPacksTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const deletePackTC = (params: ParamTypes, id: string): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const deletePackTC = (id: string): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
         await packsApi.deletePack(id);
-        const res = await packsApi.getPacks(params);
-        dispatch(getPacksAC(res));
+        dispatch(getPacksTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const sortTC = (params: ParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const sortTC = (sortPacks: string): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
         dispatch(sortAC());
-        if (params.sortPacks) {
-            dispatch(setSortParamAC(params.sortPacks))
+        if (sortPacks) {
+            dispatch(setSortParamAC(sortPacks))
         }
-        const res = await packsApi.getPacks(params);
-        dispatch(getPacksAC(res));
+        dispatch(getPacksTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const showOnlyMyPacksTC = (params: ParamTypes, showMyPacks: boolean): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const showOnlyMyPacksTC = (showMyPacks: boolean, page: number): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
-        dispatch(showMyPacksAC(showMyPacks, params.page));
-        const res = await packsApi.getPacks(params);
-        dispatch(getPacksAC(res));
+        dispatch(showMyPacksAC(showMyPacks, page));
+        dispatch(getPacksTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const changePageTC = (params: ParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const changePageTC = (page: number): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
-        dispatch(setCurrentPageAC(params.page));
-        const res = await packsApi.getPacks(params);
-        dispatch(getPacksAC(res));
+        dispatch(setCurrentPageAC(page));
+        dispatch(getPacksTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const showByTC = (params: ParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const showByTC = (pageCount: number): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
-        dispatch(setShowByAC(params.pageCount));
-        const res = await packsApi.getPacks(params);
-        dispatch(getPacksAC(res));
+        dispatch(setShowByAC(pageCount));
+        dispatch(getPacksTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));

@@ -19,20 +19,20 @@ export const AddPack = (props: PropsType) => {
     const {toggleCreatePackPopUp} = props;
 
     const dispatch = useDispatch();
-    const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer, onlyMyPacks} = packsState;
-
-    const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
-    const {userProfile} = authState;
+    // const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
+    // const {fromServer, onlyMyPacks} = packsState;
+    //
+    // const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
+    // const {userProfile} = authState;
 
     const onSubmit = (formData: CreatePackObject) => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
+        //const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         dispatch(createPackTC(
-            {
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
-                user_id: checkFlag,
-            },
+            // {
+            //     page: fromServer.page,
+            //     pageCount: fromServer.pageCount,
+            //     user_id: checkFlag,
+            // },
             {
                 name: formData.name,
                 private: formData.private = false
