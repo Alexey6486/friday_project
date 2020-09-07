@@ -38,6 +38,7 @@ export const Pack = (props: PropsType) => {
             </div>
 
             <div className={s.pack__interface}>
+                <Link className={s.pack__btn} to={`/learn/${_id}`}>Learn</Link>
                 <Link className={s.pack__btn} to={`/cards/${_id}`}>Open</Link>
                 <button className={disabledEditBtn} onClick={editPackHandler}>Edit</button>
                 <button className={disabledDeleteBtn} onClick={() => deletePack(_id)}>Delete</button>

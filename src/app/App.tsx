@@ -15,6 +15,7 @@ import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import { Packs } from "../packs/Packs";
 import { Cards } from "../cards/Cards";
 import {NotFound} from "../notFound/NotFound";
+import {Learn} from "../learn/Learn";
 
 export const App = () => {
 
@@ -40,6 +41,7 @@ export const App = () => {
                 <Route exact path={'/'} render={() => <Profile/>}/>
                 <Route exact path={'/packs'} render={() => <Packs/>}/>
                 <Route exact path={'/cards/:cardsPack_id'} render={() => <Cards/>}/>
+                <Route exact path={'/learn/:cardsPack_id'} render={() => <Learn/>}/>
                 <Route exact path={'/login'} render={() => <Login/>}/>
                 <Route exact path={'/restorePassword'} render={() => <RestorePassword/>}/>
                 <Route exact path={'/registration'} render={() => <Registration/>}/>
