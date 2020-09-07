@@ -1,11 +1,10 @@
 import React, {PropsWithChildren} from "react";
 import s from './AddCard.module.scss';
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../store/store";
+import {useDispatch} from "react-redux";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input} from "../../utils/formFields/formFields";
 import {fieldRequired} from "../../utils/formValidation/formValidation";
-import {CardsStateType, createCardTC} from "../../reducers/cardsReducer/cardsReducer";
+import {createCardTC} from "../../reducers/cardsReducer/cardsReducer";
 import {CreateCardObject} from "../../api/cardsApi";
 
 type PropsType = {
@@ -18,21 +17,9 @@ export const AddCard = (props: PropsType) => {
     const {toggleCreatePackPopUp, cardsPack_id} = props;
 
     const dispatch = useDispatch();
-    const cardsState = useSelector<AppRootStateType, CardsStateType>(state => state.cardsReducer);
-    const {fromCardsServer} = cardsState;
 
     const onSubmit = (formData: CreateCardObject) => {
-        dispatch(createCardTC(
-            {
-                page: fromCardsServer.page,
-                pageCount: fromCardsServer.pageCount,
-                cardsPack_id,
-            },
-            {
-                cardsPack_id,
-                question: formData.question,
-                answer: formData.answer,
-            }));
+        dispatch(createCardTC({cardsPack_id, question: formData.question, answer: formData.answer,}));
         toggleCreatePackPopUp();
     }
 

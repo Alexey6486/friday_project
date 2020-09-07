@@ -1,11 +1,10 @@
 import React, {PropsWithChildren} from "react";
 import s from './EditCard.module.scss';
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../store/store";
+import {useDispatch} from "react-redux";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input, Textarea} from "../../utils/formFields/formFields";
 import {EditCardObject} from "../../api/cardsApi";
-import {CardsStateType, editCardTC} from "../../reducers/cardsReducer/cardsReducer";
+import {editCardTC} from "../../reducers/cardsReducer/cardsReducer";
 
 type PropsType = {
     toggleEditCardPopUp: (_id: string, args: Array<string>) => void
@@ -14,32 +13,20 @@ type PropsType = {
     question: string
     answer: string
 }
-// type ExtraProps = {
-//     question: string
-//     answer: string
-// }
 
 export const EditCard = (props: PropsType) => {
 
-    const {toggleEditCardPopUp, id, cardsPack_id, answer, question} = props;
+    const {toggleEditCardPopUp, id, answer, question} = props;
 
     const dispatch = useDispatch();
-    const cardsState = useSelector<AppRootStateType, CardsStateType>(state => state.cardsReducer);
-    const {fromCardsServer} = cardsState;
 
     const onSubmit = (formData: EditCardObject) => {
-        dispatch(editCardTC(
-            {
-                page: fromCardsServer.page,
-                pageCount: fromCardsServer.pageCount,
-                cardsPack_id,
-            },
-            {
-                _id: id,
-                question: formData.question,
-                answer: formData.answer,
-                comments: formData.comments,
-            }));
+        dispatch(editCardTC({
+            _id: id,
+            question: formData.question,
+            answer: formData.answer,
+            comments: formData.comments,
+        }));
         toggleEditCardPopUp('', []);
     }
 
@@ -74,7 +61,6 @@ const EditCardForm: React.FC<InjectedFormProps<EditCardObject>> = (props: PropsW
         </form>
     )
 };
-
 
 const EditCardReduxForm = reduxForm<EditCardObject>({
     form: 'EditCardForm'

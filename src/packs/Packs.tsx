@@ -73,11 +73,11 @@ export const Packs = React.memo(() => {
 
     // pagination
     const onPageChange = useCallback((page: number) => {
-        dispatch(changePageTC(page))
+        dispatch(changePageTC(page));
     }, [dispatch]);
 
     const onShowByChange = useCallback((pageCount: number) => {
-        dispatch(showByTC(pageCount))
+        dispatch(showByTC(pageCount));
     }, [dispatch]);
 
     const onPortionChange = useCallback((flag: boolean) => {
@@ -89,30 +89,30 @@ export const Packs = React.memo(() => {
     }, [dispatch]);
     ///
 
-    //search
+    // search
     const onSearchSubmit = (queryParam: SearchObject) => {
         if (queryParam.packName) {
-            dispatch(searchPacksAC(queryParam.packName))
-            dispatch(getPacksTC())
+            dispatch(searchPacksAC(queryParam.packName));
+            dispatch(getPacksTC());
             dispatch(reset('SearchForm'));
         } else {
-            dispatch(searchPacksAC(''))
-            dispatch(getPacksTC())
+            dispatch(searchPacksAC(''));
+            dispatch(getPacksTC());
             dispatch(reset('SearchForm'));
         }
     }
     ///
 
-    //range slider
+    // range slider
     const searchByMinMax = (valArr: Array<number>) => {
         dispatch(setMinMaxAC(valArr[0], valArr[1]));
         dispatch(getPacksTC());
     }
     ///
 
-    //delete pack
+    // delete pack
     const deletePack = (id: string) => {
-        dispatch(deletePackTC(id))
+        dispatch(deletePackTC(id));
     }
     ///
 
@@ -120,12 +120,13 @@ export const Packs = React.memo(() => {
         dispatch(getPacksTC());
     }, []);
 
-    const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}
-                                                            toggleEditPackPopUp={toggleEditPackPopUp}
-                                                            toggleDeletePackPopUp={toggleDeletePackPopUp}/>);
+    const packsMap = fromServer.cardPacks
+        .map(pack => <Pack key={pack._id} {...pack} toggleEditPackPopUp={toggleEditPackPopUp}
+                                                    toggleDeletePackPopUp={toggleDeletePackPopUp}/>);
 
     const sortArray = ['name', 'cardsCount', 'created', 'user_id'];
-    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks}
+    const sortMap = sortArray
+        .map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks}
                                                           sortCheck={sortCheck} sortRegular={sortRegular}/>);
 
     if (!isAuth) {

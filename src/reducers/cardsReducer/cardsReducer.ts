@@ -11,14 +11,26 @@ import {packsApi, ParamTypes} from "../../api/packsApi";
 
 const LOADING = 'LOADING';
 const GET_CARDS = 'GET_CARDS';
-const IS_YOUR_PACK = 'IS_YOUR_PACK';
+const PACK_ID = 'PACK_ID';
 const SET_CURRENT_CARDS_PAGE = 'SET_CURRENT_CARDS_PAGE';
 const SET_SHOW_CARDS_BY = 'SET_SHOW_CARDS_BY';
 const CHANGE_CARDS_PORTION = 'CHANGE_CARDS_PORTION';
 const SET_CARDS_PORTION = 'SET_CARDS_PORTION';
 const SORT_CARDS = 'SORT_CARDS';
 const SET_CARDS_SORT_PARAM = 'SET_CARDS_SORT_PARAM';
+const SET_MIN_MAX_GRADE = 'SET_MIN_MAX_GRADE';
+const SEARCH_CARDS = 'SEARCH_CARDS';
 
+type SetMinMaxGradeACType = {
+    type: typeof SET_MIN_MAX_GRADE
+    min: number
+    max: number
+};
+type SearchCardsACType = {
+    type: typeof SEARCH_CARDS
+    cardAnswer: string
+    cardQuestion: string
+};
 type GetCardsACType = {
     type: typeof GET_CARDS
     payload: GetCardsResponseObjectType
@@ -27,9 +39,9 @@ type LoadingACType = {
     type: typeof LOADING
     isLoading: boolean
 };
-type IsYourPackACType = {
-    type: typeof IS_YOUR_PACK
-    isYourPack: boolean
+type PackIdACType = {
+    type: typeof PACK_ID
+    packId: string
 };
 type SetCurrentPageACType = {
     type: typeof SET_CURRENT_CARDS_PAGE
@@ -55,7 +67,7 @@ type SetCardsSortParamACType = {
     sortParam: string
 };
 
-type ActionTypes = GetCardsACType | LoadingACType | IsYourPackACType | SetCurrentPageACType | SetShowByACType | ChangePortionACType | SetPortionACType | SortCardsACType | SetCardsSortParamACType;
+type ActionTypes = SearchCardsACType | SetMinMaxGradeACType | GetCardsACType | LoadingACType | PackIdACType | SetCurrentPageACType | SetShowByACType | ChangePortionACType | SetPortionACType | SortCardsACType | SetCardsSortParamACType;
 type ThunkType = ThunkAction<void, AppRootStateType, {}, ActionTypes>;
 
 const loadingAC = (isLoading: boolean): LoadingACType => {
@@ -64,16 +76,30 @@ const loadingAC = (isLoading: boolean): LoadingACType => {
         isLoading
     }
 };
+export const setMinMaxGradeAC = (min: number, max: number): SetMinMaxGradeACType => {
+    return {
+        type: SET_MIN_MAX_GRADE,
+        min,
+        max,
+    }
+};
+export const searchCardsAC = (cardAnswer: string, cardQuestion: string): SearchCardsACType => {
+    return {
+        type: SEARCH_CARDS,
+        cardAnswer,
+        cardQuestion
+    }
+};
 const getCardsAC = (payload: GetCardsResponseObjectType): GetCardsACType => {
     return {
         type: GET_CARDS,
         payload,
     }
 };
-export const isYourPackAC = (isYourPack: boolean): IsYourPackACType => {
+export const packIdAC = (packId: string): PackIdACType => {
     return {
-        type: IS_YOUR_PACK,
-        isYourPack
+        type: PACK_ID,
+        packId
     }
 };
 export const setCurrentPageAC = (page: number): SetCurrentPageACType => {
@@ -117,15 +143,21 @@ export type CardsStateType = {
     sortBy: boolean
     sortParam: string
     currentPortion: number
-    isLoading: false
-    isYourPack: boolean,
+    isLoading: boolean
+    packId: string
+    searchParams: {
+        cardAnswer: string,
+        cardQuestion: string
+    }
+    sortMin: number
+    sortMax: number
 };
 
 const initState: CardsStateType = {
     fromCardsServer: {
         cards: [],
         cardsTotalCount: 0,
-        maxGrade: 0,
+        maxGrade: 5,
         minGrade: 0,
         page: 1,
         pageCount: 5,
@@ -134,13 +166,21 @@ const initState: CardsStateType = {
     sortParam: '',
     currentPortion: 1,
     isLoading: false,
-    isYourPack: false,
+    packId: '',
+    searchParams: {
+        cardAnswer: '',
+        cardQuestion: '',
+    },
+    sortMin: 0,
+    sortMax: 5,
 };
 
 export const cardsReducer = (state: CardsStateType = initState, action: ActionTypes) => {
     switch (action.type) {
         case LOADING:
             return {...state, isLoading: action.isLoading};
+        case SET_MIN_MAX_GRADE:
+            return {...state, sortMin: action.min, sortMax: action.max};
         case GET_CARDS:
             return {
                 ...state,
@@ -150,8 +190,8 @@ export const cardsReducer = (state: CardsStateType = initState, action: ActionTy
                     cardsTotalCount: action.payload.cardsTotalCount
                 },
             }
-        case IS_YOUR_PACK:
-            return {...state, isYourPack: action.isYourPack};
+        case PACK_ID:
+            return {...state, packId: action.packId};
         case SET_SHOW_CARDS_BY:
             return {...state, fromCardsServer: {...state.fromCardsServer, pageCount: action.pageCount}};
         case CHANGE_CARDS_PORTION:
@@ -164,15 +204,30 @@ export const cardsReducer = (state: CardsStateType = initState, action: ActionTy
             return {...state, sortParam: action.sortParam};
         case SORT_CARDS:
             return {...state, sortBy: !state.sortBy};
+        case SEARCH_CARDS:
+            return {...state, searchParams: {...state.searchParams, cardAnswer: action.cardAnswer, cardQuestion: action.cardQuestion}};
         default:
             return state;
     }
 };
 
-export const getCardsTC = (params: CardsParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const getCardsTC = (): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>, getState: () => AppRootStateType) => {
     dispatch(loadingAC(true));
     try {
-        const res = await cardsApi.getCards(params);
+        const state = getState();
+
+        const paramObject = {
+            page: state.cardsReducer.fromCardsServer.page,
+            pageCount: state.cardsReducer.fromCardsServer.pageCount,
+            sortCards: state.cardsReducer.sortParam,
+            cardsPack_id: state.cardsReducer.packId,
+            max: state.cardsReducer.sortMax,
+            min: state.cardsReducer.sortMin,
+            cardAnswer: state.cardsReducer.searchParams.cardAnswer,
+            cardQuestion: state.cardsReducer.searchParams.cardQuestion,
+        }
+
+        const res = await cardsApi.getCards(paramObject);
         dispatch(getCardsAC(res));
         dispatch(loadingAC(false));
     } catch (error) {
@@ -180,60 +235,55 @@ export const getCardsTC = (params: CardsParamTypes): ThunkType => async (dispatc
         console.log(error.response.data.error);
     }
 };
-export const createCardTC = (params: CardsParamTypes, payload: CreateCardObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const createCardTC = (payload: CreateCardObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
         await cardsApi.createCard(payload);
-        const res = await cardsApi.getCards(params);
-        dispatch(getCardsAC(res));
+        dispatch(getCardsTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const editCardTC = (params: CardsParamTypes, payload: EditCardObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const editCardTC = (payload: EditCardObject): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
         await cardsApi.editCard(payload);
-        const res = await cardsApi.getCards(params);
-        dispatch(getCardsAC(res));
+        dispatch(getCardsTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const deleteCardTC = (params: CardsParamTypes, id: string): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const deleteCardTC = (id: string): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
         await cardsApi.deleteCard(id);
-        const res = await cardsApi.getCards(params);
-        dispatch(getCardsAC(res));
+        dispatch(getCardsTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const changePageTC = (params: CardsParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const changePageTC = (page: number): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
-        dispatch(setCurrentPageAC(params.page));
-        const res = await cardsApi.getCards(params);
-        dispatch(getCardsAC(res));
+        dispatch(setCurrentPageAC(page));
+        dispatch(getCardsTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
     }
 };
-export const showByTC = (params: CardsParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const showByTC = (pageCount: number): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
-        dispatch(setShowByAC(params.pageCount));
-        const res = await cardsApi.getCards(params);
-        dispatch(getCardsAC(res));
+        dispatch(setShowByAC(pageCount));
+        dispatch(getCardsTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
@@ -254,15 +304,12 @@ export const setPortionTC = (portion: number): ThunkType => async (dispatch: Thu
         console.log(error.response.data.error);
     }
 };
-export const sortCardsTC = (params: CardsParamTypes): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
+export const sortCardsTC = (sortCards: string): ThunkType => async (dispatch: ThunkDispatch<AppRootStateType, {}, ActionTypes>) => {
     dispatch(loadingAC(true));
     try {
         dispatch(sortCardsAC());
-        if (params.sortPacks) {
-            dispatch(setCardsSortParamAC(params.sortPacks))
-        }
-        const res = await cardsApi.getCards(params);
-        dispatch(getCardsAC(res));
+        dispatch(setCardsSortParamAC(sortCards));
+        dispatch(getCardsTC());
         dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));

@@ -203,7 +203,7 @@ export const packsReducer = (state: PackStateType = initState, action: ActionTyp
         case SET_MIN_MAX:
             return {...state, sortMin: action.min, sortMax: action.max};
         case SEARCH_PACKS:
-            return {...state, searchParam: action.packName}
+            return {...state, searchParam: action.packName};
         default:
             return state;
     }
@@ -271,9 +271,7 @@ export const sortTC = (sortPacks: string): ThunkType => async (dispatch: ThunkDi
     dispatch(loadingAC(true));
     try {
         dispatch(sortAC());
-        if (sortPacks) {
-            dispatch(setSortParamAC(sortPacks))
-        }
+        dispatch(setSortParamAC(sortPacks));
         dispatch(getPacksTC());
         dispatch(loadingAC(false));
     } catch (error) {
