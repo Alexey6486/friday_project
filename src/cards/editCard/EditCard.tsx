@@ -1,51 +1,44 @@
 import React, {PropsWithChildren} from "react";
 import s from './EditCard.module.scss';
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "../../store/store";
+import {useDispatch} from "react-redux";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
 import {Input, Textarea} from "../../utils/formFields/formFields";
 import {EditCardObject} from "../../api/cardsApi";
-import {CardsStateType, editCardTC} from "../../reducers/cardsReducer/cardsReducer";
+import {editCardTC} from "../../reducers/cardsReducer/cardsReducer";
 
 type PropsType = {
-    toggleEditPackPopUp: (_id: string) => void
+    toggleEditCardPopUp: (_id: string, args: Array<string>) => void
     id: string
     cardsPack_id: string
+    question: string
+    answer: string
 }
 
 export const EditCard = (props: PropsType) => {
 
-    const {toggleEditPackPopUp, id, cardsPack_id} = props;
+    const {toggleEditCardPopUp, id, answer, question} = props;
 
     const dispatch = useDispatch();
-    const cardsState = useSelector<AppRootStateType, CardsStateType>(state => state.cardsReducer);
-    const {fromCardsServer} = cardsState;
 
     const onSubmit = (formData: EditCardObject) => {
-        dispatch(editCardTC(
-            {
-                page: fromCardsServer.page,
-                pageCount: fromCardsServer.pageCount,
-                cardsPack_id,
-            },
-            {
-                _id: id,
-                question: formData.question,
-                answer: formData.answer,
-                comments: formData.comments,
-            }));
-        toggleEditPackPopUp('');
+        dispatch(editCardTC({
+            _id: id,
+            question: formData.question,
+            answer: formData.answer,
+            comments: formData.comments,
+        }));
+        toggleEditCardPopUp('', []);
     }
 
     const onClose = () => {
-        toggleEditPackPopUp('')
+        toggleEditCardPopUp('', [])
     }
 
     return (
         <div className={s.editCard}>
             <div className={s.editCard__formWrap}>
                 <div className={s.close} onClick={onClose}></div>
-                <EditCardReduxForm onSubmit={onSubmit}/>
+                <EditCardReduxForm onSubmit={onSubmit} initialValues={{question, answer}}/>
             </div>
         </div>
     )

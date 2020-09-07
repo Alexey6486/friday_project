@@ -5,8 +5,10 @@ import {AppRootStateType} from "../store/store";
 import {
     changePageTC,
     changePortionTC,
+    deletePackTC,
     getPacksTC,
     PackStateType,
+    searchPacksAC,
     setMinMaxAC,
     setPortionTC,
     showByTC,
@@ -22,68 +24,61 @@ import {Search} from "../utils/search/Search";
 import {Pagination} from "../utils/pagination/Pagination";
 import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 import {reset} from "redux-form";
-import { SearchObject } from "../api/packsApi";
-import { RangeSlider } from "../utils/rangeSlider/RangeSlider";
+import {SearchObject} from "../api/packsApi";
+import {RangeSlider} from "../utils/rangeSlider/RangeSlider";
+import {Redirect} from "react-router-dom";
+import {DeletePack} from "./deletePack/DeletePack";
 
 export const Packs = React.memo(() => {
 
     const dispatch = useDispatch();
 
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
-    const {fromServer, sortBy, onlyMyPacks, currentPortion, isLoading, sortParam, sortMax, sortMin} = packsState;
+    const {fromServer, sortBy, onlyMyPacks, currentPortion, isLoading, sortMax, sortMin} = packsState;
 
     const authState = useSelector<AppRootStateType, AuthStateType>(state => state.authReducer);
-    const {userProfile} = authState;
+    const {isAuth} = authState;
 
-    // create/edit pop ups
+    // create/edit/delete pop ups
     const [createPackPopUp, setCreatePackPopUp] = useState(false);
-    const [editPackPopUp, setEditPackPopUp] = useState('');
+    const [editPackPopUp, setEditPackPopUp] = useState<Array<string>>([]);
+    const [deletePackPopUp, setDeletePackPopUp] = useState('');
 
     const toggleCreatePackPopUp = useCallback(() => {
         setCreatePackPopUp(prev => !prev);
     }, []);
-    const toggleEditPackPopUp = useCallback((_id: string) => {
-        setEditPackPopUp(_id);
+    const toggleEditPackPopUp = useCallback((_id: string, args: Array<string>) => {
+        if (_id) {
+            setEditPackPopUp([_id, ...args]);
+        } else {
+            setEditPackPopUp([]);
+        }
+    }, []);
+    const toggleDeletePackPopUp = useCallback((id: string) => {
+        setDeletePackPopUp(id);
     }, []);
     ///
 
     // sorting
     const sortRegular = useCallback((sortDirection: string) => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
         const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
-
-        dispatch(sortTC({
-            page: fromServer.page,
-            pageCount: fromServer.pageCount,
-            sortPacks: `${sortUrl}`,
-            user_id: checkFlag,
-            max: sortMax,
-            min: sortMin
-        }));
-    }, [dispatch, onlyMyPacks, sortBy, fromServer.pageCount, fromServer.page, userProfile._id, sortMin, sortMax]);
+        dispatch(sortTC(sortUrl));
+    }, [dispatch, sortBy]);
 
     const sortCheck = useCallback(() => {
-        const checkFlag = onlyMyPacks ? `` : `${userProfile._id}`;
-        dispatch(showOnlyMyPacksTC({page: 1, pageCount: fromServer.pageCount, user_id: checkFlag, max: sortMax, min: sortMin}, !onlyMyPacks));
+        dispatch(showOnlyMyPacksTC(!onlyMyPacks, 1));
         dispatch(setPortionTC(1));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortMin, sortMax]);
+    }, [dispatch, onlyMyPacks]);
     ///
 
     // pagination
     const onPageChange = useCallback((page: number) => {
-        const user_id = onlyMyPacks ? `${userProfile._id}` : '';
-        const pageCount = fromServer.pageCount;
-        const sortPacks = sortParam;
-        user_id ? dispatch(changePageTC({page, pageCount, sortPacks, user_id, max: sortMax, min: sortMin})) : dispatch(changePageTC({page, pageCount, sortPacks, max: sortMax, min: sortMin}));
-    }, [dispatch, onlyMyPacks, fromServer.pageCount, userProfile._id, sortParam, sortMin, sortMax]);
+        dispatch(changePageTC(page));
+    }, [dispatch]);
 
     const onShowByChange = useCallback((pageCount: number) => {
-        const checkFlag = onlyMyPacks ? `${userProfile._id}` : '';
-        const page = fromServer.page;
-        const user_id = checkFlag;
-        const sortPacks = sortParam;
-        dispatch(showByTC({page, pageCount, sortPacks, user_id, max: sortMax, min: sortMin}));
-    }, [dispatch, onlyMyPacks, fromServer.page, userProfile._id, sortParam, sortMin, sortMax]);
+        dispatch(showByTC(pageCount));
+    }, [dispatch]);
 
     const onPortionChange = useCallback((flag: boolean) => {
         flag ? dispatch(changePortionTC(true)) : dispatch(changePortionTC(false));
@@ -94,55 +89,49 @@ export const Packs = React.memo(() => {
     }, [dispatch]);
     ///
 
-    //search
+    // search
     const onSearchSubmit = (queryParam: SearchObject) => {
         if (queryParam.packName) {
-            dispatch(getPacksTC({
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
-                packName: queryParam.packName
-            }))
+            dispatch(searchPacksAC(queryParam.packName));
+            dispatch(getPacksTC());
             dispatch(reset('SearchForm'));
         } else {
-            dispatch(getPacksTC({
-                page: fromServer.page,
-                pageCount: fromServer.pageCount,
-            }))
+            dispatch(searchPacksAC(''));
+            dispatch(getPacksTC());
             dispatch(reset('SearchForm'));
         }
     }
     ///
 
-    //range slider
+    // range slider
     const searchByMinMax = (valArr: Array<number>) => {
-        const user_id = onlyMyPacks ? `${userProfile._id}` : '';
-        const sortPacks = sortParam;
-        const min = valArr[0];
-        const max = valArr[1];
-        dispatch(setMinMaxAC(min, max));
-        dispatch(getPacksTC({
-            page: fromServer.page,
-            pageCount: fromServer.pageCount,
-            min,
-            max,
-            sortPacks,
-            user_id,
-        }));
+        dispatch(setMinMaxAC(valArr[0], valArr[1]));
+        dispatch(getPacksTC());
+    }
+    ///
+
+    // delete pack
+    const deletePack = (id: string) => {
+        dispatch(deletePackTC(id));
     }
     ///
 
     useEffect(() => {
-        const page = fromServer.page;
-        const pageCount = fromServer.pageCount;
-        dispatch(getPacksTC({page, pageCount, sortParam}));
+        dispatch(getPacksTC());
     }, []);
 
-    const packsMap = fromServer.cardPacks.map(pack => <Pack key={pack._id} {...pack}
-                                                            toggleEditPackPopUp={toggleEditPackPopUp}/>);
+    const packsMap = fromServer.cardPacks
+        .map(pack => <Pack key={pack._id} {...pack} toggleEditPackPopUp={toggleEditPackPopUp}
+                                                    toggleDeletePackPopUp={toggleDeletePackPopUp}/>);
 
     const sortArray = ['name', 'cardsCount', 'created', 'user_id'];
-    const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks}
+    const sortMap = sortArray
+        .map((sort, idx) => <Sorting key={idx} sortDirection={sort} onlyMyPacks={onlyMyPacks}
                                                           sortCheck={sortCheck} sortRegular={sortRegular}/>);
+
+    if (!isAuth) {
+        return <Redirect to={'/login'}/>
+    }
 
     return (
         <div className={s.packs}>
@@ -155,7 +144,7 @@ export const Packs = React.memo(() => {
                     <Search searchBy={['packName']} onSearchSubmit={onSearchSubmit}/>
 
                     <RangeSlider max={fromServer.maxCardsCount} min={fromServer.minCardsCount} step={1}
-                    fromVal={sortMin} toVal={sortMax} searchByMinMax={searchByMinMax}/>
+                                 fromVal={sortMin} toVal={sortMax} searchByMinMax={searchByMinMax}/>
 
                     <div className={s.packs__sortBlock}>
                         <div className={s.packs__sortTitle}>Sort by:</div>
@@ -188,8 +177,12 @@ export const Packs = React.memo(() => {
                 <AddPack toggleCreatePackPopUp={toggleCreatePackPopUp}/>
             }
             {
-                editPackPopUp &&
-                <EditPack toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp}/>
+                editPackPopUp[0] &&
+                <EditPack toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp[0]} name={editPackPopUp[1]}/>
+            }
+            {
+                deletePackPopUp &&
+                <DeletePack toggleDeletePackPopUp={toggleDeletePackPopUp} deletePack={deletePack} id={deletePackPopUp}/>
             }
         </div>
     )

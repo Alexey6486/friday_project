@@ -1,0 +1,127 @@
+.learn {
+    padding: 20px 0;
+}
+
+.question {
+    width: 100%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    position: relative;
+    margin-bottom: 20px;
+
+    &__title {
+        color: #555555;
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    &__text {
+        color: #333333;
+        font-weight: 400;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eaeaea;
+        margin-bottom: 10px;
+    }
+
+    &__grade {
+        color: #555555;
+    }
+
+    button {
+        position: absolute;
+        bottom: 8px;
+        right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        cursor: pointer;
+        border: none;
+        background-color: #fa9716;
+        color: #ffffff;
+        height: 30px;
+        padding: 0 15px;
+        text-transform: uppercase;
+        outline: none;
+        transition: all linear 150ms;
+
+        &:hover{
+            background-color: darken(#fa9716, 10%);
+        }
+    }
+}
+@keyframes answerAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.answer {
+    width: 100%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    position: relative;
+    margin-bottom: 20px;
+    animation: answerAnimation 200ms forwards;
+
+    &__title {
+        color: #555555;
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    &__text {
+        color: #333333;
+        font-weight: 400;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eaeaea;
+        margin-bottom: 10px;
+    }
+
+    &__btnBlock{
+        display: flex;
+    }
+}
+.gradeBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    cursor: pointer;
+    border: none;
+    background-color: #6a7181;
+    color: #ffffff;
+    height: 30px;
+    padding: 0 15px;
+    text-transform: uppercase;
+    outline: none;
+    transition: all linear 150ms;
+
+    &:hover{
+        background-color: lighten(#6a7181, 10%);
+    }
+
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+    &:not(:last-child) {
+        margin-right: 10px;
+    }
+
+    &.nextBtn {
+        background-color: #fa9716;
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+
+        &:hover{
+            background-color: darken(#fa9716, 10%);
+        }
+    }
+}

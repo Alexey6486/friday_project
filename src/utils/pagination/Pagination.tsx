@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import s from './Pagination.module.scss';
+import React, {useEffect, useState} from "react";
+import './Pagination.styles.scss';
 
 type PropsType = {
     currentPage: number
@@ -44,7 +44,7 @@ export const Pagination = (props: PropsType) => {
         .map(m => {
             return (
                 <button key={m} onClick={() => onPageChangeHandler(m)}
-                        className={m === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{m}</button>
+                        className={m === currentPage ? 'active pageBtn' : 'pageBtn'}>{m}</button>
             )
         })
 
@@ -61,10 +61,10 @@ export const Pagination = (props: PropsType) => {
     const lastPage = pages.map(page => {
         if (page === pages.length) {
             return (
-                <div key={page} className={s.paginationBlock__pre_after}>
-                    <div className={s.paginationDots}>...</div>
+                <div key={page} className={'paginationBlock__pre-after'}>
+                    <div className={'paginationDots'}>...</div>
                     <button onClick={() => portionWithLastPage(page)}
-                            className={page === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{page}</button>
+                            className={page === currentPage ? 'active pageBtn' : 'pageBtn'}>{page}</button>
                 </div>
             )
         }
@@ -74,10 +74,10 @@ export const Pagination = (props: PropsType) => {
     const firstPage = pages.map(page => {
         if (page === 1) {
             return (
-                <div key={page} className={s.paginationBlock__pre_after}>
+                <div key={page} className={'paginationBlock__pre-after'}>
                     <button onClick={() => portionWithFirstPage(page)}
-                            className={page === currentPage ? `${s.active} + ${s.pageBtn}` : s.pageBtn}>{page}</button>
-                    <div className={s.paginationDots}>...</div>
+                            className={page === currentPage ? 'active pageBtn' : 'pageBtn'}>{page}</button>
+                    <div className={'paginationDots'}>...</div>
                 </div>
             )
         }
@@ -92,26 +92,48 @@ export const Pagination = (props: PropsType) => {
         onShowByChange(showBy);
     }
 
+    useEffect(() => {
+
+        const body = document.querySelector('body');
+
+        const closeShowBy = (e: MouseEvent) => {
+
+            const target = e.target as HTMLElement;
+
+            if (e.target) {
+                if (!target.classList.contains('paginationSelect') &&
+                    !target.classList.contains('paginationSelect__option')) setOpenSelect(false)
+            }
+        }
+
+        if (body) body.addEventListener('click', closeShowBy);
+
+        return () => {
+            if (body) body.removeEventListener('click', closeShowBy);
+        }
+
+    }, [])
+
     return (
-        <div className={s.pagination}>
-            <div className={s.paginationBlock}>
+        <div className={'pagination'}>
+            <div className={'paginationBlock'}>
                 {currentPortion > 1 && <button onClick={prevPortion}>prev</button>}
                 {currentPortion > 1 && firstPage}
                 {pagesMap}
                 {currentPortion < totalPortions && lastPage}
                 {currentPortion < totalPortions && <button onClick={nextPortion}>next</button>}
             </div>
-            <div className={s.paginationSelectBlock}>
-                <div className={s.paginationSelectBlock__title}>Show by:</div>
-                <div className={openSelect ? `${s.paginationSelect} ${s.open}` : `${s.paginationSelect}`}
+            <div className={'paginationSelectBlock'}>
+                <div className={'paginationSelectBlock__title'}>Show by:</div>
+                <div className={openSelect ? 'paginationSelect open' : 'paginationSelect'}
                      onClick={onSelectOpenClick}>
-                    <div className={s.paginationSelect__current}>{itemsOnPage}</div>
+                    <div className={'paginationSelect__current'}>{itemsOnPage}</div>
                     <div
-                        className={openSelect ? `${s.paginationSelect__options} ${s.open}` : `${s.paginationSelect__options}`}>
-                        <div onClick={() => showByChange(5)}>5</div>
-                        <div onClick={() => showByChange(10)}>10</div>
-                        <div onClick={() => showByChange(15)}>15</div>
-                        <div onClick={() => showByChange(20)}>20</div>
+                        className={openSelect ? 'paginationSelect__options open' : 'paginationSelect__options'}>
+                        <div className={'paginationSelect__option'} onClick={() => showByChange(5)}>5</div>
+                        <div className={'paginationSelect__option'} onClick={() => showByChange(10)}>10</div>
+                        <div className={'paginationSelect__option'} onClick={() => showByChange(15)}>15</div>
+                        <div className={'paginationSelect__option'} onClick={() => showByChange(20)}>20</div>
                     </div>
                 </div>
             </div>

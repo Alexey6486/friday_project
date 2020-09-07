@@ -17,7 +17,7 @@ export type CardType = {
     updated: string
     __v: number
     _id: string
-
+    user_id: string
 }
 export type GetCardsResponseObjectType = {
     cards: Array<CardType>

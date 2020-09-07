@@ -7,7 +7,10 @@ import {
     CardsStateType,
     changePageTC,
     changePortionTC,
+    deleteCardTC,
     getCardsTC,
+    packIdAC,
+    searchCardsAC,
     setCurrentPageAC,
     setPortionTC,
     showByTC,
@@ -24,6 +27,7 @@ import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 import {EditCard} from "./editCard/EditCard";
 import {reset} from "redux-form";
 import {SearchObject} from "../api/packsApi";
+import {DeleteCard} from "./deleteCard/DeleteCard";
 
 type CardsPackIdType = {
     cardsPack_id: string
@@ -38,7 +42,7 @@ const CardsComponent = (props: PropsType) => {
     const {userProfile} = authState;
 
     const cardsState = useSelector<AppRootStateType, CardsStateType>(state => state.cardsReducer);
-    const {fromCardsServer, currentPortion, isLoading, sortBy, sortParam} = cardsState;
+    const {fromCardsServer, currentPortion, isLoading, sortBy} = cardsState;
 
     const packsState = useSelector<AppRootStateType, PackStateType>(state => state.packsReducer);
 
@@ -46,30 +50,38 @@ const CardsComponent = (props: PropsType) => {
 
     const cardsPack_id = match.params.cardsPack_id;
 
-    // create/edit pop ups
-    const [createPackPopUp, setCreatePackPopUp] = useState(false);
-    const [editPackPopUp, setEditPackPopUp] = useState('');
+    // create/edit/delete pop ups
+    const [createCardPopUp, setCreateCardPopUp] = useState(false);
+    const [editCardPopUp, setEditCardPopUp] = useState<Array<string>>([]);
+    const [deleteCardPopUp, setDeleteCardPopUp] = useState<Array<string>>([]);
 
-    const toggleCreatePackPopUp = useCallback(() => {
-        setCreatePackPopUp(prev => !prev);
+    const toggleCreateCardPopUp = useCallback(() => {
+        setCreateCardPopUp(prev => !prev);
     }, []);
-    const toggleEditPackPopUp = useCallback((_id: string) => {
-        setEditPackPopUp(_id);
+    const toggleEditCardPopUp = useCallback((_id: string, args: Array<string>) => {
+        if (_id) {
+            setEditCardPopUp([_id, ...args]);
+        } else {
+            setEditCardPopUp([]);
+        }
+    }, []);
+    const toggleDeleteCardPopUp = useCallback((id: string, cardsPack_id: string) => {
+        if (id.length > 0) {
+            setDeleteCardPopUp([id, cardsPack_id]);
+        } else {
+            setDeleteCardPopUp([]);
+        }
     }, []);
     ///
 
     // pagination
     const onPageChange = useCallback((page: number) => {
-        const pageCount = fromCardsServer.pageCount;
-        const sortCards = sortParam;
-        dispatch(changePageTC({page, pageCount, sortCards, cardsPack_id}))
-    }, [dispatch, fromCardsServer.pageCount, sortParam]);
+        dispatch(changePageTC(page))
+    }, [dispatch]);
 
     const onShowByChange = useCallback((pageCount: number) => {
-        const page = fromCardsServer.page;
-        const sortCards = sortParam;
-        dispatch(showByTC({page, pageCount, sortCards, cardsPack_id}));
-    }, [dispatch, fromCardsServer.page, sortParam]);
+        dispatch(showByTC(pageCount));
+    }, [dispatch]);
 
     const onPortionChange = useCallback((flag: boolean) => {
         flag ? dispatch(changePortionTC(true)) : dispatch(changePortionTC(false));
@@ -83,55 +95,43 @@ const CardsComponent = (props: PropsType) => {
     // sorting
     const sortRegular = useCallback((sortDirection: string) => {
         const sortUrl = sortBy ? `1${sortDirection}` : `0${sortDirection}`;
-        dispatch(sortCardsTC({
-            page: fromCardsServer.page,
-            pageCount: fromCardsServer.pageCount,
-            sortCards: `${sortUrl}`,
-            cardsPack_id
-        }));
-    }, [dispatch, sortBy, fromCardsServer.pageCount, fromCardsServer.page]);
+        dispatch(sortCardsTC(sortUrl));
+    }, [dispatch, sortBy]);
     ///
 
     //search
     const onSearchSubmit = (queryParam: SearchObject) => {
-
         if (queryParam.cardAnswer) {
-            dispatch(getCardsTC({
-                page: fromCardsServer.page,
-                pageCount: fromCardsServer.pageCount,
-                cardAnswer: queryParam.cardAnswer,
-                cardsPack_id
-            }))
+            dispatch(searchCardsAC(queryParam.cardAnswer, ''));
+            dispatch(getCardsTC());
             dispatch(reset('SearchForm'));
         } else if (queryParam.cardQuestion) {
-            dispatch(getCardsTC({
-                page: fromCardsServer.page,
-                pageCount: fromCardsServer.pageCount,
-                cardQuestion: queryParam.cardQuestion,
-                cardsPack_id
-            }))
+            dispatch(searchCardsAC('', queryParam.cardQuestion));
+            dispatch(getCardsTC());
             dispatch(reset('SearchForm'));
         } else {
-            dispatch(getCardsTC({
-                page: fromCardsServer.page,
-                pageCount: fromCardsServer.pageCount,
-                cardsPack_id
-            }))
+            dispatch(searchCardsAC('', ''));
+            dispatch(getCardsTC());
             dispatch(reset('SearchForm'));
         }
     }
     ///
 
+    //delete card
+    const deleteCard = (id: string) => {
+        dispatch(deleteCardTC(id))
+    }
+    ///
+
     useEffect(() => {
-        const page = fromCardsServer.page;
-        const pageCount = fromCardsServer.pageCount;
-        dispatch(getCardsTC({cardsPack_id, page, pageCount}))
+        dispatch(packIdAC(cardsPack_id))
+        dispatch(getCardsTC())
 
         return () => {
             dispatch(setPortionTC(1))
             dispatch(setCurrentPageAC(1))
         }
-    }, [])
+    }, [dispatch, cardsPack_id])
 
     const sortArray = ['answer', 'question'];
     const sortMap = sortArray.map((sort, idx) => <Sorting key={idx} sortDirection={sort} sortRegular={sortRegular}/>);
@@ -143,11 +143,11 @@ const CardsComponent = (props: PropsType) => {
     });
 
     const cardsMap = fromCardsServer.cards.map(card => {
-        const {_id, question, answer, created} = card;
+        const {_id, question, answer, created, user_id} = card;
         return (
             <Card key={_id} question={question} answer={answer} created={created}
-                  checkIfPackIsYours={checkIfPackIsYours.length} toggleEditPackPopUp={toggleEditPackPopUp} id={_id}
-                  cardsPack_id={cardsPack_id}/>
+                  toggleEditCardPopUp={toggleEditCardPopUp} id={_id}
+                  cardsPack_id={cardsPack_id} toggleDeleteCardPopUp={toggleDeleteCardPopUp} userId={user_id}/>
         )
     })
 
@@ -159,7 +159,9 @@ const CardsComponent = (props: PropsType) => {
 
                 <div className={s.cards__interface}>
 
-                    <button className={s.cards__btn} onClick={toggleCreatePackPopUp}>add new card</button>
+                    <button className={checkIfPackIsYours.length ? `${s.cards__btn}` : `${s.cards__btn} ${s.disabled}`}
+                            onClick={toggleCreateCardPopUp}>add new card
+                    </button>
 
                     <Search searchBy={['cardQuestion', 'cardAnswer']} onSearchSubmit={onSearchSubmit}/>
 
@@ -191,12 +193,18 @@ const CardsComponent = (props: PropsType) => {
             </div>
 
             {
-                createPackPopUp &&
-                <AddCard toggleCreatePackPopUp={toggleCreatePackPopUp} cardsPack_id={cardsPack_id}/>
+                createCardPopUp &&
+                <AddCard toggleCreatePackPopUp={toggleCreateCardPopUp} cardsPack_id={cardsPack_id}/>
             }
             {
-                editPackPopUp &&
-                <EditCard toggleEditPackPopUp={toggleEditPackPopUp} id={editPackPopUp} cardsPack_id={cardsPack_id}/>
+                editCardPopUp[0] &&
+                <EditCard toggleEditCardPopUp={toggleEditCardPopUp} id={editCardPopUp[0]} question={editCardPopUp[1]}
+                          answer={editCardPopUp[2]} cardsPack_id={cardsPack_id}/>
+            }
+            {
+                deleteCardPopUp.length > 0 &&
+                <DeleteCard toggleDeleteCardPopUp={toggleDeleteCardPopUp} deleteCard={deleteCard}
+                            id={deleteCardPopUp[0]} cardsPackId={deleteCardPopUp[1]}/>
             }
 
         </div>

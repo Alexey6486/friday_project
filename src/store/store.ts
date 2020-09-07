@@ -9,6 +9,7 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import {reducer as formReducer} from 'redux-form';
 import {packsReducer} from "../reducers/packsReducer/packsReducer";
 import {cardsReducer} from "../reducers/cardsReducer/cardsReducer";
+import {gradeReducer} from "../reducers/learnReducer/learnReducer";
 
 const rootReducers = combineReducers({
     form: formReducer,
@@ -19,6 +20,7 @@ const rootReducers = combineReducers({
     appReducer,
     packsReducer,
     cardsReducer,
+    gradeReducer,
 });
 
 export type AppRootStateType = ReturnType<typeof rootReducers>;
