@@ -1,7 +1,6 @@
 import {GradeParamType, learnApi} from "../../api/learnApi";
-import {getCardsTC} from "../cardsReducer/cardsReducer";
 import {AppRootStateType} from "../../store/store";
-import {ThunkAction, ThunkDispatch } from "redux-thunk";
+import {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {cardsApi, CardType} from "../../api/cardsApi";
 
 const GRADE_LOADING = 'GRADE_LOADING';

@@ -3,10 +3,9 @@ import './Learn.styles.scss';
 import {Redirect, RouteComponentProps, withRouter} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../store/store";
-import {CardsStateType, getCardsTC, packIdAC} from "../reducers/cardsReducer/cardsReducer";
+import {getCardsTC} from "../reducers/cardsReducer/cardsReducer";
 import {getCardsToLearnTC, GradeStateType, learnTC} from "../reducers/learnReducer/learnReducer";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
-import {CardType} from "../api/cardsApi";
 import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 
 type CardsPackIdType = {
@@ -58,7 +57,7 @@ const LearnComponent = (props: PropsType) => {
         return {_id, question, answer, grade}
     });
 
-    const [card, setCard] = useState<CardDataType>({answer: '',question: '',grade: 0,_id: '',});
+    const [card, setCard] = useState<CardDataType>({answer: '', question: '', grade: 0, _id: '',});
 
     const [showAnswer, setShowAnswer] = useState(false);
     const [firstLoading, setFirstLoading] = useState(true);
@@ -82,7 +81,7 @@ const LearnComponent = (props: PropsType) => {
             dispatch(getCardsToLearnTC(cardsPack_id))
             setFirstLoading(false)
         }
-        if (cards.length > 0)  setCard(getRandomCard(cardsMap));
+        if (cards.length > 0) setCard(getRandomCard(cardsMap));
     }, [dispatch, cards, cardsPack_id])
 
     if (!isAuth) {
