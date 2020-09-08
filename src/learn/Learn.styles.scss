@@ -82,8 +82,12 @@
         margin-bottom: 10px;
     }
 
-    &__btnBlock{
-        display: flex;
+    &__btnWrap{
+        min-height: 30px;
+
+        .answer__btnBlock{
+            display: flex;
+        }
     }
 }
 .gradeBtn {
