@@ -7,6 +7,7 @@ import {CardsStateType, getCardsTC, packIdAC} from "../reducers/cardsReducer/car
 import {getCardsToLearnTC, GradeStateType, learnTC} from "../reducers/learnReducer/learnReducer";
 import {AuthStateType} from "../reducers/authReducers/loginReducer";
 import {CardType} from "../api/cardsApi";
+import {PacksLoading} from "../utils/loading/packsLoading/PacksLoading";
 
 type CardsPackIdType = {
     cardsPack_id: string
@@ -45,7 +46,7 @@ const LearnComponent = (props: PropsType) => {
     const {isAuth} = authState;
 
     const gradeState = useSelector<AppRootStateType, GradeStateType>(state => state.gradeReducer);
-    const {isLoading, cards} = gradeState;
+    const {cards, isGradeLoading, isLearnLoading} = gradeState;
 
     const {match} = props;
 
@@ -64,7 +65,6 @@ const LearnComponent = (props: PropsType) => {
     const [showGradeBtns, setShowGradeBtns] = useState(true);
 
     const onClickNext = () => {
-        const nextCard = getRandomCard(cardsMap);
         setShowAnswer(false);
         setCard(getRandomCard(cardsMap));
         dispatch(getCardsTC());
@@ -89,40 +89,59 @@ const LearnComponent = (props: PropsType) => {
         return <Redirect to={'/login'}/>
     }
 
-    const disableBtn = isLoading ? 'gradeBtn disabled' : 'gradeBtn';
+    const disableBtn = isGradeLoading ? 'gradeBtn disabled' : 'gradeBtn';
+    const loading = isLearnLoading && <PacksLoading/>;
 
     return (
+
         <div className={'learn'}>
-            <div className={'container'}>
+            {loading ? loading :
+                <div className={'container'}>
 
-                <div className={'question'}>
-                    <div className={'question__title'}>Question:</div>
-                    <div className={'question__text'}>{card.question}</div>
-                    <div className={'question__grade'}>Current grade: {card.grade}</div>
-                    {!showAnswer && <button onClick={() => setShowAnswer(true)}>show answer</button>}
-                </div>
-
-                {
-                    showAnswer &&
-                    <div className={'answer'}>
-                        <div className={'answer__title'}>Answer:</div>
-                        <div className={'answer__text'}>{card.answer}</div>
-                        <div className={'answer__btnWrap'}>
-                            {
-                                showGradeBtns &&
-                                <div className={'answer__btnBlock'}>
-                                    <button className={disableBtn} onClick={() => {gradeQuestion(1, card._id)}}>wrong</button>
-                                    <button className={disableBtn} onClick={() => {gradeQuestion(2, card._id)}}>bad</button>
-                                    <button className={disableBtn} onClick={() => {gradeQuestion(3, card._id)}}>close</button>
-                                    <button className={disableBtn} onClick={() => {gradeQuestion(4, card._id)}}>almost</button>
-                                    <button className={disableBtn} onClick={() => {gradeQuestion(5, card._id)}}>correct</button>
-                                </div>
-                            }
-                        </div>
-                        <button className={`${disableBtn} nextBtn`} onClick={onClickNext}>next</button>
+                    <div className={'question'}>
+                        <div className={'question__title'}>Question:</div>
+                        <div className={'question__text'}>{card.question}</div>
+                        <div className={'question__grade'}>Current grade: {card.grade}</div>
+                        {!showAnswer && <button onClick={() => setShowAnswer(true)}>show answer</button>}
                     </div>
-                }
-            </div>
+
+                    {
+                        showAnswer &&
+                        <div className={'answer'}>
+                            <div className={'answer__title'}>Answer:</div>
+                            <div className={'answer__text'}>{card.answer}</div>
+                            <div className={'answer__btnWrap'}>
+                                {
+                                    showGradeBtns &&
+                                    <div className={'answer__btnBlock'}>
+                                        <button className={disableBtn} onClick={() => {
+                                            gradeQuestion(1, card._id)
+                                        }}>wrong
+                                        </button>
+                                        <button className={disableBtn} onClick={() => {
+                                            gradeQuestion(2, card._id)
+                                        }}>bad
+                                        </button>
+                                        <button className={disableBtn} onClick={() => {
+                                            gradeQuestion(3, card._id)
+                                        }}>close
+                                        </button>
+                                        <button className={disableBtn} onClick={() => {
+                                            gradeQuestion(4, card._id)
+                                        }}>almost
+                                        </button>
+                                        <button className={disableBtn} onClick={() => {
+                                            gradeQuestion(5, card._id)
+                                        }}>correct
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                            <button className={`${disableBtn} nextBtn`} onClick={onClickNext}>next</button>
+                        </div>
+                    }
+                </div>
+            }
         </div>
     )
 }
