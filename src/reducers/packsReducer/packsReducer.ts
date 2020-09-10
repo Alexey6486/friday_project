@@ -239,7 +239,6 @@ export const createPackTC = (payload: CreatePackObject): ThunkType => async (dis
     try {
         await packsApi.createPack(payload);
         dispatch(getPacksTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -250,7 +249,6 @@ export const editPackTC = (payload: EditPackObject): ThunkType => async (dispatc
     try {
         await packsApi.editPack(payload);
         dispatch(getPacksTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -261,7 +259,6 @@ export const deletePackTC = (id: string): ThunkType => async (dispatch: ThunkDis
     try {
         await packsApi.deletePack(id);
         dispatch(getPacksTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -273,7 +270,6 @@ export const sortTC = (sortPacks: string): ThunkType => async (dispatch: ThunkDi
         dispatch(sortAC());
         dispatch(setSortParamAC(sortPacks));
         dispatch(getPacksTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -284,7 +280,6 @@ export const showOnlyMyPacksTC = (showMyPacks: boolean, page: number): ThunkType
     try {
         dispatch(showMyPacksAC(showMyPacks, page));
         dispatch(getPacksTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -295,7 +290,6 @@ export const changePageTC = (page: number): ThunkType => async (dispatch: ThunkD
     try {
         dispatch(setCurrentPageAC(page));
         dispatch(getPacksTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -306,7 +300,6 @@ export const showByTC = (pageCount: number): ThunkType => async (dispatch: Thunk
     try {
         dispatch(setShowByAC(pageCount));
         dispatch(getPacksTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);

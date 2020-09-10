@@ -43,3 +43,55 @@
         margin-right: 10px;
     }
 }
+@media all and (max-width: 450px) {
+
+    .sortBtn {
+        width: 24%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto !important;
+        align-self: stretch;
+        min-height: 36px;
+
+        &:not(:last-child) {
+            margin-right: 1%;
+        }
+    }
+    .sortCheck{
+        width: 24%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+        min-height: 36px;
+
+        label{
+            text-align: center;
+        }
+    }
+}
+@media all and (max-width: 400px) {
+    .sortBtn {
+        width: 49%;
+        margin-bottom: 5px;
+
+        &:not(:last-child) {
+            margin-right: 1%;
+        }
+        &:nth-child(2) {
+            margin-right: 0;
+        }
+    }
+    .sortCheck {
+        width: 49%;
+        margin-bottom: 5px;
+
+        label{
+            height: auto;
+            min-height: 36px;
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}

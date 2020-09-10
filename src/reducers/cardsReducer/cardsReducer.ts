@@ -240,7 +240,6 @@ export const createCardTC = (payload: CreateCardObject): ThunkType => async (dis
     try {
         await cardsApi.createCard(payload);
         dispatch(getCardsTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -251,7 +250,6 @@ export const editCardTC = (payload: EditCardObject): ThunkType => async (dispatc
     try {
         await cardsApi.editCard(payload);
         dispatch(getCardsTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -262,7 +260,6 @@ export const deleteCardTC = (id: string): ThunkType => async (dispatch: ThunkDis
     try {
         await cardsApi.deleteCard(id);
         dispatch(getCardsTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -273,7 +270,6 @@ export const changePageTC = (page: number): ThunkType => async (dispatch: ThunkD
     try {
         dispatch(setCurrentPageAC(page));
         dispatch(getCardsTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -284,7 +280,6 @@ export const showByTC = (pageCount: number): ThunkType => async (dispatch: Thunk
     try {
         dispatch(setShowByAC(pageCount));
         dispatch(getCardsTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
@@ -310,7 +305,6 @@ export const sortCardsTC = (sortCards: string): ThunkType => async (dispatch: Th
         dispatch(sortCardsAC());
         dispatch(setCardsSortParamAC(sortCards));
         dispatch(getCardsTC());
-        dispatch(loadingAC(false));
     } catch (error) {
         dispatch(loadingAC(false));
         console.log(error.response.data.error);
