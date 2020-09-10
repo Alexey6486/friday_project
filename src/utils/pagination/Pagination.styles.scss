@@ -154,3 +154,13 @@
     }
 
 }
+
+@media all and (max-width: 450px) {
+    .pagination {
+        flex-wrap: wrap;
+    }
+    .paginationBlock {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

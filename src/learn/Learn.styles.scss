@@ -129,3 +129,25 @@
         }
     }
 }
+
+@media all and (max-width: 500px) {
+
+    .answer__btnWrap .answer__btnBlock {
+        flex-wrap: wrap;
+    }
+    .gradeBtn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .gradeBtn:not(:last-child) {
+        margin-right: 0;
+    }
+    .gradeBtn.nextBtn {
+        position: relative;
+        bottom: 0;
+        right: 0;
+    }
+    .question button {
+        padding: 0 5px;
+    }
+}

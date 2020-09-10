@@ -6,7 +6,7 @@
     height: 40px;
     color: #444444;
 
-    &__row{
+    &__row {
         display: flex;
 
         & > div {
@@ -19,7 +19,7 @@
         background-color: #F0F8FF;
     }
 
-    &:hover{
+    &:hover {
         background-color: #cfcfcf;
     }
 
@@ -28,7 +28,7 @@
         width: auto;
         height: 100%;
 
-        .pack__btn{
+        .pack__btn {
             color: #444444;
             cursor: pointer;
             outline: none;
@@ -44,24 +44,70 @@
             font-size: 14px;
 
 
-            &:hover{
+            &:hover {
                 background-color: darken(#F0F8FF, 20%);
                 color: #ffffff;
             }
 
-            &_del:hover{
+            &_del:hover {
                 background-color: tomato;
                 color: #ffffff;
             }
 
-            &_edit:hover{
+            &_edit:hover {
                 background-color: #66ae65;
                 color: #ffffff;
             }
 
-            &.disabled{
+            &.disabled {
                 pointer-events: none;
                 opacity: 0.4;
+            }
+        }
+    }
+}
+
+@media all and (max-width: 1200px) {
+
+    .pack__row > div {
+        width: 200px;
+    }
+}
+
+@media all and (max-width: 992px) {
+
+    .pack__row > div:nth-child(3) {
+        display: none;
+    }
+}
+
+@media all and (max-width: 768px) {
+    .pack {
+        height: auto;
+        min-height: 40px;
+    }
+    .pack__row > div {
+        width: 147px;
+    }
+}
+
+@media all and (max-width: 576px) {
+
+    .pack__row > div:nth-child(2) {
+        display: none;
+    }
+}
+
+@media all and (max-width: 400px) {
+
+    .pack__row > div {
+        width: 134px;
+    }
+    .pack {
+        .pack__interface {
+            .pack__btn {
+                padding: 0 5px;
+                font-size: 12px;
             }
         }
     }

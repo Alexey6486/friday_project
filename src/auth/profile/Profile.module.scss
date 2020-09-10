@@ -11,13 +11,14 @@
 }
 
 .profileContent__left {
-    width: 10%;
+    width: 100px;
     padding-right: 10px;
+    margin-bottom: 20px;
 }
 
 .profileContent__right {
-    width: 90%;
     padding-left: 10px;
+    flex-grow: 1;
 }
 
 .profileContent__ava {
@@ -42,4 +43,19 @@
 }
 .profileContent__userData:nth-child(odd){
     background-color: #eff1ff;
+}
+
+@media all and (max-width: 500px) {
+    .profileContent__left {
+        width: 100%;
+        padding-right: 0;
+    }
+    .profileContent__right {
+        padding-left: 0;
+    }
+    .profileContent__userData{
+        height: auto;
+        min-height: 30px;
+        padding: 0 15px;
+    }
 }
