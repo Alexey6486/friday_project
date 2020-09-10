@@ -93,6 +93,7 @@
     border: 1px solid #fa9716;
     width: calc(100% - 5px);
     transition: all linear 150ms;
+    z-index: 10;
 
     &.open{
         display: block;
